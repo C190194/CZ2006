@@ -1,28 +1,25 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import {
-  Scheduler,
-  WeekView,
-  Appointments,
-} from "@devexpress/dx-react-scheduler-material-ui";
-import { Container, Row, Col } from "reactstrap";
-
-import appointments from "../shares/today-appointments";
+import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
+import PlannerIndexComponent from "../components/PlannerIndexComponent";
+import './PlanTimetable.css'
 
 function Planner() {
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Paper>
-            <Scheduler data={appointments} height={660}>
-              <WeekView startDayHour={9} endDayHour={19} />
-              <Appointments />
-            </Scheduler>
-          </Paper>
-        </Col>
-      </Row>
-    </Container>
+    <div className="container">
+      <div className="row">
+        <div className= "planner-title col-12">
+          <b>Course Planner</b>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-2">
+          <PlannerIndexComponent />
+        </div>
+        <div className="col-10">
+          <PlannerCalendarComponent />
+        </div>
+      </div>
+    </div>
   );
 }
 

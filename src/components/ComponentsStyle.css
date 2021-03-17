@@ -7,7 +7,7 @@
   }
   
   .menu-bars {
-    margin-left: 2rem;
+    margin-right: 2rem;
     font-size: 2rem;
     background: none;
   }
@@ -29,6 +29,7 @@
   }
 
   .nav-menu {
+    z-index: 99 !important;
     background-color: #16a6df;
     width: 250px;
     height: 100vh;
@@ -86,3 +87,14 @@
   span {
     margin-left: 16px;
   }
+
+
+/* PlannerIndexComponents style */
+
+.planner-search input {
+  margin-top: 20;
+  width: 180px;
+  height: 30px;
+  font-size: 0.7em;
+  margin-left: 5px;
+}
