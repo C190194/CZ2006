@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./PlannerSearchCourseStyle.css";
-import addFunction from "./PlannerIndexComponent";
+import { Button } from "reactstrap";
 
 export default function Dropdown({
   options,
@@ -9,10 +9,12 @@ export default function Dropdown({
   prompt,
   value,
   onChange,
+  addCourseDivFunc,
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef(null);
+  const [tempOption, setTempOption] = useState("");
 
   useEffect(() => {
     document.addEventListener("click", close);
@@ -36,47 +38,52 @@ export default function Dropdown({
   }
 
   return (
-    <div className="dropdown">
-      <div className="control" onClick={() => setOpen((prev) => !prev)}>
-        {/* <div className="selected-value" ref={ref}>{value ? value.name : prompt}</div> */}
-        <div className="selected-value">
-          <input
-            type="text"
-            ref={ref}
-            placeholder={value ? value[label] : prompt}
-            value={displayValue()}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              onChange(null);
-            }}
-            onClick={() => setOpen((prev) => !prev)}
-          />
-        </div>
-        <div className={`arrow ${open ? "open" : null}`} />
-      </div>
-      <div className={`options ${open ? "open" : null}`}>
-        {filter(options).map((option) => (
-          <div
-            key={option[id]}
-            className={`option ${value === option ? "selected" : null}`}
-            onClick={() => {
-              setQuery("");
-              onChange(option);
-              setOpen(false);
-              addFunction.addCourseDiv(option[label], {});
-            }}
-          >
-            {option[label]}
+    <div>
+      <div className="dropdown">
+        <div className="control" onClick={() => setOpen((prev) => !prev)}>
+          {/* <div className="selected-value" ref={ref}>{value ? value.name : prompt}</div> */}
+          <div className="selected-value">
+            <input
+              type="text"
+              ref={ref}
+              placeholder={value ? value[label] : prompt}
+              value={displayValue()}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                onChange(null);
+              }}
+              onClick={() => setOpen((prev) => !prev)}
+            />
           </div>
-        ))}
-        {/* <div>
-          <Button
-            onClick={() => {
-              addFunction.addCourseDiv(option[label], {});
-            }}
-          />{" "}
-        </div> */}
+          <div className={`arrow ${open ? "open" : null}`} />
+        </div>
+        <div className={`options ${open ? "open" : null}`}>
+          {filter(options).map((option) => (
+            <div>
+              <div
+                key={option[id]}
+                className={`option ${value === option ? "selected" : null}`}
+                onClick={() => {
+                  setQuery("");
+                  onChange(option);
+                  setOpen(false);
+                  setTempOption(option);
+                  //addCourseDivFunc(option, {});
+                }}
+              >
+                {option[label]}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+      <Button
+        onClick={() => {
+          addCourseDivFunc(tempOption, {});
+        }}
+      >
+        ADD COURSE
+      </Button>
     </div>
   );
 }

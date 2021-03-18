@@ -7,10 +7,10 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import "./ComponentsStyle.css";
 
-// import Dropdown from "./PlannerSearchCourseComponent";
+import Dropdown from "./PlannerSearchCourseComponent";
 //import countries from "./countries.json";
 import { data } from "./testData.js";
-
+import MUIButton from "@material-ui/core/Button";
 // import React, { Component } from "react";
 // import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -20,6 +20,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 // import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import FlagIcon from "@material-ui/icons/Flag";
 import { Button } from "reactstrap";
 // import { courseTimetableData } from "../data/CourseIndexesData";
 // import { data } from "../data/data";
@@ -60,6 +61,8 @@ const CourseDiv = function (props) {
   const { course, currentIdx, deleteElement, updateCurrentIdx } = props;
   const classes = useStyles();
   const courseCode = course.courseCode;
+
+  const [index_is_fixed, set_index_is_fixed] = useState(false);
   // console.log("Course below:");
   // console.log(course);
   const indexes = course.courseDetails.index;
@@ -77,16 +80,36 @@ const CourseDiv = function (props) {
       style={{ border: "2px solid grey", borderRadius: "5px" }}
     >
       <div className="row">
-        <div className="col-1">{courseCode}</div>
-        <div className="col-1">
-          <IconButton className={classes.button} onClick={deleteElement}>
-            <CloseIcon></CloseIcon>
-          </IconButton>
+        <div className="col-4">{courseCode}</div>
+        <div className="col-3">
+          <MUIButton
+            variant="outlined"
+            color="secondary"
+            className={classes.button}
+            startIcon={<CloseIcon />}
+            onClick={deleteElement}
+            style={{ width: "40px", minWidth: "40px" }}
+          ></MUIButton>
+        </div>
+        <div className="col-3">
+          <MUIButton
+            variant={index_is_fixed ? "contained" : "outlined"}
+            color="primary"
+            className={classes.button}
+            startIcon={<FlagIcon />}
+            onClick={() => {
+              set_index_is_fixed(!index_is_fixed);
+            }}
+            style={{ width: "40px", minWidth: "40px" }}
+          ></MUIButton>
         </div>
       </div>
       <div className="row">
         <div className="col-2">
-          <FormControl className={classes.formControl}>
+          <FormControl
+            className={classes.formControl}
+            disabled={index_is_fixed}
+          >
             <InputLabel htmlFor="index-native-simple">Index</InputLabel>
             <Select
               value={indexes.indexOf(currentIdx)}
@@ -131,92 +154,6 @@ function PlannerIndexComponent({ addCourseDiv }) {
         onChange={(val) => setValue(val)}
         addCourseDivFunc={addCourseDiv}
       />
-    </div>
-  );
-}
-
-function Dropdown({
-  options,
-  id,
-  label,
-  prompt,
-  value,
-  onChange,
-  addCourseDivFunc,
-}) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const ref = useRef(null);
-  const [tempOption, setTempOption] = useState("");
-
-  useEffect(() => {
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, []);
-
-  function close(e) {
-    setOpen(e && e.target === ref.current);
-  }
-
-  function filter(options) {
-    return options.filter(
-      (option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1
-    );
-  }
-
-  function displayValue() {
-    if (query.length > 0) return query;
-    if (value) return value[label];
-    return "";
-  }
-
-  return (
-    <div>
-      <div className="dropdown">
-        <div className="control" onClick={() => setOpen((prev) => !prev)}>
-          {/* <div className="selected-value" ref={ref}>{value ? value.name : prompt}</div> */}
-          <div className="selected-value">
-            <input
-              type="text"
-              ref={ref}
-              placeholder={value ? value[label] : prompt}
-              value={displayValue()}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                onChange(null);
-              }}
-              onClick={() => setOpen((prev) => !prev)}
-            />
-          </div>
-          <div className={`arrow ${open ? "open" : null}`} />
-        </div>
-        <div className={`options ${open ? "open" : null}`}>
-          {filter(options).map((option) => (
-            <div>
-              <div
-                key={option[id]}
-                className={`option ${value === option ? "selected" : null}`}
-                onClick={() => {
-                  setQuery("");
-                  onChange(option);
-                  setOpen(false);
-                  setTempOption(option);
-                  //addCourseDivFunc(option, {});
-                }}
-              >
-                {option[label]}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Button
-        onClick={() => {
-          addCourseDivFunc(tempOption, {});
-        }}
-      >
-        ADD COURSE
-      </Button>
     </div>
   );
 }
@@ -266,13 +203,24 @@ export default class ShareTimetable extends Component {
 
   //method to add course(div)
   addCourseDiv = (tempCourse, currentIdxVar) => {
-    const tempCourseDivs = [
-      ...this.state.courseDivs,
-      { course: tempCourse, currentIdx: currentIdxVar },
-    ];
-    this.setState({
-      courseDivs: tempCourseDivs,
-    });
+    if (typeof tempCourse === "object" && tempCourse !== null) {
+      const tempCourseDivs = [...this.state.courseDivs];
+
+      if (
+        !tempCourseDivs.some(
+          (e) => e.course.courseCode === tempCourse.courseCode
+        )
+      ) {
+        tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
+        this.setState({
+          courseDivs: tempCourseDivs,
+        });
+      } else {
+        alert("The selected course was added before!");
+      }
+    } else {
+      alert("Please select a course before adding!");
+    }
   };
 
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
@@ -324,7 +272,7 @@ export default class ShareTimetable extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         <PlannerIndexComponent
           addCourseDiv={this.addCourseDiv}
         ></PlannerIndexComponent>

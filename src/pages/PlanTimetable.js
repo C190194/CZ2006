@@ -81,39 +81,38 @@ export default class PlanTimetable extends Component {
             <PlannerIndexComponent />
           </div>
           <div className="col-10">
-            <div className="container">
-              <div className="row justify-content-md-center" align="center">
-                <MoreOptionsComponent />
-                <FormControl variant="outlined">
-                  <InputLabel htmlFor="outlined-page-native-simple">
-                    Page
-                  </InputLabel>
-                  <Select
-                    native
-                    value={this.state.currentTimeTablePage}
-                    onChange={(event) => {
-                      this.updateTimeTablePageNum(event.target.value);
-                    }}
-                    label="Page"
-                  >
-                    {Array.from(
-                      { length: this.state.timeTables.length },
-                      (x, i) => (
-                        <option value={i + 1}>{i + 1}</option>
-                      )
-                    )}
-                  </Select>
-                </FormControl>
-              </div>
-              <PlannerCalendarComponent
-                timeTableData={
-                  this.state.timeTables[this.state.currentTimeTablePage - 1]
-                    .occupiedTimeSlots
-                }
-              />
+            <div className="row justify-content-md-center" align="center">
+              <MoreOptionsComponent />
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-page-native-simple">
+                  Page
+                </InputLabel>
+                <Select
+                  native
+                  value={this.state.currentTimeTablePage}
+                  onChange={(event) => {
+                    this.updateTimeTablePageNum(event.target.value);
+                  }}
+                  label="Page"
+                >
+                  {Array.from(
+                    { length: this.state.timeTables.length },
+                    (x, i) => (
+                      <option value={i + 1}>{i + 1}</option>
+                    )
+                  )}
+                </Select>
+              </FormControl>
             </div>
+            <PlannerCalendarComponent
+              timeTableData={
+                this.state.timeTables[this.state.currentTimeTablePage - 1]
+                  .occupiedTimeSlots
+              }
+            />
+          </div>
 
-            {/* <div className="col">
+          {/* <div className="col">
               <Paper>
                 <Scheduler
                   data={
@@ -129,7 +128,6 @@ export default class PlanTimetable extends Component {
                 </Scheduler>
               </Paper>
             </div> */}
-          </div>
         </div>
       </div>
     );
