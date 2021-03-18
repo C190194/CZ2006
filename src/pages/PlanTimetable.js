@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
 import PlannerIndexComponent from "../components/PlannerIndexComponent";
+import MoreOptionsComponent from "../components/MoreOptionsComponent";
 import "./PlanTimetable.css";
 
 import Paper from "@material-ui/core/Paper";
@@ -82,6 +83,7 @@ export default class PlanTimetable extends Component {
           <div className="col-10">
             <div className="container">
               <div className="row justify-content-md-center" align="center">
+                <MoreOptionsComponent />
                 <FormControl variant="outlined">
                   <InputLabel htmlFor="outlined-page-native-simple">
                     Page

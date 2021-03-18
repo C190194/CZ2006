@@ -1,8 +1,8 @@
 export const appointments = [
   {
     title: "AAA08B",
-    startDate: new Date(2018, 5, 25, 9, 35),
-    endDate: new Date(2018, 5, 25, 11, 30),
+    startDate: new Date(2021, 3, 1, 9, 35),
+    endDate: new Date(2021, 3, 1, 11, 30),
     id: 0,
     type: "LEC/STUDIO",
     group: "L1",

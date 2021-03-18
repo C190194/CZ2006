@@ -60,8 +60,8 @@ const CourseDiv = function (props) {
   const { course, currentIdx, deleteElement, updateCurrentIdx } = props;
   const classes = useStyles();
   const courseCode = course.courseCode;
-  console.log("Course below:");
-  console.log(course);
+  // console.log("Course below:");
+  // console.log(course);
   const indexes = course.courseDetails.index;
   // const [courseIdx, setCourseIdx] = React.useState("");
 
@@ -284,8 +284,13 @@ export default class ShareTimetable extends Component {
 
   updateCurrentIdx = (event, idx) => {
     const tempCourseDivs = [...this.state.courseDivs];
-    tempCourseDivs[idx].currentIdx =
-      tempCourseDivs[idx].course.courseDetails.index[event.target.value];
+    if (event.target.value !== "") {
+      tempCourseDivs[idx].currentIdx =
+        tempCourseDivs[idx].course.courseDetails.index[event.target.value];
+    } else {
+      tempCourseDivs[idx].currentIdx = {};
+    }
+
     // console.log(tempCourseDivs[idx].currentIdx.index_number);
 
     this.planCourse(
