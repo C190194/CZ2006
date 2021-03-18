@@ -1,25 +1,5 @@
 # CZ2006-SE
 
-Below is the course_index_object:
-{
-index_number: "39676",
-details: [
-{
-type: "LEC/STUDIO",
-group: "L1",
-day: "WED",
-time: {
-full: "1130-1430",
-start: "1130",
-end: "1430",
-duration: 3,
-},
-location: "NIE7-02-07",
-flag: 0,
-remarks: "",
-},
-],
-}
 
 Below is the time_table_cell_format:
 {
