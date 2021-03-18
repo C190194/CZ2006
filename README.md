@@ -34,4 +34,8 @@ remarks: "",
 flag:0,
 }
 
+Please note that the above cell_format needs a startDate and endDate,
+weekdays needs to be mapped into an exact date,
+so we can set 2021-3-1 as Monday, 2021-3-2 as Tuesday and so on
+
 can add more properties like flag(indicator for fixed index)
