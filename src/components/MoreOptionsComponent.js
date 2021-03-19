@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,6 +9,13 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
+import { makeStyles } from "@material-ui/core/styles";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = (theme) => ({
   root: {
@@ -54,70 +61,120 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default class MoreOptionsComponent extends Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+  formControl: {
+    margin: theme.spacing(3),
+  },
+}));
 
-    this.state = { open: false };
-  }
+function CheckboxesGroup(props) {
+  const classes = useStyles();
+  const [state, setState] = React.useState({
+    gilad: true,
+    jason: false,
+    antoine: false,
+  });
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+    props.setChangeIsMade(true);
   };
-  handleClose = () => {
-    this.setState({ open: false });
+
+  const { gilad, jason, antoine } = state;
+  const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
+
+  return (
+    <div className={classes.root}>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Assign responsibility</FormLabel>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox checked={gilad} onChange={handleChange} name="gilad" />
+            }
+            label="Gilad Gray"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={jason} onChange={handleChange} name="jason" />
+            }
+            label="Jason Killian"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={antoine}
+                onChange={handleChange}
+                name="antoine"
+              />
+            }
+            label="Antoine Llorca"
+          />
+        </FormGroup>
+        <FormHelperText>Be careful</FormHelperText>
+      </FormControl>
+    </div>
+  );
+}
+
+export default function MoreOptionsComponent(props) {
+  const [open, setOpen] = useState(false);
+  const [changeIsMade, setChangeIsMade] = useState(false);
+  //have to compare initial and final state to setChangeisMade
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    if (changeIsMade) {
+      if (window.confirm("Discard Changes?")) {
+        setChangeIsMade(false);
+        setOpen(false);
+      }
+    } else {
+      setChangeIsMade(false);
+      setOpen(false);
+    }
   };
 
-  render() {
-    return (
-      <div>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={this.handleClickOpen}
-        >
+  const handleSaveChanges = () => {
+    setChangeIsMade(false);
+  };
+
+  return (
+    <div>
+      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+        More Options
+      </Button>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        fullWidth={true}
+        maxWidth="lg"
+      >
+        <DialogTitle id="moreOptions-dialog-title" onClose={handleClose}>
           More Options
-        </Button>
-        <Dialog
-          onClose={this.handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={this.state.open}
-          fullWidth={true}
-          maxWidth="lg"
-        >
-          {/* <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Modal title
-          </DialogTitle>
-          <DialogContent dividers>
-            <Typography gutterBottom>
-              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-              ac consectetur ac, vestibulum at eros.
-            </Typography>
-            <Typography gutterBottom>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur
-              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-              auctor.
-            </Typography>
-            <Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-              dui. Donec ullamcorper nulla non metus auctor fringilla.
-            </Typography>
-          </DialogContent> */}
-          <DialogActions>
-            <Button
-              autoFocus
-              onClick={this.handleClose}
-              color="primary"
-              variant="contained"
-            >
-              Save changes
-            </Button>
-          </DialogActions>
+        </DialogTitle>
+        <DialogContent dividers>
           <AddFreeTimeSlotsComponent />
-        </Dialog>
-      </div>
-    );
-  }
+          <CheckboxesGroup setChangeIsMade={setChangeIsMade} />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={handleSaveChanges}
+            color="primary"
+            disabled={!changeIsMade}
+            variant={changeIsMade ? "contained" : "outlined"}
+          >
+            Save changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
