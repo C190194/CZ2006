@@ -34,7 +34,7 @@ class PlannerCalendarComponent extends Component {
           <Col>
             <Paper>
               <Scheduler data={this.props.timeTableData} height={660}>
-                <WeekView startDayHour={9} endDayHour={19} />
+                <WeekView startDayHour={8} endDayHour={22} />
                 <Appointments
                   appointmentContentComponent={this.AppointmentContent}
                 />

@@ -8,6 +8,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
 
 const styles = (theme) => ({
   root: {
@@ -81,8 +82,10 @@ export default class MoreOptionsComponent extends Component {
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
+          fullWidth={true}
+          maxWidth="lg"
         >
-          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+          {/* <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Modal title
           </DialogTitle>
           <DialogContent dividers>
@@ -101,12 +104,18 @@ export default class MoreOptionsComponent extends Component {
               cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
               dui. Donec ullamcorper nulla non metus auctor fringilla.
             </Typography>
-          </DialogContent>
+          </DialogContent> */}
           <DialogActions>
-            <Button autoFocus onClick={this.handleClose} color="primary">
+            <Button
+              autoFocus
+              onClick={this.handleClose}
+              color="primary"
+              variant="contained"
+            >
               Save changes
             </Button>
           </DialogActions>
+          <AddFreeTimeSlotsComponent />
         </Dialog>
       </div>
     );
