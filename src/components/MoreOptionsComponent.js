@@ -123,7 +123,7 @@ function CheckboxesGroup(props) {
 export default function MoreOptionsComponent(props) {
   const [open, setOpen] = useState(false);
   const [changeIsMade, setChangeIsMade] = useState(false);
-  //have to compare initial and final state to setChangeisMade
+  //have to compare initial and final state to setChangeisMade in handleSaveChanges
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -141,6 +141,7 @@ export default function MoreOptionsComponent(props) {
   };
 
   const handleSaveChanges = () => {
+    //compare initial state and final state
     setChangeIsMade(false);
   };
 

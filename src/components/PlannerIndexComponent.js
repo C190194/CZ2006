@@ -138,10 +138,6 @@ function PlannerIndexComponent({ addCourseDiv }) {
   const [age, setAge] = React.useState("");
   const [value, setValue] = useState(null);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
   return (
     <div className="row" style={{ width: 200 }}>
       {/* <Dropdown options={countries} prompt="Select countries..." options={countries} value={value} onChange={val => setValue(val) }/> */}
