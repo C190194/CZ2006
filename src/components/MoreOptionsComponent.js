@@ -146,7 +146,7 @@ export default function MoreOptionsComponent(props) {
   };
 
   return (
-    <div>
+    <>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         More Options
       </Button>
@@ -176,6 +176,6 @@ export default function MoreOptionsComponent(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

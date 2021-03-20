@@ -145,7 +145,10 @@ function PlannerIndexComponent({ addCourseDiv }) {
         prompt="Select courses..."
         id="courseCode"
         label="courseCode"
-        options={data}
+        options={data.map((item) => ({
+          ...item,
+          id: Math.random().toString(36).substr(2, 9),
+        }))}
         value={value}
         onChange={(val) => setValue(val)}
         addCourseDivFunc={addCourseDiv}
