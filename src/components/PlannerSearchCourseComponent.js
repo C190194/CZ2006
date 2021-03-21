@@ -4,7 +4,6 @@ import { Button } from "reactstrap";
 
 export default function Dropdown({
   options,
-  id,
   label,
   prompt,
   value,
@@ -59,20 +58,18 @@ export default function Dropdown({
         </div>
         <div className={`options ${open ? "open" : null}`}>
           {filter(options).map((option) => (
-            <div>
-              <div
-                key={option[id]}
-                className={`option ${value === option ? "selected" : null}`}
-                onClick={() => {
-                  setQuery("");
-                  onChange(option);
-                  setOpen(false);
-                  setTempOption(option);
-                  //addCourseDivFunc(option, {});
-                }}
-              >
-                {option[label]}
-              </div>
+            <div
+              key={option.id}
+              className={`option ${value === option ? "selected" : null}`}
+              onClick={() => {
+                setQuery("");
+                onChange(option);
+                setOpen(false);
+                setTempOption(option);
+                //addCourseDivFunc(option, {});
+              }}
+            >
+              {option[label]}
             </div>
           ))}
         </div>

@@ -15,15 +15,15 @@ export default function Login() {
   }
 
   function handleSubmit(event) {
-    alert(email+" "+password);
+    alert(email + " " + password);
     event.preventDefault();
   }
 
-  function forgotPwd(){
+  function forgotPwd() {
     history.push("/forgotpwd");
   }
 
-  function register(){
+  function register() {
     history.push("/register");
   }
 
@@ -32,7 +32,7 @@ export default function Login() {
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>
-          <br/>
+          <br />
           <Form.Control
             autoFocus
             type="email"
@@ -43,7 +43,7 @@ export default function Login() {
         </Form.Group>
         <Form.Group size="lg" controlId="password">
           <Form.Label>Password</Form.Label>
-          <br/>
+          <br />
           <Form.Control
             type="password"
             value={password}
@@ -51,12 +51,21 @@ export default function Login() {
             placeholder="Enter password"
           />
         </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()}>
+        <Button type="submit" disabled={!validateForm()}>
           <span>Login</span>
         </Button>
-        <br/>
-        <span class="psw"><a href="#" onClick={forgotPwd}>Forgot password?</a></span>
-        <span class="psw">Or <a href="#"  onClick={register} >Create account</a></span>
+        <br />
+        <span class="psw">
+          <a href="#" onClick={forgotPwd}>
+            Forgot password?
+          </a>
+        </span>
+        <span class="psw">
+          Or{" "}
+          <a href="#" onClick={register}>
+            Create account
+          </a>
+        </span>
       </Form>
     </div>
   );

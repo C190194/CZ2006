@@ -13,9 +13,38 @@ class PlannerCalendarComponent extends Component {
     super(props);
   }
 
+  formatDate(date) {
+    var monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+
+    return day + " " + monthNames[monthIndex] + " " + year;
+  }
+
   AppointmentContent = (data) => {
     return (
-      <Appointments.AppointmentContent data={data}>
+      <Appointments.AppointmentContent
+        data={data}
+        type={"vertical"}
+        formatDate={this.formatDate}
+        durationType={"null"}
+        recurringIconComponent={this.props}
+      >
         <div>
           <div style={{ fontSize: "13px" }}>{data.data.title}</div>
           <div style={{ fontSize: "11px" }}>{data.data.type}</div>
@@ -34,7 +63,7 @@ class PlannerCalendarComponent extends Component {
           <Col>
             <Paper>
               <Scheduler data={this.props.timeTableData} height={660}>
-                <WeekView startDayHour={9} endDayHour={19} />
+                <WeekView startDayHour={8} endDayHour={22} />
                 <Appointments
                   appointmentContentComponent={this.AppointmentContent}
                 />
