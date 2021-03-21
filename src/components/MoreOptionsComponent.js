@@ -9,13 +9,9 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
+import AllowClashCheckBoxesComponent from "./AllowClashCheckBoxesComponent";
+
 import { makeStyles } from "@material-ui/core/styles";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = (theme) => ({
   root: {
@@ -70,59 +66,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CheckboxesGroup(props) {
-  const classes = useStyles();
-  const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
-
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-    props.setChangeIsMade(true);
-  };
-
-  const { gilad, jason, antoine } = state;
-  const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
-
-  return (
-    <div className={classes.root}>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Assign responsibility</FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox checked={gilad} onChange={handleChange} name="gilad" />
-            }
-            label="Gilad Gray"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={jason} onChange={handleChange} name="jason" />
-            }
-            label="Jason Killian"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={antoine}
-                onChange={handleChange}
-                name="antoine"
-              />
-            }
-            label="Antoine Llorca"
-          />
-        </FormGroup>
-        <FormHelperText>Be careful</FormHelperText>
-      </FormControl>
-    </div>
-  );
-}
-
 export default function MoreOptionsComponent(props) {
   const [open, setOpen] = useState(false);
   const [changeIsMade, setChangeIsMade] = useState(false);
+  const [fchangeIsMade, setfChangeIsMade] = useState(false);
+  const [cchangeIsMade, setcChangeIsMade] = useState(false);
+  const [isChangeSaved, setIsChangeSaved] = useState(false);
   //have to compare initial and final state to setChangeisMade in handleSaveChanges
 
   const handleClickOpen = () => {
@@ -138,12 +87,21 @@ export default function MoreOptionsComponent(props) {
       setChangeIsMade(false);
       setOpen(false);
     }
+    setIsChangeSaved(false);
   };
 
   const handleSaveChanges = () => {
     //compare initial state and final state
+    setIsChangeSaved(true);
     setChangeIsMade(false);
   };
+
+  useEffect(() => {
+    setChangeIsMade(fchangeIsMade || cchangeIsMade);
+  }, [fchangeIsMade]);
+  useEffect(() => {
+    setChangeIsMade(fchangeIsMade || cchangeIsMade);
+  }, [cchangeIsMade]);
 
   return (
     <>
@@ -161,8 +119,19 @@ export default function MoreOptionsComponent(props) {
           More Options
         </DialogTitle>
         <DialogContent dividers>
-          <AddFreeTimeSlotsComponent />
-          <CheckboxesGroup setChangeIsMade={setChangeIsMade} />
+          <div className="container">
+            <AddFreeTimeSlotsComponent
+              setfChangeIsMade={setfChangeIsMade}
+              isChangeSaved={isChangeSaved}
+            />
+
+            <div className="row">
+              <AllowClashCheckBoxesComponent
+                setcChangeIsMade={setcChangeIsMade}
+                isChangeSaved={isChangeSaved}
+              />
+            </div>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button

@@ -1,36 +1,104 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect, useContext } from "react";
 import "resize-observer-polyfill/dist/ResizeObserver.global";
-import { TimeGridScheduler, classes } from "@remotelock/react-week-scheduler";
+import {
+  TimeGridScheduler,
+  classes,
+  DefaultEventRootComponent,
+  Schedule,
+} from "@remotelock/react-week-scheduler";
 import "@remotelock/react-week-scheduler/index.css";
+// import "@remotelock/react-week-scheduler/in;
+// import EventRoot from "./EventRoot";
+// React.forwardRef()
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-const rangeStrings = [["March 1, 2021 11:13:00", "March 1, 2021 12:13:00"]];
+import DeleteIcon from "@material-ui/icons/Delete";
+// import Tippy from "@tippy.js/react";
+// import demoClasses from "./index.module.scss";
 
-const defaultSchedule = rangeStrings.map((range) =>
-  range.map((dateString) => new Date(dateString))
-);
+// const EventRoot = React.forwardRef<any, EventRootProps>(function EventRoot(
+//   { handleDelete, disabled, ...props },
+//   ref,
+// ) {
+//   return (
+//     <Tippy
+//       arrow
+//       interactive
+//       isEnabled={!disabled}
+//       hideOnClick={false}
+//       className={demoClasses.tooltip}
+//       content={
+//         <button disabled={disabled} onClick={handleDelete}>
+//           <DeleteIcon className={demoClasses.icon} />
+//           Delete
+//         </button>
+//       }
+//     >
+//       <DefaultEventRootComponent
+//         handleDelete={handleDelete}
+//         disabled={disabled}
+//         {...props}
+//         ref={ref}
+//       />
+//     </Tippy>
+//   );
+// });
 
-export default function App() {
-  // console.log("asdasd" + defaultSchedule);
-  // console.log(defaultSchedule[0][0].toUTCString());
-  const [schedule, setSchedule] = useState(defaultSchedule);
+// const classes1 = classes;
+// interface EventRootProps = {
+//   className: string,
+//   classes: classes1,
+//   style: React.CSSProperties,
+//   cellIndex: number,
+//   rangeIndex: number,
+//   isActive: boolean,
+//   disabled: boolean,
+//   handleDelete(): void,
+// };
+export default function AddFreeTimeSlotsComponent({
+  setfChangeIsMade,
+  isChangeSaved,
+}) {
+  // const [schedule, setSchedule] = useState(defaultSchedule);
+  const planTimetableContext = usePlanTimetable();
+  const initialSchedule = planTimetableContext.userDefinedTimeSlots;
+  const setSchedule = planTimetableContext.setUserDefinedTimeSlots;
+
+  const [customSchedule, setCustomSchedule] = useState(initialSchedule);
+  function isEqual(a, b) {
+    // if length is not equal
+    if (a.length != b.length) return "False";
+    else {
+      // comapring each element of array
+      for (var i = 0; i < a.length; i++) if (a[i] != b[i]) return "False";
+      return "True";
+    }
+  }
+  useEffect(() => {
+    if (JSON.stringify(customSchedule) === JSON.stringify(initialSchedule)) {
+      setfChangeIsMade(false);
+    } else {
+      setfChangeIsMade(true);
+    }
+    // setfChangeIsMade(true);
+    // console.log(schedule);
+    // console.log(schedule[0][0].getDay());
+    // console.log(schedule[0][0].getHours());
+    // console.log(schedule[0][0].getMinutes());
+
+    // for (var key in schedule[0][0]) {
+    //   console.log(schedule[0][0][key]);
+    // }
+  }, [customSchedule]);
 
   useEffect(() => {
-    console.log(schedule);
-    console.log(schedule[0][0].getDay());
-    console.log(schedule[0][0].getHours());
-    console.log(schedule[0][0].getMinutes());
-
-    for (var key in schedule[0][0]) {
-      console.log(schedule[0][0][key]);
-    }
-  }, [schedule]);
+    setSchedule(customSchedule);
+  }, [isChangeSaved]);
 
   return (
     <div
-      className="container"
       style={{
-        width: "100vw",
+        width: "95vw",
         height: "600px",
         "--cell-height": "20px",
         "--cell-width": "50px",
@@ -39,10 +107,11 @@ export default function App() {
       <h4>Add Free Time Slots</h4>
       <TimeGridScheduler
         classes={classes}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "90%" }}
         originDate={new Date("2021-03-01")}
-        schedule={schedule}
-        onChange={setSchedule}
+        schedule={customSchedule}
+        onChange={setCustomSchedule}
+        // eventRootComponent={EventRoot}
         visualGridVerticalPrecision={15}
         verticalPrecision={15}
         cellClickPrecision={60}
