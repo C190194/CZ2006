@@ -1,20 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-//defining a subschema of course
-const course=new Schema({
-    courseNo:{
-        type: String,
-        unique: true,
-        required: true
-        },
-    indexNo:{
-        type: Number,
-        unique: true,
-        required:true
-    }
-})
-
 //defining the schema of timetable
 const timetableSchema = new Schema({
     timetableID:{
