@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const URI = "mongodb+srv://astha:SoftwareXeon123@cluster0.ps96m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const URI = "mongodb+srv://Akshat:SoftwareXeon123@cluster0.ps96m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 const connectDB = async () => {
     await mongoose.connect(URI, {
@@ -8,7 +8,7 @@ const connectDB = async () => {
       useNewUrlParser: true
     })
     .then((result) =>console.log('db connected..!'))
-    .except((err) => console.log(err));
+    //.except((err) => console.log(err));
   };
   
   module.exports = connectDB;

@@ -96,12 +96,14 @@ const courseSchema=new Schema({
         required: true
     },
     au:{
-        type: int,
+        type: Number,
         unique: true,
         required: true
     },
     index:[indexSchema]
 });
-
+const Time=mongoose.model('Time',timeSchema);
+const Lesson=mongoose.model('Lesson',lessonSchema);
+const Index=mongoose.model('Index',indexSchema);
 const Course=mongoose.model('Course',courseSchema);
 module.exports=Course;
