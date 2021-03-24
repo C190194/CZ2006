@@ -14,7 +14,7 @@ const planRoute = require('./routes/planning');
 
 app.use(express.json({extended:false}));
 //Route middlewares
-app.use('/api/user', authRoute);
+app.use('/user', authRoute);
 app.use('/routes/planning', planRoute);
 
 
