@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.get('/', sharingController.timetable_index);
 
-router.get('/:id', sharingController.timetable_details);
+router.get('/link', sharingController.link_share);
+
+router.get('/QR', sharingController.share_QR);
 
 router.get('/mail', sharingController.share_mail);
 
