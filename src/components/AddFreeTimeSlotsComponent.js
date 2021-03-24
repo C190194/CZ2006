@@ -1,60 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import "resize-observer-polyfill/dist/ResizeObserver.global";
-import {
-  TimeGridScheduler,
-  classes,
-  DefaultEventRootComponent,
-  Schedule,
-} from "@remotelock/react-week-scheduler";
+import { TimeGridScheduler, classes } from "@remotelock/react-week-scheduler";
 import "@remotelock/react-week-scheduler/index.css";
-// import "@remotelock/react-week-scheduler/in;
-// import EventRoot from "./EventRoot";
-// React.forwardRef()
+import { EventRoot } from "./EventRoot";
 import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-import DeleteIcon from "@material-ui/icons/Delete";
-// import Tippy from "@tippy.js/react";
-// import demoClasses from "./index.module.scss";
-
-// const EventRoot = React.forwardRef<any, EventRootProps>(function EventRoot(
-//   { handleDelete, disabled, ...props },
-//   ref,
-// ) {
-//   return (
-//     <Tippy
-//       arrow
-//       interactive
-//       isEnabled={!disabled}
-//       hideOnClick={false}
-//       className={demoClasses.tooltip}
-//       content={
-//         <button disabled={disabled} onClick={handleDelete}>
-//           <DeleteIcon className={demoClasses.icon} />
-//           Delete
-//         </button>
-//       }
-//     >
-//       <DefaultEventRootComponent
-//         handleDelete={handleDelete}
-//         disabled={disabled}
-//         {...props}
-//         ref={ref}
-//       />
-//     </Tippy>
-//   );
-// });
-
-// const classes1 = classes;
-// interface EventRootProps = {
-//   className: string,
-//   classes: classes1,
-//   style: React.CSSProperties,
-//   cellIndex: number,
-//   rangeIndex: number,
-//   isActive: boolean,
-//   disabled: boolean,
-//   handleDelete(): void,
-// };
 export default function AddFreeTimeSlotsComponent({
   setfChangeIsMade,
   isChangeSaved,
@@ -111,7 +61,7 @@ export default function AddFreeTimeSlotsComponent({
         originDate={new Date("2021-03-01")}
         schedule={customSchedule}
         onChange={setCustomSchedule}
-        // eventRootComponent={EventRoot}
+        eventRootComponent={EventRoot}
         visualGridVerticalPrecision={15}
         verticalPrecision={15}
         cellClickPrecision={60}

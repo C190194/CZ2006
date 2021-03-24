@@ -1,7 +1,7 @@
 .tooltip {
   padding: 0;
 }
-.tooltip button {
+.tooltipbutton {
   padding: 0.3125rem 0.5625rem;
   appearance: none;
   background: transparent;
@@ -15,6 +15,6 @@
   text-align: center;
   cursor: pointer;
 }
-.tooltip button .icon {
+.tooltipbuttonicon {
   filter: invert(100%);
 }
