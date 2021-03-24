@@ -1,5 +1,6 @@
 const { models } = require("mongoose");
 const CourseModal= require("../models/course.js");
+const databaseExam = require("../models/examData");
 
 var times = { "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, "1330": {},
                 "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, "1830": {}, "1900": {},
@@ -16,6 +17,40 @@ timetable = {
 
 var temp_timetable = timetable;
 var all_timetables = [];
+
+
+const send_timetable = async(req,res)=>{
+    const input_courses = req.body;
+    const exam_result = new Array();
+    exam_result = check_exam_clash(input_courses);
+    for(i = 0; i <exam_result.length; i++){
+        if (exam_result[i][clash] == 0){
+            res.status(200).json(exam_result[i]);
+            break;
+        }
+        else{
+            generated_timetables = plan_timetable(input_courses,temp_timetable);
+            resultobj = delete_empty_slots(generated_timetables)
+            res.status(200).json({resultobj});
+        };
+    }
+
+}
+function delete_empty_slots (all_timetables){
+    for(j = 0; j < all_timetables.length;j++){
+        for(var i of Object.keys(all_timetable[j])){
+            for(var k of Object.keys(all_timetable[j][i]))
+            {
+                if((JSON.stringify(all_timetable[j][i][k]) === '{}'))
+                {
+                    delete all_timetable[j][i][k];
+                }
+            }
+        }
+
+    }
+    return all_timetables;
+}
 
 
 function plan_timetable(input_courses, temp_timetable){
@@ -68,20 +103,13 @@ function plan_timetable(input_courses, temp_timetable){
         all_timetables=[];
         if(arrlist.length ==0)
         {
-            return ["Cannot allott course because of clash "+input_courses[i]["courseCode"]];
+            return ["Cannot allot course because of clash "+input_courses[i]["courseCode"]];
         }
         Array.prototype.push.apply(all_timetables, arrlist);
     }
     return all_timetables;
 }
 
-function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj[start].hasOwnProperty(key))
-            return false;
-    }
-    return true;
-}
 
 function check_clash(courseCode, index, temp_timetable)
 {
@@ -138,29 +166,24 @@ function check_clash(courseCode, index, temp_timetable)
 }
 
 function allot_course(courseCode,index,temp_timetable){
-    ///data = {"id" : courseCode,
-            //      "index" : index_no,
-            //      "flag" : detail["flag"],
-            //      "type" : detail["type"],
-            //      "location" : detail["location"],
-            //      "group" : detail["group"],
-            //      "remarks" : detail["remarks"]
-            // };
-            var copiedTT = JSON.parse(JSON.stringify(temp_timetable));
-            var newLessonList = index["lesson"];
-            
-                 for (var l = 0; l < newLessonList.length; l++){
-                        var day = newLessonList[l].day;
-                        var t = parseInt(newLessonList[l].start);
-                        var end = parseInt(newLessonList[l].end);
-                        
-                        while (t < end){
-                            var t_str = t.toString();
-                            if (t < 1000){
-                                var t_str = "0" + t_str;
+         var copiedTT = JSON.parse(JSON.stringify(temp_timetable));
+         var newLessonList = index["lesson"];      
+            for (var l = 0; l < newLessonList.length; l++){
+                    var day = newLessonList[l].day;
+                    var t = parseInt(newLessonList[l].start);
+                    var end = parseInt(newLessonList[l].end);    
+                    while (t < end){
+                        var t_str = t.toString();
+                        if (t < 1000){
+                            var t_str = "0" + t_str;
                             }
-                            copiedTT[day][t_str] = [courseCode,index["index_number"],newLessonList[l]['type'],
-                                                                newLessonList[l]['weekList']] ;
+                        copiedTT[day][t_str] = [courseCode,
+                                                index["index_number"],
+                                                newLessonList[l]['type'],
+                                                newLessonList[l]['weekList'], 
+                                                newLessonList[l]["group"], 
+                                                newLessonList[l]["location"],
+                                                newLessonList[l]["remarks"]];
                             
                             if (t_str.endsWith("30")){
                                 t = t + 70;
@@ -185,7 +208,7 @@ async function get_exam_details(courseCode,DatabaseExam){
 function check_exam_clash(input_courses){
     for(i = 0;i < input_courses.length;i++){
         exami = get_exam_details(input_courses[courseCode],DatabaseExam);
-        if(exam == -1){
+        if(exami == -1){
             exami_date = -1;
             exami_time = -1;
             exami = {};
@@ -218,17 +241,26 @@ function check_exam_clash(input_courses){
         {
             if(exami_time <= exam_time && parseint(exami_time)+exami_duration >= exam_time)
             {
-                return ["true",input_courses[i]['courseCode'],input_courses[j]['courseCode']];
+                exam_result[clash] = 0; //0 = true(clash), 1 = false(no clash)
+                exam_result[course1] = input_courses[i][courseCode];
+                exam_result[course2] = input_courses[j][courseCode];
+                return exam_result;
 
             }
             else if(exam_time <= exami_time && parseint(exam_time)+exami_duration >= exami_time)
             {
-                return ["true",input_courses[i]['courseCode'],input_courses[j]['courseCode']];
+                exam_result[clash] = 0;     //0 = true(clash), 1 = false(no clash)
+                exam_result[course1] = input_courses[i][courseCode];
+                exam_result[course2] = input_courses[j][courseCode];
+                return exam_result;
 
             }
         }
     }
     }
-    return ["false",null,null];
+    exam_result[clash] = 1;     //0 = true(clash), 1 = false(no clash)
+    exam_result[course1] = 0;
+    exam_result[course2] = 0;
+    return exam_result;
 }
 module.exports=plan_timetable;
