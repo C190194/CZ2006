@@ -109,6 +109,7 @@ export default function MoreOptionsComponent(props) {
         More Options
       </Button>
       <Dialog
+        fullScreen
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}

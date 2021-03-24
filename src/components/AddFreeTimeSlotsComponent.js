@@ -48,7 +48,7 @@ export default function AddFreeTimeSlotsComponent({
   return (
     <div
       style={{
-        width: "95vw",
+        width: "90vw",
         height: "600px",
         "--cell-height": "20px",
         "--cell-width": "50px",
