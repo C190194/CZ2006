@@ -12,6 +12,7 @@ import FlagIcon from "@material-ui/icons/Flag";
 import { Button } from "reactstrap";
 import "./PlannerSearchCourseStyle.css";
 import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
+import { resourcesData } from "./resources";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -42,10 +43,7 @@ const CourseDiv = function (props) {
   const [index_is_fixed, set_index_is_fixed] = useState(false);
   const indexes = course.index;
   return (
-    <div
-      className="row"
-      style={{ border: "2px solid grey", borderRadius: "5px" }}
-    >
+    <>
       <div className="row">
         <div className="col-4">{courseCode}</div>
         <div className="col-3">
@@ -96,7 +94,7 @@ const CourseDiv = function (props) {
           </FormControl>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -214,13 +212,22 @@ export default function ShareTimetable() {
       ></PlannerIndexComponent> */}
       {courseDivs.map((courseDiv, idx) => {
         return (
-          <CourseDiv
-            key={idx}
-            course={courseDiv.course}
-            currentIdx={courseDiv.currentIdx}
-            deleteElement={() => deleteElement(idx)}
-            updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
-          />
+          <div
+            className="row"
+            style={{
+              border: "2px solid black",
+              borderRadius: "5px",
+              background: resourcesData[idx].color,
+            }}
+          >
+            <CourseDiv
+              key={idx}
+              course={courseDiv.course}
+              currentIdx={courseDiv.currentIdx}
+              deleteElement={() => deleteElement(idx)}
+              updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+            />
+          </div>
         );
       })}
       {/* <Button

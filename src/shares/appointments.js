@@ -1,8 +1,8 @@
 export const appointments = [
   {
     title: "AAA08B",
-    startDate: new Date(2021, 3, 1, 9, 35),
-    endDate: new Date(2021, 3, 1, 11, 30),
+    startDate: new Date(2021, 2, 1, 9, 35),
+    endDate: new Date(2021, 2, 1, 11, 30),
     id: 0,
     type: "LEC/STUDIO",
     group: "L1",
@@ -11,15 +11,15 @@ export const appointments = [
   },
   {
     title: "Book Flights to San Fran for Sales Trip",
-    startDate: new Date(2018, 5, 25, 12, 11),
-    endDate: new Date(2018, 5, 25, 13, 0),
+    startDate: new Date(2021, 2, 4, 12, 11),
+    endDate: new Date(2021, 2, 4, 13, 0),
     id: 1,
     location: "Room 1",
   },
   {
     title: "CZ2006",
-    startDate: new Date(2018, 5, 25, 14, 30),
-    endDate: new Date(2018, 5, 25, 15, 35),
+    startDate: new Date(2021, 2, 5, 14, 30),
+    endDate: new Date(2021, 2, 5, 15, 35),
     id: 2,
     type: "LEC/STUDIO",
     group: "CS2",
