@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Scheduler,
@@ -7,23 +7,12 @@ import {
   AppointmentTooltip,
   Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
-import { Container, Row, Col } from "reactstrap";
+
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { resourcesData } from "./resources";
 import "./calendar.css";
 
-// import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
-
 export default function PlannerCalendarComponent(props) {
-  // const planTimetableContext = usePlanTimetable();
-  // const courseDivs = planTimetableContext.courseDivs;
-
-  // useEffect(() => {
-  //   if (courseDivs[0]) {
-  //     const s = courseDivs[0].currentIdx.lesson;
-  //     console.log(s);
-  //   }
-  // }, [courseDivs]);
   let resources = [
     {
       fieldName: "courseDivID",
