@@ -25,19 +25,6 @@ function PlanTimetableContextConsumer() {
     currentTimeTablePage: 1,
   });
 
-  // useEffect(() => {
-  //   const s = courseDivs[0].currentIdx.lesson;
-  //   console.log(s);
-  // }, [courseDivs]);
-
-  // const [userDefinedTimeSlots, setUserDefinedTimeSlots] = useState([
-  //   [new Date("March 1, 2021 11:13:00"), new Date("March 1, 2021 12:13:00")], //each item is an array of start time and end time of a slot
-  //   [new Date("March 2, 2021 9:13:00"), new Date("March 1, 2021 11:13:00")],
-  //   [new Date("March 3, 2021 5:13:00"), new Date("March 1, 2021 11:13:00")],
-  // ]);
-
-  // const [];
-
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
   //   //currentTimeTablePage set to 1 as default when new timetables added
@@ -64,13 +51,8 @@ function PlanTimetableContextConsumer() {
     );
   }
   const courseDivsToAppointments = (tempCourseDivs) => {
-    // if (tempCourseDivs[0]) {
-    //   console.log(tempCourseDivs[0].currentIdx.lesson);
-    // }
-
     let returnAppointments = [];
 
-    // let appointmentProto = tempCourseDivs.map((item)=>{return ({title:item.courseCode,id: Math.random().toString(36).substr(2, 9)})})
     tempCourseDivs.map((item, idx) => {
       if (item.currentIdx.lesson) {
         returnAppointments = [
@@ -93,11 +75,6 @@ function PlanTimetableContextConsumer() {
   };
 
   useEffect(() => {
-    // if (courseDivs) {
-    //   console.log(courseDivs);
-    //   console.log(courseDivsToAppointments(courseDivs));
-    // }
-
     let newTimetablesState = { ...timetablesState };
     newTimetablesState.timeTables[
       timetablesState.currentTimeTablePage - 1
