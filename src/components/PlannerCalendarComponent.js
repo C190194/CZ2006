@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Scheduler,
@@ -7,14 +7,20 @@ import {
   AppointmentTooltip,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { Container, Row, Col } from "reactstrap";
-import appointments from "../shares/today-appointments";
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-class PlannerCalendarComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
+export default function PlannerCalendarComponent(props) {
+  const planTimetableContext = usePlanTimetable();
+  const courseDivs = planTimetableContext.courseDivs;
 
-  formatDate(date) {
+  useEffect(() => {
+    if (courseDivs[0]) {
+      const s = courseDivs[0].currentIdx.lesson;
+      console.log(s);
+    }
+  }, [courseDivs]);
+
+  function formatDate(date) {
     var monthNames = [
       "January",
       "February",
@@ -37,14 +43,14 @@ class PlannerCalendarComponent extends Component {
     return day + " " + monthNames[monthIndex] + " " + year;
   }
 
-  AppointmentContent = (data) => {
+  const AppointmentContent = (data) => {
     return (
       <Appointments.AppointmentContent
         data={data}
         type={"vertical"}
-        formatDate={this.formatDate}
+        formatDate={formatDate}
         durationType={"null"}
-        recurringIconComponent={this.props}
+        recurringIconComponent={props}
       >
         <div>
           <div style={{ fontSize: "13px" }}>{data.data.title}</div>
@@ -57,25 +63,18 @@ class PlannerCalendarComponent extends Component {
     );
   };
 
-  render() {
-    return (
-      <Container>
-        <Row>
-          <Col>
-            <Paper>
-              <Scheduler data={this.props.timeTableData} height={660}>
-                <WeekView startDayHour={8} endDayHour={22} />
-                <Appointments
-                  appointmentContentComponent={this.AppointmentContent}
-                />
-                <AppointmentTooltip showCloseButton />
-              </Scheduler>
-            </Paper>
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <Paper>
+            <Scheduler data={props.timeTableData} height={660}>
+              <WeekView startDayHour={8} endDayHour={22} />
+              <Appointments appointmentContentComponent={AppointmentContent} />
+            </Scheduler>
+          </Paper>
+        </Col>
+      </Row>
+    </Container>
+  );
 }
-
-export default PlannerCalendarComponent;
