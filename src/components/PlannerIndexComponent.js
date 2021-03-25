@@ -4,7 +4,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import "./ComponentsStyle.css";
 import Dropdown from "./PlannerSearchCourseComponent";
-import { data } from "./testData.js";
+// import { data } from "./testData.js";
 import MUIButton from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -24,24 +24,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // export default ShareTT;
-const getCourse = () => {
-  var i;
-  for (i = 0; i < data.length; i++) {
-    if (data[i].courseCode === "CZ2006") {
-      return data[i];
-    }
-  }
-};
+// const getCourse = () => {
+//   var i;
+//   for (i = 0; i < data.length; i++) {
+//     if (data[i].courseCode === "CZ2006") {
+//       return data[i];
+//     }
+//   }
+// };
 
-const customCourse = getCourse();
+// const customCourse = getCourse();
 
 const CourseDiv = function (props) {
   const { course, currentIdx, deleteElement, updateCurrentIdx } = props;
   const classes = useStyles();
   const courseCode = course.courseCode;
   const [index_is_fixed, set_index_is_fixed] = useState(false);
-  const indexes = course.courseDetails.index;
-
+  const indexes = course.index;
   return (
     <div
       className="row"
@@ -101,46 +100,66 @@ const CourseDiv = function (props) {
   );
 };
 
-function PlannerIndexComponent({ addCourseDiv }) {
-  const classes = useStyles();
-  const [age, setAge] = React.useState("");
-  const [value, setValue] = useState(null);
-
-  return (
-    <div className="row" style={{ width: 200 }}>
-      {/* <Dropdown options={countries} prompt="Select countries..." options={countries} value={value} onChange={val => setValue(val) }/> */}
-      <Dropdown
-        prompt="Select courses..."
-        id="courseCode"
-        label="courseCode"
-        options={data.map((item) => ({
-          ...item,
-          id: Math.random().toString(36).substr(2, 9),
-        }))}
-        value={value}
-        onChange={(val) => setValue(val)}
-        addCourseDivFunc={addCourseDiv}
-      />
-    </div>
-  );
-}
+// function PlannerIndexComponent({ addCourseDiv }) {
+//   const [value, setValue] = useState(null);
+//   const [data, setData] = useState([]);
+//   //method to add course(div)
+//   const getData = () => {
+//     fetch("output.json", {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//       },
+//     })
+//       .then(function (response) {
+//         console.log(response);
+//         return response.json();
+//       })
+//       .then(function (myJson) {
+//         // console.log(myJson);
+//         setData(myJson);
+//       });
+//   };
+//   useEffect(() => {
+//     getData();
+//   }, []);
+//   console.log("Dropdown rerender");
+//   return (
+//     <div className="row" style={{ width: 200 }}>
+//       {/* <Dropdown options={countries} prompt="Select countries..." options={countries} value={value} onChange={val => setValue(val) }/> */}
+//       <Dropdown
+//         prompt="Select courses..."
+//         id="courseCode"
+//         label="courseCode"
+//         options={data.map((item) => ({
+//           ...item,
+//           id: Math.random().toString(36).substr(2, 9),
+//         }))}
+//         value={value}
+//         onChange={(val) => setValue(val)}
+//         addCourseDivFunc={addCourseDiv}
+//       />
+//     </div>
+//   );
+// }
 
 export default function ShareTimetable() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
-  //method to add course(div)
+
   const addCourseDiv = (tempCourse, currentIdxVar) => {
     if (typeof tempCourse === "object" && tempCourse !== null) {
-      const tempCourseDivs = [...courseDivs];
+      // const tempCourseDivs = [...courseDivs];
 
       if (
-        !tempCourseDivs.some(
-          (e) => e.course.courseCode === tempCourse.courseCode
-        )
+        !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
       ) {
-        tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
-        setCourseDivs(tempCourseDivs);
+        // tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
+        setCourseDivs((prevCourseDivs) => [
+          ...prevCourseDivs,
+          { course: tempCourse, currentIdx: currentIdxVar },
+        ]);
       } else {
         alert("The selected course was added before!");
       }
@@ -152,7 +171,7 @@ export default function ShareTimetable() {
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   const planCourse = (temp_course_indexes) => {
-    console.log(temp_course_indexes);
+    // console.log(temp_course_indexes);
     // console.log(temp_course_indexes[0].index_number);
   };
 
@@ -160,7 +179,7 @@ export default function ShareTimetable() {
     const tempCourseDivs = [...courseDivs];
     if (event.target.value !== "") {
       tempCourseDivs[idx].currentIdx =
-        tempCourseDivs[idx].course.courseDetails.index[event.target.value];
+        tempCourseDivs[idx].course.index[event.target.value];
     } else {
       tempCourseDivs[idx].currentIdx = {};
     }
@@ -190,9 +209,9 @@ export default function ShareTimetable() {
 
   return (
     <>
-      <PlannerIndexComponent
+      {/* <PlannerIndexComponent
         addCourseDiv={addCourseDiv}
-      ></PlannerIndexComponent>
+      ></PlannerIndexComponent> */}
       {courseDivs.map((courseDiv, idx) => {
         return (
           <CourseDiv
@@ -204,12 +223,12 @@ export default function ShareTimetable() {
           />
         );
       })}
-      <Button
+      {/* <Button
         className="btn-warning"
         onClick={() => addCourseDiv(customCourse, {})}
       >
         Plan
-      </Button>
+      </Button> */}
     </>
   );
 }

@@ -3,16 +3,16 @@ import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
 import PlannerIndexComponent from "../components/PlannerIndexComponent";
 import MoreOptionsComponent from "../components/MoreOptionsComponent";
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
+import PlannerSearchCourseComponent from "../components/PlannerSearchCourseComponent";
 
-import {
-  PlanTimetableContextProvider,
-  usePlanTimetable,
-} from "../context/PlanTimetableContextProvider";
+import { PlanTimetableContextProvider } from "../context/PlanTimetableContextProvider";
 
 import "./PlanTimetable.css";
 import appointments from "../shares/today-appointments";
 
 export default function PlanTimetable() {
+  // const planTimetableContext = usePlanTimetable();
+  // const courseDivs = planTimetableContext.courseDivs;
   const [timetablesState, setTimetablesState] = useState({
     timeTables: [
       { page: 1, occupiedTimeSlots: [appointments[0], appointments[1]] },
@@ -23,6 +23,11 @@ export default function PlanTimetable() {
     ],
     currentTimeTablePage: 1,
   });
+
+  // useEffect(() => {
+  //   const s = courseDivs[0].currentIdx.lesson;
+  //   console.log(s);
+  // }, [courseDivs]);
 
   // const [userDefinedTimeSlots, setUserDefinedTimeSlots] = useState([
   //   [new Date("March 1, 2021 11:13:00"), new Date("March 1, 2021 12:13:00")], //each item is an array of start time and end time of a slot
@@ -55,6 +60,7 @@ export default function PlanTimetable() {
         </div>
         <div className="row">
           <div className="col-2">
+            <PlannerSearchCourseComponent />
             <PlannerIndexComponent />
           </div>
           <div className="col-10">
