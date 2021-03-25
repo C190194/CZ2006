@@ -4,6 +4,7 @@ import {
   Scheduler,
   WeekView,
   Appointments,
+  AppointmentTooltip,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { Container, Row, Col } from "reactstrap";
 import appointments from "../shares/today-appointments";
@@ -67,6 +68,7 @@ class PlannerCalendarComponent extends Component {
                 <Appointments
                   appointmentContentComponent={this.AppointmentContent}
                 />
+                <AppointmentTooltip showCloseButton />
               </Scheduler>
             </Paper>
           </Col>

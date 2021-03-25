@@ -8,6 +8,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import Slide from "@material-ui/core/Slide";
 import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
 import AllowClashCheckBoxesComponent from "./AllowClashCheckBoxesComponent";
 
@@ -36,6 +37,7 @@ const DialogTitle = withStyles(styles)((props) => {
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}
+          style={{ color: "white" }}
         >
           <CloseIcon />
         </IconButton>
@@ -65,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3),
   },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function MoreOptionsComponent(props) {
   const [open, setOpen] = useState(false);
@@ -109,13 +115,19 @@ export default function MoreOptionsComponent(props) {
         More Options
       </Button>
       <Dialog
+        fullScreen
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
         fullWidth={true}
         maxWidth="lg"
+        TransitionComponent={Transition}
       >
-        <DialogTitle id="moreOptions-dialog-title" onClose={handleClose}>
+        <DialogTitle
+          id="moreOptions-dialog-title"
+          onClose={handleClose}
+          style={{ background: "#16a6df", color: "white" }}
+        >
           More Options
         </DialogTitle>
         <DialogContent dividers>
