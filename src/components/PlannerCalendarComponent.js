@@ -82,34 +82,26 @@ export default function PlannerCalendarComponent(props) {
   // };
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Paper>
-            <div
-            // className="calendar"
-            >
-              <Scheduler
-                data={props.timeTableData}
-                firstDayOfWeek={1}
-                // style={{ height: 400 }}
-              >
-                <ViewState currentDate={currentDate} />
-                <WeekView
-                  startDayHour={8}
-                  endDayHour={22}
-                  // timeScaleLayoutComponent={TimeScaleLayout}
-                />
-                <Appointments
-                  appointmentContentComponent={AppointmentContent}
-                />
-                <AppointmentTooltip showCloseButton />
-                <Resources data={resources} mainResourceName="courseDivID" />
-              </Scheduler>
-            </div>
-          </Paper>
-        </Col>
-      </Row>
-    </Container>
+    <Paper>
+      <div
+      // className="calendar"
+      >
+        <Scheduler
+          data={props.timeTableData}
+          firstDayOfWeek={1}
+          // style={{ height: 400 }}
+        >
+          <ViewState currentDate={currentDate} />
+          <WeekView
+            startDayHour={8}
+            endDayHour={22}
+            // timeScaleLayoutComponent={TimeScaleLayout}
+          />
+          <Appointments appointmentContentComponent={AppointmentContent} />
+          <AppointmentTooltip showCloseButton />
+          <Resources data={resources} mainResourceName="courseDivID" />
+        </Scheduler>
+      </div>
+    </Paper>
   );
 }
