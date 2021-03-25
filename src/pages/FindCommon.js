@@ -34,7 +34,7 @@ export default function FindCommon() {
     // console.log(isFile2Picked);
     setSelectedFile1(event.target.files[0]);
     setIsFile1Picked(true);
-    setIsFile2Picked(false);
+    // setIsFile2Picked(false);
     // if (isFile1Picked) setSelectedFile1(event.target.files[0]);
     // else if (isFile2Picked) setSelectedFile2(event.target.files[0]);
     // console.log(selectedFile1);
@@ -46,7 +46,7 @@ export default function FindCommon() {
     // console.log(isFile2Picked);
     setSelectedFile2(event.target.files[0]);
     setIsFile2Picked(true);
-    setIsFile1Picked(false);
+    // setIsFile1Picked(false);
     // if (isFile1Picked) setSelectedFile1(event.target.files[0]);
     // else if (isFile2Picked) setSelectedFile2(event.target.files[0]);
     // console.log(selectedFile1);
@@ -151,7 +151,7 @@ export default function FindCommon() {
             <h4>Timetables</h4>
           </div>
           <div className="row">
-            <h6>Timetable 1</h6>
+            <h5>Timetable 1</h5>
           </div>
           <div className="row">
             <File1UploadPage />
@@ -159,8 +159,9 @@ export default function FindCommon() {
           <div className="row">
             <Button onClick={useSavedTimetable1}>Use saved timetable</Button>
           </div>
+          <br />
           <div className="row">
-            <h6>Timetable 2</h6>
+            <h5>Timetable 2</h5>
           </div>
           <div className="row">
             <File2UploadPage />
