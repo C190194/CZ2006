@@ -17,7 +17,7 @@ const sharing = require('./routes/sharing');
 
 app.use(express.json({extended:false}));
 //Route middlewares
-app.use('/api/user', authRoute);
+app.use('/user', authRoute);
 app.use('/routes/planning', planRoute);
 app.use('/discuss', discussion);
 app.use('/share', sharing);

@@ -29,5 +29,5 @@ const examSchema=new Schema({
 });
 
 
-const ExamDate=mongoose.model('DatabaseExam',examSchema);
-module.exports=ExamDate;
+const databaseExam=mongoose.model('databaseExam',examSchema);
+module.exports= databaseExam;
