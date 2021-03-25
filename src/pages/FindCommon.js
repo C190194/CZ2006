@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
 import appointments from "../shares/today-appointments";
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
@@ -29,27 +29,13 @@ export default function FindCommon() {
   const [isFile2Picked, setIsFile2Picked] = useState(false);
 
   const changeHandler1 = (event) => {
-    // console.log("runed");
-    // console.log(isFile1Picked);
-    // console.log(isFile2Picked);
     setSelectedFile1(event.target.files[0]);
     setIsFile1Picked(true);
-    // setIsFile2Picked(false);
-    // if (isFile1Picked) setSelectedFile1(event.target.files[0]);
-    // else if (isFile2Picked) setSelectedFile2(event.target.files[0]);
-    // console.log(selectedFile1);
   };
 
   const changeHandler2 = (event) => {
-    // console.log("runed");
-    // console.log(isFile1Picked);
-    // console.log(isFile2Picked);
     setSelectedFile2(event.target.files[0]);
     setIsFile2Picked(true);
-    // setIsFile1Picked(false);
-    // if (isFile1Picked) setSelectedFile1(event.target.files[0]);
-    // else if (isFile2Picked) setSelectedFile2(event.target.files[0]);
-    // console.log(selectedFile1);
   };
 
   const handleSubmission = () => {};
@@ -128,15 +114,6 @@ export default function FindCommon() {
   var datatobepassed =
     timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
       .occupiedTimeSlots;
-
-  // useEffect(() => {
-  //   console.log("--debug--");
-  //   console.log(timetablesState.timeTables);
-  //   datatobepassed =
-  //     timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-  //       .occupiedTimeSlots;
-  //   // console.log(timetablesState.timeTables[0]);
-  // }, [timetablesState]);
 
   return (
     <div className="container">
