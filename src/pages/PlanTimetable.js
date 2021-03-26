@@ -28,6 +28,7 @@ function PlanTimetableContextConsumer() {
 
   const timetablesState = planTimetableContext.timetablesState;
   const setTimetablesState = planTimetableContext.setTimetablesState;
+  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
 
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
@@ -36,10 +37,14 @@ function PlanTimetableContextConsumer() {
   // };
 
   const updateTimeTablePageNum = (tempPage) => {
-    setTimetablesState((prevTimetablesState) => ({
-      ...prevTimetablesState,
+    // console.log(tempPage);
+
+    setTimetablesState({
+      ...timetablesState,
       currentTimeTablePage: tempPage,
-    }));
+    });
+    // console.log(timetablesState);
+    // displayCurrentTTpage();
   };
 
   // const courseDivs = planTimetableContext.courseDivs;
