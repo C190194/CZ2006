@@ -15,152 +15,78 @@ function PlanTimetableContextProvider({ children }) {
   //           isIndexFixed: false,
   //         },
   const [allowClashCC, setAllowClashCC] = useState([]);
-  const [timetablesState, setTimetablesState] = useState({
-    timeTables: [
-      {
-        page: 1,
-        occupiedTimeSlots: [appointments[0], appointments[1]],
-        cNIdx: {},
-      }, //cNIdx is courses and index
-      {
-        page: 2,
-        occupiedTimeSlots: [appointments[0], appointments[2]],
-        cNIdx: {},
-      },
-    ],
-    currentTimeTablePage: 1,
-  });
+  // const [timetablesState, setTimetablesState] = useState({
+  //   timeTables: [
+  //     {
+  //       page: 1,
+  //       occupiedTimeSlots: [appointments[0], appointments[1]],
+  //       cNIdx: {},
+  //     }, //cNIdx is courses and index
+  //     {
+  //       page: 2,
+  //       occupiedTimeSlots: [appointments[0], appointments[2]],
+  //       cNIdx: {},
+  //     },
+  //   ],
+  //   currentTimeTablePage: 1,
+  // });
+  const [currentTimeTablePage, setCurrentTimeTablePage] = useState(1);
+  const [combinations, setCombinations] = useState([]); //timetable combinations
+  const [occupiedTimeSlots, setOccupiedTimeSlots] = useState([]); //appointment format(react scheduler)
 
-  const displayCurrentTTpage = () => {
-    const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  // const displayCurrentTTpage = () => {
 
-    function convertToDate(day, time) {
-      return new Date(
-        2021,
-        2,
-        dayNames.indexOf(day) + 1,
-        parseInt(time.slice(0, time.length - 2)),
-        parseInt(time.slice(time.length - 2, time.length))
-      );
-    }
+  // };
+  const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-    const courseDivToApps = (tempCourseDiv, idx) => {
-      if (Object.keys(tempCourseDiv.currentIdx).length !== 0) {
-        let returnAppointments = tempCourseDiv.currentIdx.lesson.map(
-          (lesson) => {
-            return {
-              ...lesson,
-              title: tempCourseDiv.course.courseCode,
-              id: Math.random().toString(36).substr(2, 9),
-              startDate: convertToDate(lesson.day, lesson.start),
-              endDate: convertToDate(lesson.day, lesson.end),
-              courseDivID: idx + 1,
-            };
-          }
-        );
-
-        return returnAppointments;
-      }
-      return [];
-    };
-
-    const convertCNItoApps = (CNI) => {
-      let apps = [];
-      let idx = 0;
-      for (const key in CNI) {
-        const courseDiv = courseDivs.find(
-          (item) => item.course.courseCode === key
-        );
-        // console.log("--debug--");
-        // console.log("count");
-        console.log("--debug--");
-        console.log(courseDiv);
-        apps.push(...courseDivToApps(courseDiv, idx));
-        idx += 1;
-      }
-      // console.log("--debug--");
-      // console.log(apps);
-      // console.log("--debug--");
-      return apps;
-    };
-
-    const CNI = {
-      ...timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-        .cNIdx,
-    };
-
-    let tempTT = [...timetablesState.timeTables];
-    tempTT[
-      timetablesState.currentTimeTablePage - 1
-    ].occupiedTimeSlots = convertCNItoApps(CNI);
-    setTimetablesState(
-      { ...timetablesState, timeTables: tempTT }
-      //   (prevState) => {
-      //   let tempTT = [...prevState.timeTables];
-      //   tempTT[
-      //     prevState.currentTimeTablePage - 1
-      //   ].occupiedTimeSlots = convertCNItoApps(CNI);
-      //   return {
-      //     ...prevState,
-      //     timeTables: tempTT,
-      //   };
-      // }
+  function convertToDate(day, time) {
+    return new Date(
+      2021,
+      2,
+      dayNames.indexOf(day) + 1,
+      parseInt(time.slice(0, time.length - 2)),
+      parseInt(time.slice(time.length - 2, time.length))
     );
-    // console.log("--debug--");
-    // console.log(timetablesState);
-    // console.log("--debug--");
+  }
+
+  const courseDivToApps = (tempCourseDiv, idx) => {
+    if (Object.keys(tempCourseDiv.currentIdx).length !== 0) {
+      let returnAppointments = tempCourseDiv.currentIdx.lesson.map((lesson) => {
+        return {
+          ...lesson,
+          title: tempCourseDiv.course.courseCode,
+          id: Math.random().toString(36).substr(2, 9),
+          startDate: convertToDate(lesson.day, lesson.start),
+          endDate: convertToDate(lesson.day, lesson.end),
+          courseDivID: idx + 1,
+        };
+      });
+
+      return returnAppointments;
+    }
+    return [];
   };
 
-  // useEffect(() => {
-  //   displayCurrentTTpage();
-  // }, [timetablesState.currentTimeTablePage]);
+  const convertCombinationtoApps = (CNI) => {
+    let apps = [];
+    let idx = 0;
+    for (const key in CNI) {
+      const courseDiv = courseDivs.find(
+        (item) => item.course.courseCode === key
+      );
+      apps.push(...courseDivToApps(courseDiv, idx));
+      idx += 1;
+    }
+    return apps;
+  };
 
-  // useEffect(() => {
-  //   let tempState = { ...timetablesState };
-
-  //   for (let i = 0; i < courseDivs.length; i++) {
-  //     tempState.timeTables[tempState.currentTimeTablePage - 1].cNIdx[
-  //       courseDivs[i].course.courseCode
-  //     ] = courseDivs[i].currentIdx.index_number;
-  //   }
-  //   setTimetablesState(tempState);
-  // }, [courseDivs]);
-
-  //update coursedivs based on the page number
-  // useEffect(() => {
-  //   let tempCourseDivs = [...courseDivs];
-
-  //   const setCurrentIdx = (courseStr, indexStr) => {
-  //     if (courseDivs.length != 0) {
-  //       const tempCD = [...courseDivs];
-  //       const tempCDidx = tempCD.findIndex(
-  //         (item) => item.courseCode === courseStr
-  //       );
-
-  //       // console.log(tempCDidx);
-
-  //       if (tempCDidx !== -1) {
-  //         const tempIdx = tempCD[tempCDidx].course.index.findIndex(
-  //           (item) => item.index_number === indexStr
-  //         );
-  //         tempCD[tempCDidx].currentIdx =
-  //           tempCD[tempCDidx].course.index[tempIdx];
-  //         setCourseDivs(tempCD);
-  //       }
-  //     }
-  //   };
-
-  //   let tempCNIdx =
-  //     timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-  //       .cNIdx;
-
-  //   for (let key in tempCNIdx) {
-  //     setCurrentIdx(key, tempCNIdx[key]);
-  //   }
-
-  //   // setCourseDivs
-  //   // tempState.timeTables[tempState.currentTimeTablePage - 1];
-  // }, [timetablesState.currentTimeTablePage]);
+  useEffect(() => {
+    const combination = {
+      ...combinations[currentTimeTablePage - 1],
+    };
+    const tempOTS = convertCombinationtoApps(combination);
+    setOccupiedTimeSlots(tempOTS);
+  }, [combinations, currentTimeTablePage]);
 
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
@@ -173,9 +99,15 @@ function PlanTimetableContextProvider({ children }) {
     setCourseDivs,
     allowClashCC,
     setAllowClashCC,
-    timetablesState,
-    setTimetablesState,
-    displayCurrentTTpage,
+    currentTimeTablePage,
+    setCurrentTimeTablePage,
+    combinations,
+    setCombinations,
+    occupiedTimeSlots,
+    setOccupiedTimeSlots,
+    // timetablesState,
+    // setTimetablesState,
+    // displayCurrentTTpage,
   };
   return (
     <PlanTimetableContext.Provider value={value}>

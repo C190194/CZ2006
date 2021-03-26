@@ -15,85 +15,23 @@ import "./PlanTimetable.css";
 import { appointments } from "../shares/appointments";
 
 function PlanTimetableContextConsumer() {
-  // const [timetablesState, setTimetablesState] = useState({
-  //   timeTables: [
-  //     { page: 1, occupiedTimeSlots: [appointments[0], appointments[1]] },
-  //     {
-  //       page: 2,
-  //       occupiedTimeSlots: [appointments[0], appointments[2]],
-  //     },
-  //   ],
-  //   currentTimeTablePage: 1,
-  // });
   const planTimetableContext = usePlanTimetable();
 
-  const timetablesState = planTimetableContext.timetablesState;
-  const setTimetablesState = planTimetableContext.setTimetablesState;
-  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
+  const combinations = planTimetableContext.combinations;
+  const setCombinations = planTimetableContext.setCombinations;
+  const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
+  const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
+  const occupiedTimeSlots = planTimetableContext.occupiedTimeSlots;
+  const setOccupiedTimeSlots = planTimetableContext.setOccupiedTimeSlots;
 
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
   //   //currentTimeTablePage set to 1 as default when new timetables added
   //   setTimetablesState({ timeTables: tempTimeTables, currentTimeTablePage: 1 });
   // };
-
   const updateTimeTablePageNum = (tempPage) => {
-    // console.log(tempPage);
-
-    setTimetablesState({
-      ...timetablesState,
-      currentTimeTablePage: tempPage,
-    });
-    // console.log(timetablesState);
-    // displayCurrentTTpage();
+    setCurrentTimeTablePage(tempPage);
   };
-
-  // const courseDivs = planTimetableContext.courseDivs;
-  // const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-
-  // function convertToDate(day, time) {
-  //   return new Date(
-  //     2021,
-  //     2,
-  //     dayNames.indexOf(day) + 1,
-  //     parseInt(time.slice(0, time.length - 2)),
-  //     parseInt(time.slice(time.length - 2, time.length))
-  //   );
-  // }
-
-  // const courseDivsToAppointments = (tempCourseDivs) => {
-  //   let returnAppointments = [];
-
-  //   tempCourseDivs.map((item, idx) => {
-  //     if (item.currentIdx.lesson) {
-  //       returnAppointments = [
-  //         ...returnAppointments,
-  //         ...item.currentIdx.lesson.map((lesson) => {
-  //           return {
-  //             ...lesson,
-  //             title: item.course.courseCode,
-  //             id: Math.random().toString(36).substr(2, 9),
-  //             startDate: convertToDate(lesson.day, lesson.start),
-  //             endDate: convertToDate(lesson.day, lesson.end),
-  //             courseDivID: idx + 1,
-  //           };
-  //         }),
-  //       ];
-  //     }
-  //   });
-
-  //   return returnAppointments;
-  // };
-
-  // useEffect(() => {
-  //   let newTimetablesState = { ...timetablesState };
-  //   newTimetablesState.timeTables[
-  //     timetablesState.currentTimeTablePage - 1
-  //   ].occupiedTimeSlots = courseDivsToAppointments(courseDivs);
-  //   setTimetablesState(newTimetablesState);
-  // }, [courseDivs]);
-
-  // useEffect(() => {}, [timetablesState.currentTimeTablePage]);
 
   return (
     <div className="container">
@@ -111,17 +49,12 @@ function PlanTimetableContextConsumer() {
           <div className="row justify-content-md-center" align="center">
             <MoreOptionsComponent />
             <SelectTimetablePageComponent
-              timetablesState={timetablesState}
+              combinations={combinations}
+              currentTimeTablePage={currentTimeTablePage}
               updateTimeTablePageNum={updateTimeTablePageNum}
             />
           </div>
-          <PlannerCalendarComponent
-            timeTableData={
-              timetablesState.timeTables[
-                timetablesState.currentTimeTablePage - 1
-              ].occupiedTimeSlots
-            }
-          />
+          <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
           <ShareTimetableComponent />
         </div>
       </div>

@@ -4,7 +4,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 export default function SelectTimetablePageComponent({
-  timetablesState,
+  combinations,
+  currentTimeTablePage,
   updateTimeTablePageNum,
 }) {
   return (
@@ -12,30 +13,22 @@ export default function SelectTimetablePageComponent({
       <InputLabel htmlFor="outlined-page-native-simple">Page</InputLabel>
       <Select
         native
-        value={timetablesState.currentTimeTablePage}
+        value={currentTimeTablePage}
         onChange={(event) => {
           updateTimeTablePageNum(event.target.value);
         }}
         label="Page"
       >
-        {
-          timetablesState.timeTables.map((timeTable, idx) => {
-            return (
-              <option
-                key={Math.random().toString(36).substr(2, 9)}
-                value={idx + 1}
-              >
-                {timeTable.page}
-              </option>
-            );
-          })
-
-          // Array.from({ length: timetablesState.timeTables.length }, (x, i) => (
-          //   <option key={Math.random().toString(36).substr(2, 9)} value={i + 1}>
-          //     {i + 1}
-          //   </option>
-          // ))}
-        }
+        {combinations.map((combination, idx) => {
+          return (
+            <option
+              key={Math.random().toString(36).substr(2, 9)}
+              value={idx + 1}
+            >
+              {idx + 1}
+            </option>
+          );
+        })}
       </Select>
     </FormControl>
   );

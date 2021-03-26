@@ -3,18 +3,10 @@ import "./PlannerSearchCourseStyle.css";
 import { Button } from "reactstrap";
 import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-function Dropdown({
-  options,
-  label,
-  prompt,
-  value,
-  onChange,
-  // addCourseDivFunc,
-}) {
+function Dropdown({ options, label, prompt, value, onChange }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef(null);
-  // const [tempOption, setTempOption] = useState({});
 
   useEffect(() => {
     document.addEventListener("click", close);
@@ -41,7 +33,6 @@ function Dropdown({
     <div>
       <div className="dropdown">
         <div className="control" onClick={() => setOpen((prev) => !prev)}>
-          {/* <div className="selected-value" ref={ref}>{value ? value.name : prompt}</div> */}
           <div className="selected-value">
             <input
               type="text"
@@ -66,8 +57,6 @@ function Dropdown({
                 setQuery("");
                 onChange(option);
                 setOpen(false);
-                // setTempOption(option);
-                //addCourseDivFunc(option, {});
               }}
             >
               {option[label]}
@@ -75,13 +64,6 @@ function Dropdown({
           ))}
         </div>
       </div>
-      {/* <Button
-        onClick={() => {
-          addCourseDivFunc(tempOption, {});
-        }}
-      > */}
-      {/* ADD COURSE
-      </Button> */}
     </div>
   );
 }
@@ -93,17 +75,17 @@ export default function PlannerSearchCourseComponent() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
-  const timetablesState = planTimetableContext.timetablesState;
-  const setTimetablesState = planTimetableContext.setTimetablesState;
+  const combinations = planTimetableContext.combinations;
+  const setCombinations = planTimetableContext.setCombinations;
+  const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
+  const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
 
+  //add Course Division
   const addCourseDiv = (tempCourse, currentIdxVar) => {
     if (typeof tempCourse === "object" && tempCourse !== null) {
-      // const tempCourseDivs = [...courseDivs];
-
       if (
         !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
       ) {
-        // tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
         setCourseDivs((prevCourseDivs) => [
           ...prevCourseDivs,
           {
@@ -113,30 +95,17 @@ export default function PlannerSearchCourseComponent() {
           },
         ]);
 
-        // const tempState = {
-        //   ...timetablesState,
-        //   timeTables: timetablesState.timeTables.map((item) => {
-        //     const tempCNIdx = { ...item.cNIdx };
-        //     tempCNIdx[tempCourse.courseCode] = "";
-        //     // console.log(tempCNIdx);
-        //     return { ...item, cNIdx: tempCNIdx };
-        //   }),
-        // };
-        // // console.log(tempState);
+        //change combination of the current page
+        const tempCs = [...combinations];
+        //create course and respective index(empty default)
+        if (tempCs.length !== 0) {
+          tempCs[currentTimeTablePage - 1][tempCourse.courseCode] = "";
+        } else {
+          tempCs.push({});
+          tempCs[0][tempCourse.courseCode] = "";
+        }
 
-        setTimetablesState((prevState) => {
-          return {
-            ...prevState,
-            timeTables: timetablesState.timeTables.map((item) => {
-              const tempCNIdx = { ...item.cNIdx };
-              tempCNIdx[tempCourse.courseCode] = "";
-              // console.log(tempCNIdx);
-              return { ...item, cNIdx: tempCNIdx };
-            }),
-          };
-        });
-
-        console.log(timetablesState);
+        setCombinations(tempCs);
       } else {
         alert("The selected course was added before!");
       }
@@ -184,7 +153,6 @@ export default function PlannerSearchCourseComponent() {
         }))}
         value={value}
         onChange={(val) => setValue(val)}
-        // addCourseDivFunc={addCourseDiv}
       />
       <Button
         onClick={() => {
