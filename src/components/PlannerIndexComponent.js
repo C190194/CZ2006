@@ -94,7 +94,7 @@ const CourseDiv = function (props) {
   );
 };
 
-export default function ShareTimetable() {
+export default function ShareTimetable(props) {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
@@ -167,6 +167,39 @@ export default function ShareTimetable() {
     setCourseDivs(tempCourseDivs);
   };
 
+  //add Course Division
+  const addCourseDiv = (tempCourse, currentIdxVar) => {
+    if (typeof tempCourse === "object" && tempCourse !== null) {
+      if (
+        !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
+      ) {
+        setCourseDivs((prevCourseDivs) => [
+          ...prevCourseDivs,
+          {
+            course: tempCourse,
+            currentIdx: currentIdxVar,
+            isIndexFixed: false,
+          },
+        ]);
+
+        //change combination of the current page
+        const tempCs = [...combinations];
+        //create course and respective index(empty default)
+        if (tempCs.length !== 0) {
+          tempCs[currentTimeTablePage - 1][tempCourse.courseCode] = "";
+        } else {
+          tempCs.push({});
+          tempCs[0][tempCourse.courseCode] = "";
+        }
+
+        setCombinations(tempCs);
+      } else {
+        alert("The selected course was added before!");
+      }
+    } else {
+      alert("Please select a course before adding!");
+    }
+  };
   const deleteElement = (idx) => {
     const tempCourseDivs = [...courseDivs];
     const tempCourseDiv = tempCourseDivs.splice(idx, 1)[0];
@@ -181,6 +214,13 @@ export default function ShareTimetable() {
 
   return (
     <>
+      <Button
+        onClick={() => {
+          addCourseDiv(props.course, {});
+        }}
+      >
+        ADD COURSE
+      </Button>
       {courseDivs.map((courseDiv, idx) => {
         return (
           <div
