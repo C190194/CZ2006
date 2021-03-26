@@ -14,16 +14,20 @@ import "./PlanTimetable.css";
 import { appointments } from "../shares/appointments";
 
 function PlanTimetableContextConsumer() {
-  const [timetablesState, setTimetablesState] = useState({
-    timeTables: [
-      { page: 1, occupiedTimeSlots: [appointments[0], appointments[1]] },
-      {
-        page: 2,
-        occupiedTimeSlots: [appointments[0], appointments[2]],
-      },
-    ],
-    currentTimeTablePage: 1,
-  });
+  // const [timetablesState, setTimetablesState] = useState({
+  //   timeTables: [
+  //     { page: 1, occupiedTimeSlots: [appointments[0], appointments[1]] },
+  //     {
+  //       page: 2,
+  //       occupiedTimeSlots: [appointments[0], appointments[2]],
+  //     },
+  //   ],
+  //   currentTimeTablePage: 1,
+  // });
+  const planTimetableContext = usePlanTimetable();
+
+  const timetablesState = planTimetableContext.timetablesState;
+  const setTimetablesState = planTimetableContext.setTimetablesState;
 
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
@@ -38,9 +42,9 @@ function PlanTimetableContextConsumer() {
     }));
   };
 
-  const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
   function convertToDate(day, time) {
     return new Date(
       2021,
@@ -50,6 +54,7 @@ function PlanTimetableContextConsumer() {
       parseInt(time.slice(time.length - 2, time.length))
     );
   }
+
   const courseDivsToAppointments = (tempCourseDivs) => {
     let returnAppointments = [];
 
@@ -81,6 +86,8 @@ function PlanTimetableContextConsumer() {
     ].occupiedTimeSlots = courseDivsToAppointments(courseDivs);
     setTimetablesState(newTimetablesState);
   }, [courseDivs]);
+
+  useEffect(() => {}, [timetablesState.currentTimeTablePage]);
 
   return (
     <div className="container">

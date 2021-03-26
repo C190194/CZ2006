@@ -96,6 +96,8 @@ export default function PlannerSearchCourseComponent() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
+  const timetablesState = planTimetableContext.timetablesState;
+  const setTimetablesState = planTimetableContext.setTimetablesState;
 
   const addCourseDiv = (tempCourse, currentIdxVar) => {
     if (typeof tempCourse === "object" && tempCourse !== null) {
@@ -107,8 +109,25 @@ export default function PlannerSearchCourseComponent() {
         // tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
         setCourseDivs((prevCourseDivs) => [
           ...prevCourseDivs,
-          { course: tempCourse, currentIdx: currentIdxVar },
+          {
+            course: tempCourse,
+            currentIdx: currentIdxVar,
+            isIndexFixed: false,
+          },
         ]);
+
+        let tempState = {
+          ...timetablesState,
+          timeTables: timetablesState.timeTables.map((item) => {
+            const tempCNIdx = { ...item.cNIdx };
+            tempCNIdx[tempCourse.courseCode] = "";
+            // console.log(tempCNIdx);
+            return { ...item, cNIdx: tempCNIdx };
+          }),
+        };
+        // console.log(tempState);
+
+        setTimetablesState(tempState);
       } else {
         alert("The selected course was added before!");
       }
@@ -155,7 +174,7 @@ export default function PlannerSearchCourseComponent() {
         }))}
         value={value}
         onChange={(val) => setValue(val)}
-        addCourseDivFunc={addCourseDiv}
+        // addCourseDivFunc={addCourseDiv}
       />
       <Button
         onClick={() => {

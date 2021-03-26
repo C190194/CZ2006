@@ -1,10 +1,8 @@
-import React, { Component, useState, useRef, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import "./ComponentsStyle.css";
-import Dropdown from "./PlannerSearchCourseComponent";
-// import { data } from "./testData.js";
 import MUIButton from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import CloseIcon from "@material-ui/icons/Close";
@@ -37,11 +35,18 @@ const useStyles = makeStyles((theme) => ({
 // const customCourse = getCourse();
 
 const CourseDiv = function (props) {
-  const { course, currentIdx, deleteElement, updateCurrentIdx } = props;
+  const {
+    course,
+    currentIdx,
+    deleteElement,
+    updateCurrentIdx,
+    isIndexFixed,
+    setIsIndexFixed,
+  } = props;
   const classes = useStyles();
   const courseCode = course.courseCode;
-  const [index_is_fixed, set_index_is_fixed] = useState(false);
   const indexes = course.index;
+
   return (
     <>
       <div className="row">
@@ -58,12 +63,14 @@ const CourseDiv = function (props) {
         </div>
         <div className="col-3">
           <MUIButton
-            variant={index_is_fixed ? "contained" : "outlined"}
+            variant={isIndexFixed ? "contained" : "outlined"}
             color="primary"
             className={classes.button}
             startIcon={<FlagIcon />}
             onClick={() => {
-              set_index_is_fixed(!index_is_fixed);
+              Object.keys(currentIdx).length === 0
+                ? alert("You cannot fix an empty index!")
+                : setIsIndexFixed(!isIndexFixed);
             }}
             style={{ width: "40px", minWidth: "40px" }}
           ></MUIButton>
@@ -71,10 +78,7 @@ const CourseDiv = function (props) {
       </div>
       <div className="row">
         <div className="col-2">
-          <FormControl
-            className={classes.formControl}
-            disabled={index_is_fixed}
-          >
+          <FormControl className={classes.formControl} disabled={isIndexFixed}>
             <InputLabel htmlFor="index-native-simple">Index</InputLabel>
             <Select
               value={indexes.indexOf(currentIdx)}
@@ -98,79 +102,37 @@ const CourseDiv = function (props) {
   );
 };
 
-// function PlannerIndexComponent({ addCourseDiv }) {
-//   const [value, setValue] = useState(null);
-//   const [data, setData] = useState([]);
-//   //method to add course(div)
-//   const getData = () => {
-//     fetch("output.json", {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//       },
-//     })
-//       .then(function (response) {
-//         console.log(response);
-//         return response.json();
-//       })
-//       .then(function (myJson) {
-//         // console.log(myJson);
-//         setData(myJson);
-//       });
-//   };
-//   useEffect(() => {
-//     getData();
-//   }, []);
-//   console.log("Dropdown rerender");
-//   return (
-//     <div className="row" style={{ width: 200 }}>
-//       {/* <Dropdown options={countries} prompt="Select countries..." options={countries} value={value} onChange={val => setValue(val) }/> */}
-//       <Dropdown
-//         prompt="Select courses..."
-//         id="courseCode"
-//         label="courseCode"
-//         options={data.map((item) => ({
-//           ...item,
-//           id: Math.random().toString(36).substr(2, 9),
-//         }))}
-//         value={value}
-//         onChange={(val) => setValue(val)}
-//         addCourseDivFunc={addCourseDiv}
-//       />
-//     </div>
-//   );
-// }
-
 export default function ShareTimetable() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
-
-  const addCourseDiv = (tempCourse, currentIdxVar) => {
-    if (typeof tempCourse === "object" && tempCourse !== null) {
-      // const tempCourseDivs = [...courseDivs];
-
-      if (
-        !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
-      ) {
-        // tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
-        setCourseDivs((prevCourseDivs) => [
-          ...prevCourseDivs,
-          { course: tempCourse, currentIdx: currentIdxVar },
-        ]);
-      } else {
-        alert("The selected course was added before!");
-      }
-    } else {
-      alert("Please select a course before adding!");
-    }
-  };
-
+  const timetablesState = planTimetableContext.timetablesState;
+  const setTimetablesState = planTimetableContext.setTimetablesState;
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
-  const planCourse = (temp_course_indexes) => {
-    // console.log(temp_course_indexes);
-    // console.log(temp_course_indexes[0].index_number);
+  //convert courseDivs to courses
+  const planCourse = (temp_course_divs) => {
+    // console.log(temp_course_divs);
+    const temp_course_arr = temp_course_divs.map((item) => {
+      if (item.isIndexFixed) {
+        let tempCourse = { ...item.course };
+        tempCourse.index = [item.currentIdx];
+        return tempCourse;
+      } else {
+        return item.course;
+      }
+    });
+
+    const setCurrentIdx = () => {
+      const tempCD = [...courseDivs];
+      const tempIdx = tempCD[0].course.index.findIndex(
+        (item) => item.index_number === "10064"
+      );
+      tempCD[0].currentIdx = tempCD[0].course.index[tempIdx];
+      setCourseDivs(tempCD);
+    };
+    setCurrentIdx();
+    // console.log(temp_course_arr);
   };
 
   const updateCurrentIdx = (event, idx) => {
@@ -181,38 +143,40 @@ export default function ShareTimetable() {
     } else {
       tempCourseDivs[idx].currentIdx = {};
     }
+    setCourseDivs(tempCourseDivs);
 
-    // console.log(tempCourseDivs[idx].currentIdx.index_number);
+    // let tempState = {
+    //   ...timetablesState,
+    //   timeTables: timetablesState.timeTables.map((item) => {
+    //     const tempCNIdx = { ...item.cNIdx };
+    //     tempCNIdx[tempCourseDivs[idx].course.courseCode] =
+    //       tempCourseDivs[idx].currentIdx.index_number;
 
-    planCourse(
-      tempCourseDivs.reduce((filtered, tempCourseDiv) => {
-        if (Object.keys(tempCourseDiv.currentIdx).length !== 0) {
-          filtered.push(tempCourseDiv.currentIdx);
-        }
-        return filtered;
-      }, [])
-    );
+    //     return { ...item, cNIdx: tempCNIdx };
+    //   }),
+    // };
 
-    //ifstatement
+    // setTimetablesState(tempState);
+  };
+
+  const setIsIndexFixed = (value, idx) => {
+    const tempCourseDivs = [...courseDivs];
+    tempCourseDivs[idx].isIndexFixed = value;
     setCourseDivs(tempCourseDivs);
   };
 
   const deleteElement = (idx) => {
     const tempCourseDivs = [...courseDivs];
-    // console.log(courseDivs[idx]);
-    // console.log(courseDivs[idx].course);
     tempCourseDivs.splice(idx, 1);
     setCourseDivs(tempCourseDivs);
   };
 
   return (
     <>
-      {/* <PlannerIndexComponent
-        addCourseDiv={addCourseDiv}
-      ></PlannerIndexComponent> */}
       {courseDivs.map((courseDiv, idx) => {
         return (
           <div
+            key={idx}
             className="row"
             style={{
               border: "2px solid black",
@@ -226,16 +190,15 @@ export default function ShareTimetable() {
               currentIdx={courseDiv.currentIdx}
               deleteElement={() => deleteElement(idx)}
               updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+              isIndexFixed={courseDiv.isIndexFixed}
+              setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
             />
           </div>
         );
       })}
-      {/* <Button
-        className="btn-warning"
-        onClick={() => addCourseDiv(customCourse, {})}
-      >
+      <Button className="btn-warning" onClick={() => planCourse(courseDivs)}>
         Plan
-      </Button> */}
+      </Button>
     </>
   );
 }
