@@ -105,7 +105,7 @@ const CourseDiv = function (props) {
 export default function ShareTimetable() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
-  const setCourseDivs = planTimetableContext.setCourseDivs;
+  // const setCourseDivs = planTimetableContext.setCourseDivs;
   const timetablesState = planTimetableContext.timetablesState;
   const setTimetablesState = planTimetableContext.setTimetablesState;
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
@@ -123,14 +123,15 @@ export default function ShareTimetable() {
       }
     });
 
-    const setCurrentIdx = () => {
-      const tempCD = [...courseDivs];
-      const tempIdx = tempCD[0].course.index.findIndex(
-        (item) => item.index_number === "10064"
-      );
-      tempCD[0].currentIdx = tempCD[0].course.index[tempIdx];
-      setCourseDivs(tempCD);
-    };
+    // const setCurrentIdx = () => {
+    //   const tempCD = [...courseDivs];
+    //   const tempIdx = tempCD[0].course.index.findIndex(
+    //     (item) => item.index_number === "10064"
+    //   );
+    //   tempCD[0].currentIdx = tempCD[0].course.index[tempIdx];
+    //   setCourseDivs(tempCD);
+    // };
+
     setCurrentIdx();
     // console.log(temp_course_arr);
   };
@@ -173,29 +174,34 @@ export default function ShareTimetable() {
 
   return (
     <>
-      {courseDivs.map((courseDiv, idx) => {
-        return (
-          <div
-            key={idx}
-            className="row"
-            style={{
-              border: "2px solid black",
-              borderRadius: "5px",
-              background: resourcesData[idx].color,
-            }}
-          >
-            <CourseDiv
+      {() => {
+        const tempIDX =
+          timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
+            .cNIdx;
+        timetablesState.map((courseDiv, idx) => {
+          return (
+            <div
               key={idx}
-              course={courseDiv.course}
-              currentIdx={courseDiv.currentIdx}
-              deleteElement={() => deleteElement(idx)}
-              updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
-              isIndexFixed={courseDiv.isIndexFixed}
-              setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
-            />
-          </div>
-        );
-      })}
+              className="row"
+              style={{
+                border: "2px solid black",
+                borderRadius: "5px",
+                background: resourcesData[idx].color,
+              }}
+            >
+              <CourseDiv
+                key={idx}
+                course={courseDiv.course}
+                currentIdx={courseDiv.currentIdx}
+                deleteElement={() => deleteElement(idx)}
+                updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+                isIndexFixed={courseDiv.isIndexFixed}
+                setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
+              />
+            </div>
+          );
+        });
+      }}
       <Button className="btn-warning" onClick={() => planCourse(courseDivs)}>
         Plan
       </Button>
