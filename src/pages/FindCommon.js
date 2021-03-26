@@ -149,7 +149,7 @@ export default function FindCommon() {
         </div>
         <div className="col-10">
           <SelectTimetablePageComponent
-            timetablesState={timetablesState}
+            combinations={timetablesState.timeTables}
             updateTimeTablePageNum={updateTimeTablePageNum}
           />
           <PlannerCalendarComponent

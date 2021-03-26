@@ -97,28 +97,21 @@ function PlanTimetableContextConsumer(props) {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="planner-title col-12">
-          <b>Course Planner</b>
-        </div>
+    <div className="row">
+      <div className="col-2">
+        <PlannerIndexComponent course={props.course} />
       </div>
-      <div className="row">
-        <div className="col-2">
-          <PlannerIndexComponent course={props.course} />
+      <div className="col-10">
+        <div className="row justify-content-md-center" align="center">
+          <MoreOptionsComponent />
+          <SelectTimetablePageComponent
+            combinations={combinations}
+            currentTimeTablePage={currentTimeTablePage}
+            updateTimeTablePageNum={updateTimeTablePageNum}
+          />
         </div>
-        <div className="col-10">
-          <div className="row justify-content-md-center" align="center">
-            <MoreOptionsComponent />
-            <SelectTimetablePageComponent
-              combinations={combinations}
-              currentTimeTablePage={currentTimeTablePage}
-              updateTimeTablePageNum={updateTimeTablePageNum}
-            />
-          </div>
-          <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
-          <ShareTimetableComponent />
-        </div>
+        <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
+        <ShareTimetableComponent />
       </div>
     </div>
   );
@@ -143,7 +136,7 @@ export default function PlanTimetable() {
       .then(function (myJson) {
         // console.log(myJson);
         //i only chose 200 courses
-        setData(myJson.slice(409, 609));
+        setData(myJson);
       });
   };
 
@@ -156,20 +149,27 @@ export default function PlanTimetable() {
   });
   return (
     <PlanTimetableContextProvider>
-      <div className="row" style={{ width: 200 }}>
-        <Dropdown
-          prompt="Select courses..."
-          id="courseCode"
-          label="courseCode"
-          options={data.map((item) => ({
-            ...item,
-            id: Math.random().toString(36).substr(2, 9),
-          }))}
-          value={value}
-          onChange={(val) => setValue(val)}
-        />
+      <div className="container">
+        <div className="row">
+          <div className="planner-title col-12">
+            <b>Course Planner</b>
+          </div>
+          <div className="row" style={{ width: 200 }}>
+            <Dropdown
+              prompt="Select courses..."
+              id="courseCode"
+              label="courseCode"
+              options={data.map((item) => ({
+                ...item,
+                id: Math.random().toString(36).substr(2, 9),
+              }))}
+              value={value}
+              onChange={(val) => setValue(val)}
+            />
+          </div>
+          <PlanTimetableContextConsumer course={value} />
+        </div>
       </div>
-      <PlanTimetableContextConsumer course={value} />
     </PlanTimetableContextProvider>
   );
 }

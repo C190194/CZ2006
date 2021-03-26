@@ -15,28 +15,10 @@ function PlanTimetableContextProvider({ children }) {
   //           isIndexFixed: false,
   //         },
   const [allowClashCC, setAllowClashCC] = useState([]);
-  // const [timetablesState, setTimetablesState] = useState({
-  //   timeTables: [
-  //     {
-  //       page: 1,
-  //       occupiedTimeSlots: [appointments[0], appointments[1]],
-  //       cNIdx: {},
-  //     }, //cNIdx is courses and index
-  //     {
-  //       page: 2,
-  //       occupiedTimeSlots: [appointments[0], appointments[2]],
-  //       cNIdx: {},
-  //     },
-  //   ],
-  //   currentTimeTablePage: 1,
-  // });
+
   const [currentTimeTablePage, setCurrentTimeTablePage] = useState(1);
-  const [combinations, setCombinations] = useState([]); //timetable combinations
+  const [combinations, setCombinations] = useState([{}]); //timetable combinations
   const [occupiedTimeSlots, setOccupiedTimeSlots] = useState([]); //appointment format(react scheduler)
-
-  // const displayCurrentTTpage = () => {
-
-  // };
   const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   function convertToDate(day, time) {
@@ -105,9 +87,6 @@ function PlanTimetableContextProvider({ children }) {
     setCombinations,
     occupiedTimeSlots,
     setOccupiedTimeSlots,
-    // timetablesState,
-    // setTimetablesState,
-    // displayCurrentTTpage,
   };
   return (
     <PlanTimetableContext.Provider value={value}>
