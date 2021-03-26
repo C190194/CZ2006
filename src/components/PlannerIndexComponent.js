@@ -26,18 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// export default ShareTT;
-// const getCourse = () => {
-//   var i;
-//   for (i = 0; i < data.length; i++) {
-//     if (data[i].courseCode === "CZ2006") {
-//       return data[i];
-//     }
-//   }
-// };
-
-// const customCourse = getCourse();
-
 const CourseDiv = function (props) {
   const {
     course,
@@ -106,13 +94,15 @@ const CourseDiv = function (props) {
   );
 };
 
-export default function ShareTimetable() {
+export default function ShareTimetable(props) {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
-  const timetablesState = planTimetableContext.timetablesState;
-  const setTimetablesState = planTimetableContext.setTimetablesState;
-  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
+
+  const combinations = planTimetableContext.combinations;
+  const setCombinations = planTimetableContext.setCombinations;
+  const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
+  const setIsPlanClicked = planTimetableContext.setIsPlanClicked;
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   //convert courseDivs to courses
@@ -128,8 +118,14 @@ export default function ShareTimetable() {
         return item.course;
       }
     });
-    console.log(temp_course_arr);
+    // console.log(temp_course_arr);
 
+    //testing
+    // setCombinations([
+    //   { CZ1016: "10061", CZ1103: "10064" },
+    //   { CZ1016: "10060", CZ1103: "10063" },
+    //   { CZ1016: "10062", CZ1103: "10064" },
+    // ]);
     //
     // const backend_data_arr = backend_method(temp_course_arr)
     // const backend_data_arr = [];
@@ -162,19 +158,12 @@ export default function ShareTimetable() {
     }
     setCourseDivs(tempCourseDivs);
 
-    let tempState = {
-      ...timetablesState,
-      timeTables: timetablesState.timeTables.map((item) => {
-        const tempCNIdx = { ...item.cNIdx };
-        tempCNIdx[tempCourseDivs[idx].course.courseCode] =
-          tempCourseDivs[idx].currentIdx.index_number;
-
-        return { ...item, cNIdx: tempCNIdx };
-      }),
-    };
-
-    setTimetablesState(tempState);
-    displayCurrentTTpage();
+    //change combination of the current page
+    const tempCs = [...combinations];
+    //create course and respective index(empty default)
+    tempCs[currentTimeTablePage - 1][tempCourseDivs[idx].course.courseCode] =
+      tempCourseDivs[idx].currentIdx.index_number;
+    setCombinations(tempCs);
   };
 
   const setIsIndexFixed = (value, idx) => {
@@ -183,119 +172,95 @@ export default function ShareTimetable() {
     setCourseDivs(tempCourseDivs);
   };
 
+  //add Course Division
+  const addCourseDiv = (tempCourse, currentIdxVar) => {
+    if (typeof tempCourse === "object" && tempCourse !== null) {
+      if (
+        !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
+      ) {
+        setCourseDivs((prevCourseDivs) => [
+          ...prevCourseDivs,
+          {
+            course: tempCourse,
+            currentIdx: currentIdxVar,
+            isIndexFixed: false,
+          },
+        ]);
+
+        //change combination of the current page
+        const tempCs = [...combinations];
+        //create course and respective index(empty default)
+        if (tempCs.length !== 0) {
+          for (let i = 0; i < tempCs.length; i++) {
+            tempCs[i][tempCourse.courseCode] = "";
+          }
+        } else {
+          tempCs.push({});
+          tempCs[0][tempCourse.courseCode] = "";
+        }
+
+        setCombinations(tempCs);
+      } else {
+        alert("The selected course was added before!");
+      }
+    } else {
+      alert("Please select a course before adding!");
+    }
+  };
   const deleteElement = (idx) => {
     const tempCourseDivs = [...courseDivs];
-    // console.log("-debug-");
-    // console.log(tempCourseDivs);
-    // console.log("-debug-\n");
     const tempCourseDiv = tempCourseDivs.splice(idx, 1)[0];
-
-    // console.log("-debug-");
-    // console.log(tempCourseDivs);
-    // console.log("-debug-\n");
     setCourseDivs(tempCourseDivs);
 
-    let tempState = {
-      ...timetablesState,
-      timeTables: timetablesState.timeTables.map((item) => {
-        const tempCNIdx = { ...item.cNIdx };
-        // console.log("-debug-");
-        // console.log(tempCourseDiv);
-        // console.log("-debug-");
-        // console.log(tempCourseDiv.course);
-        delete tempCNIdx[tempCourseDiv.course.courseCode];
-        return { ...item, cNIdx: tempCNIdx };
-      }),
-    };
+    //change combination of the current page
+    const tempCs = [...combinations];
+    //create course and respective index(empty default)
+    for (let i = 0; i < tempCs.length; i++) {
+      delete tempCs[i][tempCourseDiv.course.courseCode];
+    }
 
-    setTimetablesState(tempState);
+    setCombinations(tempCs);
   };
 
   return (
     <>
-      {
-        courseDivs.map((courseDiv, idx) => {
-          return (
-            <div
+      <Button
+        onClick={() => {
+          addCourseDiv(props.course, {});
+        }}
+      >
+        ADD COURSE
+      </Button>
+      {courseDivs.map((courseDiv, idx) => {
+        return (
+          <div
+            key={idx}
+            className="row"
+            style={{
+              border: "2px solid black",
+              borderRadius: "5px",
+              background: resourcesData[idx].color,
+            }}
+          >
+            <CourseDiv
               key={idx}
-              className="row"
-              style={{
-                border: "2px solid black",
-                borderRadius: "5px",
-                background: resourcesData[idx].color,
-              }}
-            >
-              <CourseDiv
-                key={idx}
-                course={courseDiv.course}
-                currentIdx={courseDiv.currentIdx}
-                deleteElement={() => deleteElement(idx)}
-                updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
-                isIndexFixed={courseDiv.isIndexFixed}
-                setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
-              />
-            </div>
-          );
-        })
-        /*{" "}
-      {() => {
-        const tempCNIDX =
-          timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-            .cNIdx;
-        const return_courseDivs = [];
-        let idx = 0;
-        for (let key in tempCNIDX) {
-          return_courseDivs.push(
-            <div
-              key={idx}
-              className="row"
-              style={{
-                border: "2px solid black",
-                borderRadius: "5px",
-                background: resourcesData[idx].color,
-              }}
-            >
-              <CourseDiv
-                key={idx}
-                course={courseDiv.course}
-                currentIdx={courseDiv.currentIdx}
-                deleteElement={() => deleteElement(idx)}
-                updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
-                isIndexFixed={courseDiv.isIndexFixed}
-                setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
-              />
-            </div>
-          );
-          idx += 1;
-        }
-        return return_courseDivs;
-        // timetablesState.map((courseDiv, idx) => {
-        //   return (
-        //     <div
-        //       key={idx}
-        //       className="row"
-        //       style={{
-        //         border: "2px solid black",
-        //         borderRadius: "5px",
-        //         background: resourcesData[idx].color,
-        //       }}
-        //     >
-        //       <CourseDiv
-        //         key={idx}
-        //         course={courseDiv.course}
-        //         currentIdx={courseDiv.currentIdx}
-        //         deleteElement={() => deleteElement(idx)}
-        //         updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
-        //         isIndexFixed={courseDiv.isIndexFixed}
-        //         setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
-        //       />
-        //     </div>
-        //   );
-        // });
-      }}{" "}
-      */
-      }
-      <Button className="btn-warning" onClick={() => planCourse(courseDivs)}>
+              course={courseDiv.course}
+              currentIdx={courseDiv.currentIdx}
+              deleteElement={() => deleteElement(idx)}
+              updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+              isIndexFixed={courseDiv.isIndexFixed}
+              setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
+            />
+          </div>
+        );
+      })}
+      <Button
+        className="btn-warning"
+        onClick={() => {
+          setIsPlanClicked(true);
+          planCourse(courseDivs);
+        }}
+      >
         Plan
       </Button>
     </>

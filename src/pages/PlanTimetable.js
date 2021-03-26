@@ -14,125 +14,163 @@ import {
 import "./PlanTimetable.css";
 import { appointments } from "../shares/appointments";
 
-function PlanTimetableContextConsumer() {
-  // const [timetablesState, setTimetablesState] = useState({
-  //   timeTables: [
-  //     { page: 1, occupiedTimeSlots: [appointments[0], appointments[1]] },
-  //     {
-  //       page: 2,
-  //       occupiedTimeSlots: [appointments[0], appointments[2]],
-  //     },
-  //   ],
-  //   currentTimeTablePage: 1,
-  // });
-  const planTimetableContext = usePlanTimetable();
+function Dropdown({ options, label, prompt, value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef(null);
 
-  const timetablesState = planTimetableContext.timetablesState;
-  const setTimetablesState = planTimetableContext.setTimetablesState;
-  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
+  useEffect(() => {
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, []);
 
-  //Backend: addTimetables
-  // const addTimeTables = (tempTimeTables) => {
-  //   //currentTimeTablePage set to 1 as default when new timetables added
-  //   setTimetablesState({ timeTables: tempTimeTables, currentTimeTablePage: 1 });
-  // };
+  function close(e) {
+    setOpen(e && e.target === ref.current);
+  }
 
-  const updateTimeTablePageNum = (tempPage) => {
-    // console.log(tempPage);
+  function filter(options) {
+    return options.filter(
+      (option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1
+    );
+  }
 
-    setTimetablesState({
-      ...timetablesState,
-      currentTimeTablePage: tempPage,
-    });
-    // console.log(timetablesState);
-    // displayCurrentTTpage();
-  };
-
-  // const courseDivs = planTimetableContext.courseDivs;
-  // const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-
-  // function convertToDate(day, time) {
-  //   return new Date(
-  //     2021,
-  //     2,
-  //     dayNames.indexOf(day) + 1,
-  //     parseInt(time.slice(0, time.length - 2)),
-  //     parseInt(time.slice(time.length - 2, time.length))
-  //   );
-  // }
-
-  // const courseDivsToAppointments = (tempCourseDivs) => {
-  //   let returnAppointments = [];
-
-  //   tempCourseDivs.map((item, idx) => {
-  //     if (item.currentIdx.lesson) {
-  //       returnAppointments = [
-  //         ...returnAppointments,
-  //         ...item.currentIdx.lesson.map((lesson) => {
-  //           return {
-  //             ...lesson,
-  //             title: item.course.courseCode,
-  //             id: Math.random().toString(36).substr(2, 9),
-  //             startDate: convertToDate(lesson.day, lesson.start),
-  //             endDate: convertToDate(lesson.day, lesson.end),
-  //             courseDivID: idx + 1,
-  //           };
-  //         }),
-  //       ];
-  //     }
-  //   });
-
-  //   return returnAppointments;
-  // };
-
-  // useEffect(() => {
-  //   let newTimetablesState = { ...timetablesState };
-  //   newTimetablesState.timeTables[
-  //     timetablesState.currentTimeTablePage - 1
-  //   ].occupiedTimeSlots = courseDivsToAppointments(courseDivs);
-  //   setTimetablesState(newTimetablesState);
-  // }, [courseDivs]);
-
-  // useEffect(() => {}, [timetablesState.currentTimeTablePage]);
+  function displayValue() {
+    if (query.length > 0) return query;
+    if (value) return value[label];
+    return "";
+  }
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="planner-title col-12">
-          <b>Course Planner</b>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-2">
-          <PlannerSearchCourseComponent />
-          <PlannerIndexComponent />
-        </div>
-        <div className="col-10">
-          <div className="row justify-content-md-center" align="center">
-            <MoreOptionsComponent />
-            <SelectTimetablePageComponent
-              timetablesState={timetablesState}
-              updateTimeTablePageNum={updateTimeTablePageNum}
+    <div>
+      <div className="dropdown">
+        <div className="control" onClick={() => setOpen((prev) => !prev)}>
+          <div className="selected-value">
+            <input
+              type="text"
+              ref={ref}
+              placeholder={value ? value[label] : prompt}
+              value={displayValue()}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                onChange(null);
+              }}
+              onClick={() => setOpen((prev) => !prev)}
             />
           </div>
-          <PlannerCalendarComponent
-            timeTableData={
-              timetablesState.timeTables[
-                timetablesState.currentTimeTablePage - 1
-              ].occupiedTimeSlots
-            }
-          />
-          <ShareTimetableComponent />
+          <div className={`arrow ${open ? "open" : null}`} />
+        </div>
+        <div className={`options ${open ? "open" : null}`}>
+          {filter(options).map((option) => (
+            <div
+              key={option.id}
+              className={`option ${value === option ? "selected" : null}`}
+              onClick={() => {
+                setQuery("");
+                onChange(option);
+                setOpen(false);
+              }}
+            >
+              {option[label]}
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
+function PlanTimetableContextConsumer(props) {
+  const planTimetableContext = usePlanTimetable();
+
+  const combinations = planTimetableContext.combinations;
+  const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
+  const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
+  const occupiedTimeSlots = planTimetableContext.occupiedTimeSlots;
+  // const setIsPageChanged = planTimetableContext.setIsPageChanged;
+  //Backend: addTimetables
+  // const addTimeTables = (tempTimeTables) => {
+  //   //currentTimeTablePage set to 1 as default when new timetables added
+  //   setTimetablesState({ timeTables: tempTimeTables, currentTimeTablePage: 1 });
+  // };
+  const updateTimeTablePageNum = (tempPage) => {
+    setCurrentTimeTablePage(tempPage);
+    // setIsPageChanged(true);
+  };
+
+  return (
+    <div className="row">
+      <div className="col-2">
+        <PlannerIndexComponent course={props.course} />
+      </div>
+      <div className="col-10">
+        <div className="row justify-content-md-center" align="center">
+          <MoreOptionsComponent />
+          <SelectTimetablePageComponent
+            combinations={combinations}
+            currentTimeTablePage={currentTimeTablePage}
+            updateTimeTablePageNum={updateTimeTablePageNum}
+          />
+        </div>
+        <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
+        <ShareTimetableComponent />
+      </div>
+    </div>
+  );
+}
+
 export default function PlanTimetable() {
+  const [value, setValue] = useState(null);
+  const [data, setData] = useState([]);
+
+  //method to add course(div)
+  const getData = () => {
+    fetch("output.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        return response.json();
+      })
+      .then(function (myJson) {
+        // console.log(myJson);
+        //i only chose 200 courses
+        setData(myJson);
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Dropdown rerender");
+  });
   return (
     <PlanTimetableContextProvider>
-      <PlanTimetableContextConsumer />
+      <div className="container">
+        <div className="row">
+          <div className="planner-title col-12">
+            <b>Course Planner</b>
+          </div>
+          <div className="row" style={{ width: 200 }}>
+            <Dropdown
+              prompt="Select courses..."
+              id="courseCode"
+              label="courseCode"
+              options={data.map((item) => ({
+                ...item,
+                id: Math.random().toString(36).substr(2, 9),
+              }))}
+              value={value}
+              onChange={(val) => setValue(val)}
+            />
+          </div>
+          <PlanTimetableContextConsumer course={value} />
+        </div>
+      </div>
     </PlanTimetableContextProvider>
   );
 }
