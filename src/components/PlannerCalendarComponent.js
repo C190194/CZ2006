@@ -1,24 +1,31 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Scheduler,
   WeekView,
   Appointments,
   AppointmentTooltip,
+  Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
-import { Container, Row, Col } from "reactstrap";
+
+import { ViewState } from "@devexpress/dx-react-scheduler";
+import { resourcesData } from "./resources";
+import "./calendar.css";
 import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
 export default function PlannerCalendarComponent(props) {
   const planTimetableContext = usePlanTimetable();
-  const courseDivs = planTimetableContext.courseDivs;
 
-  useEffect(() => {
-    if (courseDivs[0]) {
-      const s = courseDivs[0].currentIdx.lesson;
-      console.log(s);
-    }
-  }, [courseDivs]);
+  const timetablesState = planTimetableContext.timetablesState;
+  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
+
+  let resources = [
+    {
+      fieldName: "courseDivID",
+      title: "Course",
+      instances: resourcesData,
+    },
+  ];
 
   function formatDate(date) {
     var monthNames = [
@@ -43,6 +50,8 @@ export default function PlannerCalendarComponent(props) {
     return day + " " + monthNames[monthIndex] + " " + year;
   }
 
+  const currentDate = "2021-03-02";
+
   const AppointmentContent = (data) => {
     return (
       <Appointments.AppointmentContent
@@ -63,18 +72,34 @@ export default function PlannerCalendarComponent(props) {
     );
   };
 
+  // const TimeScaleLayout = () => {
+  //   return <WeekView.TimeScaleLayout height={20} />;
+  // };
+  // displayCurrentTTpage();
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Paper>
-            <Scheduler data={props.timeTableData} height={660}>
-              <WeekView startDayHour={8} endDayHour={22} />
-              <Appointments appointmentContentComponent={AppointmentContent} />
-            </Scheduler>
-          </Paper>
-        </Col>
-      </Row>
-    </Container>
+    <Paper>
+      <div
+      // className="calendar"
+      >
+        <Scheduler
+          data={
+            timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
+              .occupiedTimeSlots
+          }
+          firstDayOfWeek={1}
+          // style={{ height: 400 }}
+        >
+          <ViewState currentDate={currentDate} />
+          <WeekView
+            startDayHour={8}
+            endDayHour={22}
+            // timeScaleLayoutComponent={TimeScaleLayout}
+          />
+          <Appointments appointmentContentComponent={AppointmentContent} />
+          <AppointmentTooltip showCloseButton />
+          <Resources data={resources} mainResourceName="courseDivID" />
+        </Scheduler>
+      </div>
+    </Paper>
   );
 }

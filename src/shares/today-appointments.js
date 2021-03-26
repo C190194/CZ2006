@@ -21,12 +21,14 @@ const makeTodayAppointment = (startDate, endDate) => {
   };
 };
 
-export default appointments.map(({ startDate, endDate, ...restArgs }) => {
-  const result = {
-    ...makeTodayAppointment(startDate, endDate),
-    ...restArgs,
-  };
-  date += 1;
-  if (date > 31) date = 1;
-  return result;
-});
+// export default appointments.map(({ startDate, endDate, ...restArgs }) => {
+//   const result = {
+//     ...makeTodayAppointment(startDate, endDate),
+//     ...restArgs,
+//   };
+//   date += 1;
+//   if (date > 31) date = 1;
+//   return result;
+// });
+
+export default appointments;
