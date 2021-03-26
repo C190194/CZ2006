@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const user = new mongoose.Schema({
     email:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     name:{
         type:String,
@@ -20,6 +21,9 @@ const user = new mongoose.Schema({
     yearOfStudy:{
         type: String,
         required: true
+    },
+    timetables: {
+        type: [Number]
     }
 });
 

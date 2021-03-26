@@ -1,61 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import {
   Scheduler,
   WeekView,
   Appointments,
+  AppointmentTooltip,
+  Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  Modal,
-  ModalHeader,
-  ModalBody,
-} from "reactstrap";
-import ShareTimetableComponent from "./ShareTimetableComponent";
 
-class PlannerCalendarComponent extends Component {
-  constructor(props) {
-    super(props);
+import { ViewState } from "@devexpress/dx-react-scheduler";
+import { resourcesData } from "./resources";
+import "./calendar.css";
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-    this.toggleNav = this.toggleNav.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
+export default function PlannerCalendarComponent(props) {
+  const planTimetableContext = usePlanTimetable();
 
-    this.state = {
-      isNavOpen: false,
-      isModalOpen: false,
-    };
-  }
+  const timetablesState = planTimetableContext.timetablesState;
+  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
 
-  toggleNav() {
-    this.setState({
-      isNavOpen: !this.state.isNavOpen,
-    });
-  }
 
-  toggleModal() {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-    });
-  }
+  let resources = [
+    {
+      fieldName: "courseDivID",
+      title: "Course",
+      instances: resourcesData,
+    },
+  ];
 
-  handleLogin(event) {
-    this.toggleModal();
-    alert(
-      "Username: " +
-        this.username.value +
-        " Password: " +
-        this.password.value +
-        " Remember: " +
-        this.remember.checked
-    );
-    event.preventDefault();
-  }
-
-  formatDate(date) {
+  function formatDate(date) {
     var monthNames = [
       "January",
       "February",
@@ -78,14 +51,16 @@ class PlannerCalendarComponent extends Component {
     return day + " " + monthNames[monthIndex] + " " + year;
   }
 
-  AppointmentContent = (data) => {
+  const currentDate = "2021-03-02";
+
+  const AppointmentContent = (data) => {
     return (
       <Appointments.AppointmentContent
         data={data}
         type={"vertical"}
-        formatDate={this.formatDate}
+        formatDate={formatDate}
         durationType={"null"}
-        recurringIconComponent={this.props}
+        recurringIconComponent={props}
       >
         <div>
           <div style={{ fontSize: "13px" }}>{data.data.title}</div>
@@ -98,25 +73,36 @@ class PlannerCalendarComponent extends Component {
     );
   };
 
-  render() {
-    return (
-      <Container>
-        <Row>
-          <Col>
-            <Paper>
-              <Scheduler data={this.props.timeTableData} height={660}>
-                <WeekView startDayHour={8} endDayHour={22} />
-                <Appointments
-                  appointmentContentComponent={this.AppointmentContent}
-                />
-              </Scheduler>
-            </Paper>
-          </Col>
-        </Row>
-        <ShareTimetableComponent />
-      </Container>
-    );
-  }
-}
 
-export default PlannerCalendarComponent;
+  // const TimeScaleLayout = () => {
+  //   return <WeekView.TimeScaleLayout height={20} />;
+  // };
+  // displayCurrentTTpage();
+  return (
+    <Paper>
+      <div
+      // className="calendar"
+      >
+        <Scheduler
+          data={
+            timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
+              .occupiedTimeSlots
+          }
+          firstDayOfWeek={1}
+          // style={{ height: 400 }}
+        >
+          <ViewState currentDate={currentDate} />
+          <WeekView
+            startDayHour={8}
+            endDayHour={22}
+            // timeScaleLayoutComponent={TimeScaleLayout}
+          />
+          <Appointments appointmentContentComponent={AppointmentContent} />
+          <AppointmentTooltip showCloseButton />
+          <Resources data={resources} mainResourceName="courseDivID" />
+        </Scheduler>
+      </div>
+    </Paper>
+  );
+
+}

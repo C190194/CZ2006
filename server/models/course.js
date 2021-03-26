@@ -1,7 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const timeSchema=new Schema({
+
+const lessonSchema=new Schema({
+    type:{
+        type: String,
+        unique: false,
+        required: true
+    },
+    group:{
+        type: String,
+        unique: false,
+        required: true
+    },
+    day:{
+        type: String,
+        unique: false,
+        required: true
+    },
     full:{
         type: String,
         unique: false,
@@ -21,36 +37,17 @@ const timeSchema=new Schema({
         type: Number,
         unique: false,
         required: true
-    }
-});
-
-const lessonSchema=new Schema({
-    type:{
-        type: String,
-        unique: false,
-        required: true
-    },
-    group:{
-        type: String,
-        unique: false,
-        required: true
-    },
-    day:{
-        type: String,
-        unique: false,
-        required: true
-    },
-    time: {
-        type: timeSchema,
-        unique: false,
-        required: true
     },
     location:{
         type: String,
         unique: false,
         required: true
     },
-    flag: Number,
+    flag: {
+        type:Number,
+        unique: false,
+        required: true
+    },
     remarks:{
         type: String,
         unique: false,
@@ -68,6 +65,7 @@ const lessonSchema=new Schema({
     }
 });
 
+
 const indexSchema=new Schema({
     index_number:{
         type: Number,
@@ -75,14 +73,13 @@ const indexSchema=new Schema({
         required:true
     },
     lesson:
-        {
-            type: [lessonSchema],
-            unique: false,
-            required:true 
-        }
+    {
+        type: [lessonSchema],
+        unique: false,
+        required:true 
+    }
     
 });
-//defining a subschema of course
 
 const courseSchema=new Schema({
     courseCode:{
@@ -96,11 +93,16 @@ const courseSchema=new Schema({
         required: true
     },
     au:{
-        type: int,
+        type: Number,
         unique: true,
         required: true
     },
-    index:[indexSchema]
+    index:[indexSchema],
+    clashFree:{
+        type: Boolean,
+        unique: false,
+        required: true
+    }
 });
 
 const Course=mongoose.model('Course',courseSchema);

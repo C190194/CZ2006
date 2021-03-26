@@ -46,8 +46,32 @@ const return_data_to_be_displayed_array = [
   },
 ];
 
+// const return_course_code_and_selected_index_array = [
+//   { course_code: "CZ2006", selected_index: "10123" },
+//   { course_code: "AB1206", selected_index: "10324" },
+//   { course_code: "ED3406", selected_index: "10345" },
+// ];
+
 const return_course_code_and_selected_index_array = [
-  { course_code: "CZ2006", selected_index: "10123" },
-  { course_code: "AB1206", selected_index: "10324" },
-  { course_code: "ED3406", selected_index: "10345" },
+  [{ CZ2006: "10123", AB1206: "10324" }],
+  [{ CZ2006: "10124", AB1206: "10745" }],
 ];
+
+//saved setting format
+const usersTimeTablesData = {
+  user_email: "abc@gmail.com",
+  timetables_with_setting: [
+    {
+      courses: [], //each item is course object
+      setting: {
+        allowClashCC: ["CZ2006", "CZ3003"],
+        userDefinedTimeSlots: [
+          [
+            new Date("March 1, 2021 10:15:00"),
+            new Date("March 1, 2021 12:15:00"),
+          ], //each item is an array of start time and end time of a slot
+        ],
+      },
+    },
+  ],
+};

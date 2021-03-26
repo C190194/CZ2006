@@ -1,0 +1,4 @@
+.calendar {
+  -ms-transform: scale(1, 0.5); /* IE 9 */
+  transform: scale(1, 0.7); /* Standard syntax */
+}

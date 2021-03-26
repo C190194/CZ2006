@@ -4,16 +4,23 @@ const connectDB = require('./DB/Connection')
 const mongoose=require('mongoose');
 
 connectDB();
-// mongoose.connect("mongodb+srv://Akshat:SoftwareXeon123@cluster0.ps96m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", 
-// { useNewUrlParser: true ,useUnifiedTopology: true },
-// ()=>console.log('Connected to DB'));
-// //Import routes
+ //mongoose.connect("mongodb+srv://Akshat:SoftwareXeon123@cluster0.ps96m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", 
+ //{ useNewUrlParser: true ,useUnifiedTopology: true },
+ //()=>console.log('Connected to DB'));
+ //Import routes
 const authRoute=require('./routes/user');
+const planRoute = require('./routes/planning');
+const discussion = require('./routes/discussion');
+const sharing = require('./routes/sharing');
+ 
 
 
 app.use(express.json({extended:false}));
 //Route middlewares
-app.use('/api/user', authRoute);
+app.use('/user', authRoute);
+app.use('/routes/planning', planRoute);
+app.use('/discuss', discussion);
+app.use('/share', sharing);
 
 
 app.listen(3000,() => console.log("Server up and running"));

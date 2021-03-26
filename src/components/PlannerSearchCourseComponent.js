@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./PlannerSearchCourseStyle.css";
 import { Button } from "reactstrap";
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
-export default function Dropdown({
+function Dropdown({
   options,
   label,
   prompt,
   value,
   onChange,
-  addCourseDivFunc,
+  // addCourseDivFunc,
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef(null);
-  const [tempOption, setTempOption] = useState("");
+  // const [tempOption, setTempOption] = useState({});
 
   useEffect(() => {
     document.addEventListener("click", close);
@@ -65,7 +66,7 @@ export default function Dropdown({
                 setQuery("");
                 onChange(option);
                 setOpen(false);
-                setTempOption(option);
+                // setTempOption(option);
                 //addCourseDivFunc(option, {});
               }}
             >
@@ -74,9 +75,107 @@ export default function Dropdown({
           ))}
         </div>
       </div>
-      <Button
+      {/* <Button
         onClick={() => {
           addCourseDivFunc(tempOption, {});
+        }}
+      > */}
+      {/* ADD COURSE
+      </Button> */}
+    </div>
+  );
+}
+
+export default function PlannerSearchCourseComponent() {
+  const [value, setValue] = useState(null);
+  const [data, setData] = useState([]);
+
+  const planTimetableContext = usePlanTimetable();
+  const courseDivs = planTimetableContext.courseDivs;
+  const setCourseDivs = planTimetableContext.setCourseDivs;
+  const timetablesState = planTimetableContext.timetablesState;
+  const setTimetablesState = planTimetableContext.setTimetablesState;
+
+  const addCourseDiv = (tempCourse, currentIdxVar) => {
+    if (typeof tempCourse === "object" && tempCourse !== null) {
+      // const tempCourseDivs = [...courseDivs];
+
+      if (
+        !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
+      ) {
+        // tempCourseDivs.push({ course: tempCourse, currentIdx: currentIdxVar });
+        setCourseDivs((prevCourseDivs) => [
+          ...prevCourseDivs,
+          {
+            course: tempCourse,
+            currentIdx: currentIdxVar,
+            isIndexFixed: false,
+          },
+        ]);
+
+        const tempState = {
+          ...timetablesState,
+          timeTables: timetablesState.timeTables.map((item) => {
+            const tempCNIdx = { ...item.cNIdx };
+            tempCNIdx[tempCourse.courseCode] = "";
+            // console.log(tempCNIdx);
+            return { ...item, cNIdx: tempCNIdx };
+          }),
+        };
+        // console.log(tempState);
+
+        setTimetablesState(tempState);
+      } else {
+        alert("The selected course was added before!");
+      }
+    } else {
+      alert("Please select a course before adding!");
+    }
+  };
+  //method to add course(div)
+  const getData = () => {
+    fetch("output.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        return response.json();
+      })
+      .then(function (myJson) {
+        // console.log(myJson);
+        //i only chose 200 courses
+        setData(myJson.slice(409, 609));
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Dropdown rerender");
+  });
+
+  return (
+    <div className="row" style={{ width: 200 }}>
+      <Dropdown
+        prompt="Select courses..."
+        id="courseCode"
+        label="courseCode"
+        options={data.map((item) => ({
+          ...item,
+          id: Math.random().toString(36).substr(2, 9),
+        }))}
+        value={value}
+        onChange={(val) => setValue(val)}
+        // addCourseDivFunc={addCourseDiv}
+      />
+      <Button
+        onClick={() => {
+          addCourseDiv(value, {});
         }}
       >
         ADD COURSE
