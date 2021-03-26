@@ -10,8 +10,8 @@ export default function SelectTimetablePageComponent({
 }) {
   const [value, setValue] = useState();
   const handleChange = (event) => {
-    setValue(event.target.value);
-    updateTimeTablePageNum(event.target.value);
+    setValue(parseInt(event.target.value));
+    updateTimeTablePageNum(parseInt(event.target.value));
   };
 
   return (

@@ -86,7 +86,7 @@ function PlanTimetableContextConsumer(props) {
   const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
   const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
   const occupiedTimeSlots = planTimetableContext.occupiedTimeSlots;
-
+  // const setIsPageChanged = planTimetableContext.setIsPageChanged;
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
   //   //currentTimeTablePage set to 1 as default when new timetables added
@@ -94,6 +94,7 @@ function PlanTimetableContextConsumer(props) {
   // };
   const updateTimeTablePageNum = (tempPage) => {
     setCurrentTimeTablePage(tempPage);
+    // setIsPageChanged(true);
   };
 
   return (

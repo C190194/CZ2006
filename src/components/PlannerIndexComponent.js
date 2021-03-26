@@ -102,8 +102,7 @@ export default function ShareTimetable(props) {
   const combinations = planTimetableContext.combinations;
   const setCombinations = planTimetableContext.setCombinations;
   const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
-  const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
-
+  const setIsPlanClicked = planTimetableContext.setIsPlanClicked;
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   //convert courseDivs to courses
@@ -119,8 +118,14 @@ export default function ShareTimetable(props) {
         return item.course;
       }
     });
-    console.log(temp_course_arr);
+    // console.log(temp_course_arr);
 
+    //testing
+    // setCombinations([
+    //   { CZ1016: "10061", CZ1103: "10064" },
+    //   { CZ1016: "10060", CZ1103: "10063" },
+    //   { CZ1016: "10062", CZ1103: "10064" },
+    // ]);
     //
     // const backend_data_arr = backend_method(temp_course_arr)
     // const backend_data_arr = [];
@@ -186,7 +191,9 @@ export default function ShareTimetable(props) {
         const tempCs = [...combinations];
         //create course and respective index(empty default)
         if (tempCs.length !== 0) {
-          tempCs[currentTimeTablePage - 1][tempCourse.courseCode] = "";
+          for (let i = 0; i < tempCs.length; i++) {
+            tempCs[i][tempCourse.courseCode] = "";
+          }
         } else {
           tempCs.push({});
           tempCs[0][tempCourse.courseCode] = "";
@@ -208,7 +215,10 @@ export default function ShareTimetable(props) {
     //change combination of the current page
     const tempCs = [...combinations];
     //create course and respective index(empty default)
-    delete tempCs[currentTimeTablePage - 1][tempCourseDiv.course.courseCode];
+    for (let i = 0; i < tempCs.length; i++) {
+      delete tempCs[i][tempCourseDiv.course.courseCode];
+    }
+
     setCombinations(tempCs);
   };
 
@@ -244,7 +254,13 @@ export default function ShareTimetable(props) {
           </div>
         );
       })}
-      <Button className="btn-warning" onClick={() => planCourse(courseDivs)}>
+      <Button
+        className="btn-warning"
+        onClick={() => {
+          setIsPlanClicked(true);
+          planCourse(courseDivs);
+        }}
+      >
         Plan
       </Button>
     </>
