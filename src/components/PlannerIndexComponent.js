@@ -162,7 +162,7 @@ export default function ShareTimetable() {
     }
     setCourseDivs(tempCourseDivs);
 
-    let tempState = {
+    const tempState = {
       ...timetablesState,
       timeTables: timetablesState.timeTables.map((item) => {
         const tempCNIdx = { ...item.cNIdx };
@@ -173,8 +173,11 @@ export default function ShareTimetable() {
       }),
     };
 
-    setTimetablesState(tempState);
-    displayCurrentTTpage();
+    setTimetablesState((prevState) => tempState);
+    // setTimetablesState({});
+    console.log(timetablesState);
+    // console.log(courseDivs);
+    // displayCurrentTTpage();
   };
 
   const setIsIndexFixed = (value, idx) => {
@@ -195,20 +198,29 @@ export default function ShareTimetable() {
     // console.log("-debug-\n");
     setCourseDivs(tempCourseDivs);
 
-    let tempState = {
+    const tempState = {
       ...timetablesState,
       timeTables: timetablesState.timeTables.map((item) => {
-        const tempCNIdx = { ...item.cNIdx };
+        let tempCNIdx = { ...item.cNIdx };
         // console.log("-debug-");
         // console.log(tempCourseDiv);
-        // console.log("-debug-");
-        // console.log(tempCourseDiv.course);
+        // console.log("-debug2-");
+        // console.log(tempCNIdx);
         delete tempCNIdx[tempCourseDiv.course.courseCode];
+        // console.log("-debug2-");
+        // console.log(tempCNIdx);
+        // console.log({ ...item, cNIdx: tempCNIdx });
         return { ...item, cNIdx: tempCNIdx };
       }),
     };
 
-    setTimetablesState(tempState);
+    // console.log(tempState);
+    setTimetablesState({ ...tempState });
+    // console.log(timetablesState);
+
+    // console.log(timetablesState);
+
+    displayCurrentTTpage();
   };
 
   return (

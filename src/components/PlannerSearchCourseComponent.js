@@ -113,18 +113,30 @@ export default function PlannerSearchCourseComponent() {
           },
         ]);
 
-        const tempState = {
-          ...timetablesState,
-          timeTables: timetablesState.timeTables.map((item) => {
-            const tempCNIdx = { ...item.cNIdx };
-            tempCNIdx[tempCourse.courseCode] = "";
-            // console.log(tempCNIdx);
-            return { ...item, cNIdx: tempCNIdx };
-          }),
-        };
-        // console.log(tempState);
+        // const tempState = {
+        //   ...timetablesState,
+        //   timeTables: timetablesState.timeTables.map((item) => {
+        //     const tempCNIdx = { ...item.cNIdx };
+        //     tempCNIdx[tempCourse.courseCode] = "";
+        //     // console.log(tempCNIdx);
+        //     return { ...item, cNIdx: tempCNIdx };
+        //   }),
+        // };
+        // // console.log(tempState);
 
-        setTimetablesState(tempState);
+        setTimetablesState((prevState) => {
+          return {
+            ...prevState,
+            timeTables: timetablesState.timeTables.map((item) => {
+              const tempCNIdx = { ...item.cNIdx };
+              tempCNIdx[tempCourse.courseCode] = "";
+              // console.log(tempCNIdx);
+              return { ...item, cNIdx: tempCNIdx };
+            }),
+          };
+        });
+
+        console.log(timetablesState);
       } else {
         alert("The selected course was added before!");
       }
@@ -132,6 +144,7 @@ export default function PlannerSearchCourseComponent() {
       alert("Please select a course before adding!");
     }
   };
+
   //method to add course(div)
   const getData = () => {
     fetch("output.json", {

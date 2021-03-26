@@ -32,7 +32,6 @@ function PlanTimetableContextProvider({ children }) {
   });
 
   const displayCurrentTTpage = () => {
-    // const apps = [];
     const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
     function convertToDate(day, time) {
@@ -45,47 +44,24 @@ function PlanTimetableContextProvider({ children }) {
       );
     }
 
-    // const convertLessontoApps = (lessonArr) => {
-    //   lessonArr.map((lesson) => {
-    //     return {
-    //       ...lesson,
-    //       title: item.course.courseCode,
-    //       id: Math.random().toString(36).substr(2, 9),
-    //       startDate: convertToDate(lesson.day, lesson.start),
-    //       endDate: convertToDate(lesson.day, lesson.end),
-    //       courseDivID: i + 1,
-    //     };
-    //   });
-    // };
-
     const courseDivToApps = (tempCourseDiv, idx) => {
-      let returnAppointments = [];
-      returnAppointments = tempCourseDiv.currentIdx.lesson.map((lesson) => {
-        return {
-          ...lesson,
-          title: tempCourseDiv.course.courseCode,
-          id: Math.random().toString(36).substr(2, 9),
-          startDate: convertToDate(lesson.day, lesson.start),
-          endDate: convertToDate(lesson.day, lesson.end),
-          courseDivID: idx + 1,
-        };
-      });
-      // tempCourseDiv.course.index.map((item) => {
-      //   returnAppointments = [
-      //     ...returnAppointments,
-      //     ...item.lesson.map((lesson) => {
-      //       return {
-      //         ...lesson,
-      //         title: tempCourseDiv.course.courseCode,
-      //         id: Math.random().toString(36).substr(2, 9),
-      //         startDate: convertToDate(lesson.day, lesson.start),
-      //         endDate: convertToDate(lesson.day, lesson.end),
-      //         courseDivID: idx + 1,
-      //       };
-      //     }),
-      //   ];
-      // });
-      return returnAppointments;
+      if (Object.keys(tempCourseDiv.currentIdx).length !== 0) {
+        let returnAppointments = tempCourseDiv.currentIdx.lesson.map(
+          (lesson) => {
+            return {
+              ...lesson,
+              title: tempCourseDiv.course.courseCode,
+              id: Math.random().toString(36).substr(2, 9),
+              startDate: convertToDate(lesson.day, lesson.start),
+              endDate: convertToDate(lesson.day, lesson.end),
+              courseDivID: idx + 1,
+            };
+          }
+        );
+
+        return returnAppointments;
+      }
+      return [];
     };
 
     const convertCNItoApps = (CNI) => {
@@ -97,7 +73,8 @@ function PlanTimetableContextProvider({ children }) {
         );
         // console.log("--debug--");
         // console.log("count");
-        // console.log("--debug--");
+        console.log("--debug--");
+        console.log(courseDiv);
         apps.push(...courseDivToApps(courseDiv, idx));
         idx += 1;
       }
@@ -188,6 +165,7 @@ function PlanTimetableContextProvider({ children }) {
   // NOTE: you *might* need to memoize this value
   // Learn more in http://kcd.im/optimize-context
   //   const value = { state, dispatch };
+
   const value = {
     userDefinedTimeSlots,
     setUserDefinedTimeSlots,
