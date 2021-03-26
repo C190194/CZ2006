@@ -96,3 +96,21 @@
   font-size: 0.7em;
   margin-left: 5px;
 }
+
+.sharetimetable {
+  width: 90vw ;   /* Occupy the 90% of the screen width */
+  max-width: 90vw;
+}
+
+/* SharetimetableComponents style */
+.share-timetable {
+  font-size: 1.2em;
+}
+
+/*General*/
+.page-title{
+  margin:auto;
+  font-size: 3em;
+  width: 50%;
+  text-align:center;
+}

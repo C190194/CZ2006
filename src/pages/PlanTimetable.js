@@ -9,7 +9,6 @@ import {
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
 
-import "./PlanTimetable.css";
 import appointments from "../shares/today-appointments";
 
 export default function PlanTimetable() {
@@ -49,7 +48,7 @@ export default function PlanTimetable() {
     <PlanTimetableContextProvider>
       <div className="container">
         <div className="row">
-          <div className="planner-title col-12">
+          <div className="page-title col-12">
             <b>Course Planner</b>
           </div>
         </div>
