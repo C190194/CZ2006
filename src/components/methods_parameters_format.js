@@ -46,10 +46,15 @@ const return_data_to_be_displayed_array = [
   },
 ];
 
+// const return_course_code_and_selected_index_array = [
+//   { course_code: "CZ2006", selected_index: "10123" },
+//   { course_code: "AB1206", selected_index: "10324" },
+//   { course_code: "ED3406", selected_index: "10345" },
+// ];
+
 const return_course_code_and_selected_index_array = [
-  { course_code: "CZ2006", selected_index: "10123" },
-  { course_code: "AB1206", selected_index: "10324" },
-  { course_code: "ED3406", selected_index: "10345" },
+  [{ CZ2006: "10123", AB1206: "10324" }],
+  [{ CZ2006: "10124", AB1206: "10745" }],
 ];
 
 //saved setting format

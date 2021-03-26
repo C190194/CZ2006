@@ -14,7 +14,7 @@ function Dropdown({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef(null);
-  const [tempOption, setTempOption] = useState({});
+  // const [tempOption, setTempOption] = useState({});
 
   useEffect(() => {
     document.addEventListener("click", close);
@@ -90,9 +90,6 @@ export default function PlannerSearchCourseComponent() {
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(value);
-  // }, [value]);
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
   const setCourseDivs = planTimetableContext.setCourseDivs;
@@ -116,7 +113,7 @@ export default function PlannerSearchCourseComponent() {
           },
         ]);
 
-        let tempState = {
+        const tempState = {
           ...timetablesState,
           timeTables: timetablesState.timeTables.map((item) => {
             const tempCNIdx = { ...item.cNIdx };

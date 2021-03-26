@@ -105,14 +105,16 @@ const CourseDiv = function (props) {
 export default function ShareTimetable() {
   const planTimetableContext = usePlanTimetable();
   const courseDivs = planTimetableContext.courseDivs;
-  // const setCourseDivs = planTimetableContext.setCourseDivs;
+  const setCourseDivs = planTimetableContext.setCourseDivs;
   const timetablesState = planTimetableContext.timetablesState;
   const setTimetablesState = planTimetableContext.setTimetablesState;
+  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   //convert courseDivs to courses
   const planCourse = (temp_course_divs) => {
     // console.log(temp_course_divs);
+    //pass course to backend
     const temp_course_arr = temp_course_divs.map((item) => {
       if (item.isIndexFixed) {
         let tempCourse = { ...item.course };
@@ -122,7 +124,17 @@ export default function ShareTimetable() {
         return item.course;
       }
     });
+    console.log(temp_course_arr);
 
+    //
+    // const backend_data_arr = backend_method(temp_course_arr)
+    // const backend_data_arr = [];
+    // //reset timetablestate.timetables
+    // // for (let i=0;i<backend_data_arr.length;i++){
+    // //   let tempTT = backend_data_arr[i];
+    // // }
+    // setTimetablesState({ ...timetablesState, timeTables: backend_data_arr });
+    // displayCurrentTTpage();
     // const setCurrentIdx = () => {
     //   const tempCD = [...courseDivs];
     //   const tempIdx = tempCD[0].course.index.findIndex(
@@ -132,7 +144,7 @@ export default function ShareTimetable() {
     //   setCourseDivs(tempCD);
     // };
 
-    setCurrentIdx();
+    // setCurrentIdx();
     // console.log(temp_course_arr);
   };
 
@@ -146,18 +158,19 @@ export default function ShareTimetable() {
     }
     setCourseDivs(tempCourseDivs);
 
-    // let tempState = {
-    //   ...timetablesState,
-    //   timeTables: timetablesState.timeTables.map((item) => {
-    //     const tempCNIdx = { ...item.cNIdx };
-    //     tempCNIdx[tempCourseDivs[idx].course.courseCode] =
-    //       tempCourseDivs[idx].currentIdx.index_number;
+    let tempState = {
+      ...timetablesState,
+      timeTables: timetablesState.timeTables.map((item) => {
+        const tempCNIdx = { ...item.cNIdx };
+        tempCNIdx[tempCourseDivs[idx].course.courseCode] =
+          tempCourseDivs[idx].currentIdx.index_number;
 
-    //     return { ...item, cNIdx: tempCNIdx };
-    //   }),
-    // };
+        return { ...item, cNIdx: tempCNIdx };
+      }),
+    };
 
-    // setTimetablesState(tempState);
+    setTimetablesState(tempState);
+    displayCurrentTTpage();
   };
 
   const setIsIndexFixed = (value, idx) => {
@@ -168,17 +181,36 @@ export default function ShareTimetable() {
 
   const deleteElement = (idx) => {
     const tempCourseDivs = [...courseDivs];
-    tempCourseDivs.splice(idx, 1);
+    // console.log("-debug-");
+    // console.log(tempCourseDivs);
+    // console.log("-debug-\n");
+    const tempCourseDiv = tempCourseDivs.splice(idx, 1)[0];
+
+    // console.log("-debug-");
+    // console.log(tempCourseDivs);
+    // console.log("-debug-\n");
     setCourseDivs(tempCourseDivs);
+
+    let tempState = {
+      ...timetablesState,
+      timeTables: timetablesState.timeTables.map((item) => {
+        const tempCNIdx = { ...item.cNIdx };
+        // console.log("-debug-");
+        // console.log(tempCourseDiv);
+        // console.log("-debug-");
+        // console.log(tempCourseDiv.course);
+        delete tempCNIdx[tempCourseDiv.course.courseCode];
+        return { ...item, cNIdx: tempCNIdx };
+      }),
+    };
+
+    setTimetablesState(tempState);
   };
 
   return (
     <>
-      {() => {
-        const tempIDX =
-          timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-            .cNIdx;
-        timetablesState.map((courseDiv, idx) => {
+      {
+        courseDivs.map((courseDiv, idx) => {
           return (
             <div
               key={idx}
@@ -200,8 +232,65 @@ export default function ShareTimetable() {
               />
             </div>
           );
-        });
-      }}
+        })
+        /*{" "}
+      {() => {
+        const tempCNIDX =
+          timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
+            .cNIdx;
+        const return_courseDivs = [];
+        let idx = 0;
+        for (let key in tempCNIDX) {
+          return_courseDivs.push(
+            <div
+              key={idx}
+              className="row"
+              style={{
+                border: "2px solid black",
+                borderRadius: "5px",
+                background: resourcesData[idx].color,
+              }}
+            >
+              <CourseDiv
+                key={idx}
+                course={courseDiv.course}
+                currentIdx={courseDiv.currentIdx}
+                deleteElement={() => deleteElement(idx)}
+                updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+                isIndexFixed={courseDiv.isIndexFixed}
+                setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
+              />
+            </div>
+          );
+          idx += 1;
+        }
+        return return_courseDivs;
+        // timetablesState.map((courseDiv, idx) => {
+        //   return (
+        //     <div
+        //       key={idx}
+        //       className="row"
+        //       style={{
+        //         border: "2px solid black",
+        //         borderRadius: "5px",
+        //         background: resourcesData[idx].color,
+        //       }}
+        //     >
+        //       <CourseDiv
+        //         key={idx}
+        //         course={courseDiv.course}
+        //         currentIdx={courseDiv.currentIdx}
+        //         deleteElement={() => deleteElement(idx)}
+        //         updateCurrentIdx={(event) => updateCurrentIdx(event, idx)}
+        //         isIndexFixed={courseDiv.isIndexFixed}
+        //         setIsIndexFixed={(value) => setIsIndexFixed(value, idx)}
+        //       />
+        //     </div>
+        //   );
+        // });
+      }}{" "}
+      */
+      }
       <Button className="btn-warning" onClick={() => planCourse(courseDivs)}>
         Plan
       </Button>

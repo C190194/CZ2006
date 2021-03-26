@@ -11,8 +11,14 @@ import {
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { resourcesData } from "./resources";
 import "./calendar.css";
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
 export default function PlannerCalendarComponent(props) {
+  const planTimetableContext = usePlanTimetable();
+
+  const timetablesState = planTimetableContext.timetablesState;
+  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
+
   let resources = [
     {
       fieldName: "courseDivID",
@@ -69,14 +75,17 @@ export default function PlannerCalendarComponent(props) {
   // const TimeScaleLayout = () => {
   //   return <WeekView.TimeScaleLayout height={20} />;
   // };
-
+  // displayCurrentTTpage();
   return (
     <Paper>
       <div
       // className="calendar"
       >
         <Scheduler
-          data={props.timeTableData}
+          data={
+            timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
+              .occupiedTimeSlots
+          }
           firstDayOfWeek={1}
           // style={{ height: 400 }}
         >

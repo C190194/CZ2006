@@ -42,52 +42,52 @@ function PlanTimetableContextConsumer() {
     }));
   };
 
-  const courseDivs = planTimetableContext.courseDivs;
-  const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  // const courseDivs = planTimetableContext.courseDivs;
+  // const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-  function convertToDate(day, time) {
-    return new Date(
-      2021,
-      2,
-      dayNames.indexOf(day) + 1,
-      parseInt(time.slice(0, time.length - 2)),
-      parseInt(time.slice(time.length - 2, time.length))
-    );
-  }
+  // function convertToDate(day, time) {
+  //   return new Date(
+  //     2021,
+  //     2,
+  //     dayNames.indexOf(day) + 1,
+  //     parseInt(time.slice(0, time.length - 2)),
+  //     parseInt(time.slice(time.length - 2, time.length))
+  //   );
+  // }
 
-  const courseDivsToAppointments = (tempCourseDivs) => {
-    let returnAppointments = [];
+  // const courseDivsToAppointments = (tempCourseDivs) => {
+  //   let returnAppointments = [];
 
-    tempCourseDivs.map((item, idx) => {
-      if (item.currentIdx.lesson) {
-        returnAppointments = [
-          ...returnAppointments,
-          ...item.currentIdx.lesson.map((lesson) => {
-            return {
-              ...lesson,
-              title: item.course.courseCode,
-              id: Math.random().toString(36).substr(2, 9),
-              startDate: convertToDate(lesson.day, lesson.start),
-              endDate: convertToDate(lesson.day, lesson.end),
-              courseDivID: idx + 1,
-            };
-          }),
-        ];
-      }
-    });
+  //   tempCourseDivs.map((item, idx) => {
+  //     if (item.currentIdx.lesson) {
+  //       returnAppointments = [
+  //         ...returnAppointments,
+  //         ...item.currentIdx.lesson.map((lesson) => {
+  //           return {
+  //             ...lesson,
+  //             title: item.course.courseCode,
+  //             id: Math.random().toString(36).substr(2, 9),
+  //             startDate: convertToDate(lesson.day, lesson.start),
+  //             endDate: convertToDate(lesson.day, lesson.end),
+  //             courseDivID: idx + 1,
+  //           };
+  //         }),
+  //       ];
+  //     }
+  //   });
 
-    return returnAppointments;
-  };
+  //   return returnAppointments;
+  // };
 
-  useEffect(() => {
-    let newTimetablesState = { ...timetablesState };
-    newTimetablesState.timeTables[
-      timetablesState.currentTimeTablePage - 1
-    ].occupiedTimeSlots = courseDivsToAppointments(courseDivs);
-    setTimetablesState(newTimetablesState);
-  }, [courseDivs]);
+  // useEffect(() => {
+  //   let newTimetablesState = { ...timetablesState };
+  //   newTimetablesState.timeTables[
+  //     timetablesState.currentTimeTablePage - 1
+  //   ].occupiedTimeSlots = courseDivsToAppointments(courseDivs);
+  //   setTimetablesState(newTimetablesState);
+  // }, [courseDivs]);
 
-  useEffect(() => {}, [timetablesState.currentTimeTablePage]);
+  // useEffect(() => {}, [timetablesState.currentTimeTablePage]);
 
   return (
     <div className="container">
@@ -111,9 +111,10 @@ function PlanTimetableContextConsumer() {
           </div>
           <PlannerCalendarComponent
             timeTableData={
-              timetablesState.timeTables[
-                timetablesState.currentTimeTablePage - 1
-              ].occupiedTimeSlots
+              []
+              // [timetablesState.timeTables[
+              //   timetablesState.currentTimeTablePage - 1
+              // ].occupiedTimeSlots]
             }
           />
         </div>
