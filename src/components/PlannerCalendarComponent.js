@@ -11,14 +11,13 @@ import {
 import { ViewState } from "@devexpress/dx-react-scheduler";
 import { resourcesData } from "./resources";
 import "./calendar.css";
-import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
+// import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
 export default function PlannerCalendarComponent(props) {
-  const planTimetableContext = usePlanTimetable();
+  // const planTimetableContext = usePlanTimetable();
 
-  const timetablesState = planTimetableContext.timetablesState;
-  const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
-
+  // const timetablesState = planTimetableContext.timetablesState;
+  // const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
 
   let resources = [
     {
@@ -73,7 +72,6 @@ export default function PlannerCalendarComponent(props) {
     );
   };
 
-
   // const TimeScaleLayout = () => {
   //   return <WeekView.TimeScaleLayout height={20} />;
   // };
@@ -84,10 +82,7 @@ export default function PlannerCalendarComponent(props) {
       // className="calendar"
       >
         <Scheduler
-          data={
-            timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-              .occupiedTimeSlots
-          }
+          data={props.timeTableData}
           firstDayOfWeek={1}
           // style={{ height: 400 }}
         >
@@ -104,5 +99,4 @@ export default function PlannerCalendarComponent(props) {
       </div>
     </Paper>
   );
-
 }

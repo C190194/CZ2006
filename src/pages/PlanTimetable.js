@@ -4,16 +4,15 @@ import PlannerIndexComponent from "../components/PlannerIndexComponent";
 import MoreOptionsComponent from "../components/MoreOptionsComponent";
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
 import PlannerSearchCourseComponent from "../components/PlannerSearchCourseComponent";
+import ShareTimetableComponent from "../components/ShareTimetableComponent";
 
 import {
   PlanTimetableContextProvider,
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
 
-
 import "./PlanTimetable.css";
 import { appointments } from "../shares/appointments";
-
 
 function PlanTimetableContextConsumer() {
   // const [timetablesState, setTimetablesState] = useState({
@@ -96,7 +95,7 @@ function PlanTimetableContextConsumer() {
 
   // useEffect(() => {}, [timetablesState.currentTimeTablePage]);
 
-
+  return (
     <div className="container">
       <div className="row">
         <div className="planner-title col-12">
@@ -118,12 +117,12 @@ function PlanTimetableContextConsumer() {
           </div>
           <PlannerCalendarComponent
             timeTableData={
-              []
-              // [timetablesState.timeTables[
-              //   timetablesState.currentTimeTablePage - 1
-              // ].occupiedTimeSlots]
+              timetablesState.timeTables[
+                timetablesState.currentTimeTablePage - 1
+              ].occupiedTimeSlots
             }
           />
+          <ShareTimetableComponent />
         </div>
       </div>
     </div>
