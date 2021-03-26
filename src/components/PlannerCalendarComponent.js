@@ -19,6 +19,7 @@ export default function PlannerCalendarComponent(props) {
   const timetablesState = planTimetableContext.timetablesState;
   const displayCurrentTTpage = planTimetableContext.displayCurrentTTpage;
 
+
   let resources = [
     {
       fieldName: "courseDivID",
@@ -72,6 +73,7 @@ export default function PlannerCalendarComponent(props) {
     );
   };
 
+
   // const TimeScaleLayout = () => {
   //   return <WeekView.TimeScaleLayout height={20} />;
   // };
@@ -102,4 +104,5 @@ export default function PlannerCalendarComponent(props) {
       </div>
     </Paper>
   );
+
 }

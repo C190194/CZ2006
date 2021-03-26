@@ -1,0 +1,23 @@
+.page-title {
+  margin: auto;
+  font-size: 2em;
+  width: 50%;
+  text-align: center;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #3A3636;
+}
+
+a {
+  color: black;
+}
+
+.comment-card {
+    background: #CCFFFF;
+}
+
+.comment-header {
+    background: #99FFFF;
+}

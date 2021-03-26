@@ -10,8 +10,10 @@ import {
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
 
+
 import "./PlanTimetable.css";
 import { appointments } from "../shares/appointments";
+
 
 function PlanTimetableContextConsumer() {
   // const [timetablesState, setTimetablesState] = useState({
@@ -94,7 +96,7 @@ function PlanTimetableContextConsumer() {
 
   // useEffect(() => {}, [timetablesState.currentTimeTablePage]);
 
-  return (
+
     <div className="container">
       <div className="row">
         <div className="planner-title col-12">
