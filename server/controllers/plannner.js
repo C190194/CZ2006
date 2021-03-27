@@ -1,6 +1,6 @@
 const { models } = require("mongoose");
 const CourseModal= require("../models/course.js");
-const databaseExam = require("../models/examData");
+const databaseExam = require("../models/databaseExam");
 
 var times = { "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, "1330": {},
                 "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, "1830": {}, "1900": {},
@@ -20,7 +20,8 @@ var all_timetables = [];
 
 
 const send_timetable = async(req,res)=>{
-    const input_courses = req.body;
+    const input_courses = [];
+    input_courses = req.body.courses;
     const exam_result = new Array();
     exam_result = check_exam_clash(input_courses);
     for(i = 0; i <exam_result.length; i++){
@@ -263,4 +264,7 @@ function check_exam_clash(input_courses){
     exam_result[course2] = 0;
     return exam_result;
 }
-module.exports=plan_timetable;
+module.exports= {
+    send_timetable
+    
+};

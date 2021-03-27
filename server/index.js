@@ -24,3 +24,7 @@ app.use('/share', sharing);
 
 
 app.listen(3000,() => console.log("Server up and running"));
+app.use((req,res)=>{
+    console.log("User requested a resource which is unavailable");
+    res.status(404).send('Resource not found');
+});
