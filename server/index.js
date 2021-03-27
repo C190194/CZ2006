@@ -1,5 +1,6 @@
 const express = require ('express');
 const app= express();
+var cors = require("cors");
 const connectDB = require('./DB/Connection')
 const mongoose=require('mongoose');
 
@@ -10,17 +11,19 @@ connectDB();
  //Import routes
 const authRoute=require('./routes/user');
 const planRoute = require('./routes/planning');
-const discussion = require('./routes/discussion');
-const sharing = require('./routes/sharing');
+//const discussion = require('./routes/discussionRoute');
+//const sharing = require('./routes/sharing');
  
 
 
 app.use(express.json({extended:false}));
+
+app.use(cors());
 //Route middlewares
 app.use('/user', authRoute);
 app.use('/routes/planning', planRoute);
-app.use('/discuss', discussion);
-app.use('/share', sharing);
+//app.use('/discuss', discussion);
+//app.use('/share', sharing);
 
 
 app.listen(3000,() => console.log("Server up and running"));
