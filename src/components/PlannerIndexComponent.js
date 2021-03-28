@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import axios from 'axios';
 
 import "./ComponentsStyle.css";
 
@@ -118,6 +119,14 @@ export default function ShareTimetable(props) {
         return item.course;
       }
     });
+
+    axios.post('/user/login',{
+      email: 'astha@gmail.com',
+      password: 'astha123'
+    })
+  .then((response) => {
+    console.log(response.data);
+  });
     // console.log(temp_course_arr);
 
     //testing

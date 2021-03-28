@@ -19,14 +19,15 @@ const planRoute = require('./routes/planning');
 app.use(express.json({extended:false}));
 
 app.use(cors());
+
 //Route middlewares
 app.use('/user', authRoute);
-app.use('/routes/planning', planRoute);
+app.use('/planning', planRoute);
 //app.use('/discuss', discussion);
 //app.use('/share', sharing);
+app.get('/api', (req, res) => res.send('Hello World!'));
 
-
-app.listen(3000,() => console.log("Server up and running"));
+app.listen(5000,() => console.log("Server up and running"));
 app.use((req,res)=>{
     console.log("User requested a resource which is unavailable");
     res.status(404).send('Resource not found');
