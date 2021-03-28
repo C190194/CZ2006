@@ -17,6 +17,7 @@ const timetableSchema = new Schema({
     timetableID:{
         unique: true,
         type: Number,
+        index: true,
         required: true,
         min:1
     },
