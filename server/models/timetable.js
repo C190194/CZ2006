@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const course = new Schema({
+    courseID: {
+        type:String,
+        unique: true
+    },
+    indexNum: {
+        type:Number,
+        unique: true
+    }
+})
+
 //defining the schema of timetable
 const timetableSchema = new Schema({
     timetableID:{

@@ -12,7 +12,7 @@ connectDB();
 const authRoute=require('./routes/user');
 const planRoute = require('./routes/planning');
 //const discussion = require('./routes/discussionRoute');
-//const sharing = require('./routes/sharing');
+const sharing = require('./routes/sharing');
  
 
 
@@ -23,7 +23,7 @@ app.use(cors());
 app.use('/user', authRoute);
 app.use('/routes/planning', planRoute);
 //app.use('/discuss', discussion);
-//app.use('/share', sharing);
+app.use('/share', sharing);
 
 
 app.listen(3000,() => console.log("Server up and running"));
