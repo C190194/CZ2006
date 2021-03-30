@@ -268,9 +268,9 @@ module.exports = ClashPlanner;
 //document.write("testing\n");
 
 //const courses = require("./oldData.js");
-const courses = require("./data.js");
+//const courses = require("./data.js");
 
-const test = new ClashPlanner();
-let a = test.main(courses);
+//const test = new ClashPlanner();
+//let a = test.main(courses);
 
 // This script can run on its own
