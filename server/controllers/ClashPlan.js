@@ -1,17 +1,36 @@
 
 class ClashPlanner {
 
-    timetable_day = {
+    timetable_MON = {
         "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
         "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
         "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
     };
-    timetable_MON = {...this.timetable_day};
-    timetable_TUE = {...this.timetable_day};
-    timetable_WED = {...this.timetable_day};
-    timetable_THU = {...this.timetable_day};
-    timetable_FRI = {...this.timetable_day};
-    timetable_SAT = {...this.timetable_day};
+    timetable_TUE = {
+        "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
+        "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
+        "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
+    };
+    timetable_WED = {
+        "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
+        "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
+        "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
+    };
+    timetable_THU = {
+        "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
+        "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
+        "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
+    };
+    timetable_FRI = {
+        "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
+        "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
+        "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
+    };
+    timetable_SAT = {
+        "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
+        "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
+        "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
+    };
 
     full_timetable = {
         "MON": this.timetable_MON,
@@ -22,256 +41,7 @@ class ClashPlanner {
         "SAT": this.timetable_SAT
     };
 
-    courseArray= [
-        {
-            "courseCode": "AAAAA", 
-            "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-            "au": 3.0,// float
-            "clashFree": true,// True or False
-                        // True means this course doesn't have 
-                        // fixed time, such as online courses
-            "index": [
-                    {
-                        "index_number": "A1", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1130-1430", 
-                                    "start": "1130", 
-                                    "end": "1430", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    },
-                    {
-                        "index_number": "A2", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1430-1730", 
-                                    "start": "1430", 
-                                    "end": "1730", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    }
-            ]
-        },
-        {
-            "courseCode": "BBBBB", 
-            "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-            "au": 3.0,// float
-            "clashFree": true,// True or False
-                        // True means this course doesn't have 
-                        // fixed time, such as online courses
-            "index": [
-                {
-                    "index_number": "B1", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1430-1730", 
-                                "start": "1430", 
-                                "end": "1730", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                },
-                {
-                    "index_number": "B2", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1730-2030", 
-                                    "start": "1730", 
-                                    "end": "2030", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                }    
-            ]
-        },
-        {
-            "courseCode": "CCCCC", 
-            "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-            "au": 3.0,// float
-            "clashFree": true,// True or False
-                        // True means this course doesn't have 
-                        // fixed time, such as online courses
-            "index": [
-                    {
-                        "index_number": "C1", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "0830-1130", 
-                                    "start": "0830", 
-                                    "end": "1130", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    },
-                    {
-                        "index_number": "C2", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1430-1730", 
-                                    "start": "1430", 
-                                    "end": "1730", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    }
-            ]
-        },
-        {
-            "courseCode": "DDDDD", 
-            "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-            "au": 3.0,// float
-            "clashFree": true,// True or False
-                        // True means this course doesn't have 
-                        // fixed time, such as online courses
-            "index": [
-                    {
-                        "index_number": "D1", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1130-1430", 
-                                    "start": "1130", 
-                                    "end": "1430", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    },
-                    {
-                        "index_number": "D2", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1430-1730", 
-                                    "start": "1430", 
-                                    "end": "1730", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    }
-            ]
-        },
-        {
-            "courseCode": "EEEEE", 
-            "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-            "au": 3.0,// float
-            "clashFree": true,// True or False
-                        // True means this course doesn't have 
-                        // fixed time, such as online courses
-            "index": [
-                    {
-                        "index_number": "E1", 
-                        "lesson": [
-                            {
-                                "type": "LEC/STUDIO", 
-                                "group": "L1", 
-                                "day": "WED", 
-                                "date_w1": "2021-08-11",// "2021-08-09"
-                                "time": {
-                                    "full": "1430-1730", 
-                                    "start": "1430", 
-                                    "end": "1730", 
-                                    "duration": 3}, 
-                                "location": "NIE7-02-07", 
-                                "flag": 0, 
-                                "remarks": "",
-                                "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                            // 0 for no course in that week
-                                            // 1 for ~
-                            }
-                        ]
-                    }
-            ]
-        }
-    ];
+    courseArray= [];
 
     //Functions
 
@@ -280,8 +50,8 @@ class ClashPlanner {
         var newLessonList = newIndex.lesson;
         for (var l = 0; l < newLessonList.length; l++){
             var day = newLessonList[l].day;
-            var t = parseInt(newLessonList[l].time.start);
-            var end = parseInt(newLessonList[l].time.end);
+            var t = parseInt(newLessonList[l].start);
+            var end = parseInt(newLessonList[l].end);
 
             while (t < end){
                 var t_str = t.toString();
@@ -327,8 +97,8 @@ class ClashPlanner {
         var oldLessonList = indexObj.lesson;
         for (var l = 0; l < oldLessonList.length; l++){
             var day = oldLessonList[l].day;
-            var t = parseInt(oldLessonList[l].time.start);
-            var end = parseInt(oldLessonList[l].time.end);
+            var t = parseInt(oldLessonList[l].start);
+            var end = parseInt(oldLessonList[l].end);
             
             while (t < end){
                 var t_str = t.toString();
@@ -351,8 +121,8 @@ class ClashPlanner {
         var newLessonList = indexObj.lesson;
         for (var l = 0; l < newLessonList.length; l++){
             var day = newLessonList[l].day;
-            var t = parseInt(newLessonList[l].time.start);
-            var end = parseInt(newLessonList[l].time.end);
+            var t = parseInt(newLessonList[l].start);
+            var end = parseInt(newLessonList[l].end);
             
             while (t < end){
                 var t_str = t.toString();
@@ -393,25 +163,25 @@ class ClashPlanner {
         // DFS
         for (var c = 0; c < this.courseArray.length; c++){ // choose course
             var courseObject = this.courseArray[c];
-            console.log(courseObject.courseCode);
+            //console.log(courseObject.courseCode);
             var accept = false;
             // remove old index from timetable
             if (progress[c] != -1){ // remove old index
                 this.removeIndex(courseObject.courseCode, courseObject.index[progress[c]]);
             }
             for (var i = progress[c] + 1; i < courseObject.index.length; i++){ // choose index
-                console.log(courseObject.index[i].index_number);
+                //console.log(courseObject.index[i].index_number);
                 // reset clash array for this course
                 if (c == 0){
                     clash_array[c] = []; 
                 } else {
                     clash_array[c] = [...clash_array[c-1]];
-                    console.log(clash_array[c]);
+                    //console.log(clash_array[c]);
                 }
                 accept = false;
                 var indexObject = courseObject.index[i];
                 var condition = this.checkClash(indexObject);
-                console.log(condition);
+                //console.log(condition);
                 if (Array.isArray(condition)){ // Acceptable
                     if (condition.length > 0){ // clash 
                         for (var ci = 0; ci < condition.length; ci ++){
@@ -420,7 +190,7 @@ class ClashPlanner {
                             }
                         }
                         clash_array[c].push(courseObject.courseCode);
-                        console.log(clash_array);
+                        //console.log(clash_array);
                         if (clash_array[c].length > 4){ // At most 4 courses are allowed in clashes; New course is not counted in num_clashCourses
                             continue; // next index
                         } 
@@ -430,11 +200,11 @@ class ClashPlanner {
                     if (c == this.courseArray.length - 1){ // Last course
                         var num_clashCourses = clash_array[c].length;
                         result_array[num_clashCourses].push([...progress]); // Record an index set
-                        console.log(progress);
+                        //console.log(progress);
                         continue;
                     }
                     this.addIndex(courseObject.courseCode, indexObject);
-                    console.log(" added");
+                    //console.log(" added");
                     accept = true;
                     break;
                 } 
@@ -478,21 +248,29 @@ class ClashPlanner {
                 result[catgry[i]].push(index_dic);
             }
         }
+        console.log(result['0'].length) // test
+        console.log(result['2'].length)
         return result;
     }
 
 
 
-    main(timetable, clash_courses) {
-        this.full_timetable = timetable;
+    main(clash_courses) {
+        //this.full_timetable = timetable;
         this.courseArray = clash_courses; 
-        this.plan();
+        return this.plan();
     }
 }
 
+module.exports = ClashPlanner;
 
-// Test
+// Test 
 //document.write("testing\n");
+
+//const courses = require("./oldData.js");
+const courses = require("./data.js");
+
 const test = new ClashPlanner();
-console.log(test.plan());
+let a = test.main(courses);
+
 // This script can run on its own
