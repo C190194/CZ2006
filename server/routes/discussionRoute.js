@@ -9,4 +9,6 @@ router.get('/:id', sharingController.course_page);
 
 router.post('/:id', sharingController.update_course_page);
 
-module.export = router;
+router.post('/add', sharingController.add_course_page);
+
+module.exports=router;

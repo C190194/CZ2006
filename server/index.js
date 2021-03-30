@@ -11,7 +11,7 @@ connectDB();
  //Import routes
 const authRoute=require('./routes/user');
 const planRoute = require('./routes/planning');
-//const discussion = require('./routes/discussionRoute');
+const discussion = require('./routes/discussionRoute');
 const sharing = require('./routes/sharing');
  
 
@@ -22,7 +22,7 @@ app.use(cors());
 //Route middlewares
 app.use('/user', authRoute);
 app.use('/routes/planning', planRoute);
-//app.use('/discuss', discussion);
+app.use('/discuss', discussion);
 app.use('/share', sharing);
 
 
