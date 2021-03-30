@@ -3,7 +3,6 @@ const User = require('../models/user');
 const Course = require('../models/course');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const CourseContent = require('../models/courseContent');
 var CourseContent = mongoose.model('CourseContent', new Schema(), 'CourseContent');
 
 
@@ -26,40 +25,39 @@ const update_course_page=(req,res)=>{
     return 2;
 }
 
-const add_course_page=(req, res)=>{
-    res.status(200).send('OK!');
-    // try {
-    //     res.status(200).send('Done adding courses!');
-    //     console.log(-1);
-    //     let courseList = CourseContent.find({}, function(err) {
-    //         if (err) { 
-    //             console.log(err);
-    //         }
-    //     });
+const add_course_page=async(req, res)=>{
+    // res.status(200).send('OK!');
+    try {
+        // res.status(200).send('Done adding courses!');
+        console.log(-1);
+        let courseList = await CourseContent.find({}, function(err) {
+            if (err) { 
+                console.log(err);
+            }
+        });
 
-    //     console.log(100);
-    //     for (i=0; i < 2; i++) {
-    //         courseList[i] = courseList[i].toJSON();
+        console.log(100);
+        for (i=0; i < courseList.length; i++) {
+            var temp = courseList[i].toJSON();
 
-    //         console.log(i)
-    //         const Dis =new Discussion({
-    //             courseCode: courseList[i].courseCode,
-    //             courseInfo:courseList[i].details
-    //         });
-    //         console.log(Dis)
+            console.log(temp)
+            const Dis =new Discussion({
+                courseCode: temp.courseCode,
+                courseInfo:temp.details
+            });
+            console.log(Dis)
 
-    //         // Dis.save().then((result)=>{
-    //         //     console.log(result);})
-    //         //      .catch((err)=>{
-    //         //          console.log(err);});
-    //         console.log(i)
+            Dis.save().then((result)=>{
+                console.log(result);})
+                 .catch((err)=>{
+                     console.log(err);});
 
-    //     }
-    //     res.status(200).send('Done adding courses!');
-    // }
-    // catch (err) {
-    //     res.status(400).send(err);
-    // }
+        }
+        // res.status(200).send('Done adding courses!');
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
 }
 
 module.exports={

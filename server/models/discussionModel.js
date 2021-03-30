@@ -8,8 +8,7 @@ const comment = new Schema({
         required: true
     },
     commentID: {
-        type: Number,
-        unique: true,
+        type: Number,        
         required: true
     },
     commentBody: {
@@ -26,7 +25,7 @@ const discussion = new Schema({
         required: true
         },
     courseInfo:{
-        type: [String]
+        type: [[String]]
     },
     numReviews:{
         type: Number,
@@ -53,10 +52,7 @@ const discussion = new Schema({
         min: 1,
         max: 10
     },
-    comments: {
-        type:[comment],
-        default:[]
-    }
+    comments: [comment]
 });
 
 //making the mongoose model and exporting it
