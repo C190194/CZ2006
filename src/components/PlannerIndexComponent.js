@@ -107,10 +107,6 @@ export default function ShareTimetable(props) {
   // const allowClashCC = planTimetableContext.allowClashCC;
   const setAllowClashCC = planTimetableContext.setAllowClashCC;
 
-  useEffect(() => {
-    console.log("index rerendered");
-  });
-
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   //convert courseDivs to courses
