@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Slide from "@material-ui/core/Slide";
 import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
 import AllowClashCheckBoxesComponent from "./AllowClashCheckBoxesComponent";
+import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -59,55 +60,68 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  formControl: {
-    margin: theme.spacing(3),
-  },
-}));
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function MoreOptionsComponent(props) {
+  const planTimetableContext = usePlanTimetable();
+  const courseDivs = planTimetableContext.courseDivs;
+  const allowClashCC = planTimetableContext.allowClashCC;
+  const setAllowClashCC = planTimetableContext.setAllowClashCC;
+  const userDefinedTimeSlots = planTimetableContext.userDefinedTimeSlots;
+  const setUserDefinedTimeSlots = planTimetableContext.setUserDefinedTimeSlots;
+
   const [open, setOpen] = useState(false);
-  const [changeIsMade, setChangeIsMade] = useState(false);
-  const [fchangeIsMade, setfChangeIsMade] = useState(false);
-  const [cchangeIsMade, setcChangeIsMade] = useState(false);
-  const [isChangeSaved, setIsChangeSaved] = useState(false);
-  //have to compare initial and final state to setChangeisMade in handleSaveChanges
+  const [isChangeMade, setIsChangeMade] = useState(false);
+  // const [isChangeSaved, setIsChangeSaved] = useState(false);
+  const [tempUserDefinedTimeSlots, setTempUserDefinedTimeSlots] = useState(
+    userDefinedTimeSlots
+  );
+  const [tempAllowClashCC, setTempAllowClashCC] = useState(allowClashCC);
+
+  useEffect(() => {
+    if (open == true) {
+      setTempUserDefinedTimeSlots(userDefinedTimeSlots);
+      setTempAllowClashCC(allowClashCC);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    //have to compare initial and final state
+    if (
+      JSON.stringify(tempAllowClashCC.sort()) !==
+        JSON.stringify(allowClashCC.sort()) ||
+      JSON.stringify(tempUserDefinedTimeSlots) !==
+        JSON.stringify(userDefinedTimeSlots)
+    ) {
+      setIsChangeMade(true);
+    } else {
+      setIsChangeMade(false);
+    }
+  }, [tempAllowClashCC, tempUserDefinedTimeSlots]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
-    if (changeIsMade) {
+    if (isChangeMade) {
       if (window.confirm("Discard Changes?")) {
-        setChangeIsMade(false);
+        setIsChangeMade(false);
         setOpen(false);
       }
     } else {
-      setChangeIsMade(false);
       setOpen(false);
     }
-    setIsChangeSaved(false);
+    // setIsChangeSaved(false);
   };
 
   const handleSaveChanges = () => {
-    //compare initial state and final state
-    setIsChangeSaved(true);
-    setChangeIsMade(false);
+    setIsChangeMade(false);
+    setAllowClashCC(tempAllowClashCC);
+    setUserDefinedTimeSlots(tempUserDefinedTimeSlots);
   };
-
-  useEffect(() => {
-    setChangeIsMade(fchangeIsMade || cchangeIsMade);
-  }, [fchangeIsMade]);
-  useEffect(() => {
-    setChangeIsMade(fchangeIsMade || cchangeIsMade);
-  }, [cchangeIsMade]);
 
   return (
     <>
@@ -131,27 +145,24 @@ export default function MoreOptionsComponent(props) {
           More Options
         </DialogTitle>
         <DialogContent dividers>
-          <div className="container">
-            <AddFreeTimeSlotsComponent
-              setfChangeIsMade={setfChangeIsMade}
-              isChangeSaved={isChangeSaved}
-            />
+          <AddFreeTimeSlotsComponent
+            tempUserDefinedTimeSlots={tempUserDefinedTimeSlots}
+            setTempUserDefinedTimeSlots={setTempUserDefinedTimeSlots}
+          />
 
-            <div className="row">
-              <AllowClashCheckBoxesComponent
-                setcChangeIsMade={setcChangeIsMade}
-                isChangeSaved={isChangeSaved}
-              />
-            </div>
-          </div>
+          <AllowClashCheckBoxesComponent
+            tempAllowClashCC={tempAllowClashCC}
+            setTempAllowClashCC={setTempAllowClashCC}
+            courseDivs={courseDivs}
+          />
         </DialogContent>
         <DialogActions>
           <Button
             autoFocus
             onClick={handleSaveChanges}
             color="primary"
-            disabled={!changeIsMade}
-            variant={changeIsMade ? "contained" : "outlined"}
+            disabled={!isChangeMade}
+            variant={isChangeMade ? "contained" : "outlined"}
           >
             Save changes
           </Button>
