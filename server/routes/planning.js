@@ -28,6 +28,6 @@ input_courses = [{"courseCode": "AAA08B", "name": "FASHION & DESIGN: WEARABLE AR
 
 //routing
 // route called in the beginning after login for basic student details
-router.get('/send_timetable', plannner.plan_timetable(input_courses, temp_timetable));
+router.get('/send_timetable', plannner.send_timetable);
 
 module.exports=router;

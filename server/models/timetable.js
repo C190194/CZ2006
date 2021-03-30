@@ -17,7 +17,6 @@ const timetableSchema = new Schema({
     timetableID:{
         unique: true,
         type: Number,
-        index: true,
         required: true,
         min:1
     },
@@ -27,7 +26,7 @@ const timetableSchema = new Schema({
     },
     // each integer encodes a time slot
     fixedTimeSlots:{
-        type: [Date],
+        type: [[Date]],
         min: 11
     },
     courseFixed:{
