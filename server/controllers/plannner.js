@@ -19,6 +19,8 @@ var temp_timetable = timetable;
 var all_timetables = [];
 
 
+
+
 const send_timetable = async(req,res)=>{
     const input_courses = [];
     input_courses = req.body.courses;
@@ -108,6 +110,8 @@ function plan_timetable(input_courses, temp_timetable){
         }
         Array.prototype.push.apply(all_timetables, arrlist);
     }
+    console.log(all_timetables);
+    console.log(all_timetables.length);
     return all_timetables;
 }
 
@@ -119,9 +123,9 @@ function check_clash(courseCode, index, temp_timetable)
     var i;
     for(i=0;i<numLessons;i++)
     {
-        var timeDetails=lesson[i].time;
-        var start=timeDetails.start;
-        var duration=timeDetails.duration;
+        //var timeDetails=lesson[i].time;
+        var start=lesson[i].start;
+        var duration=lesson[i].duration;
         var day=lesson[i].day;
         var weeks=lesson[i].weekList;
         var j;
@@ -265,6 +269,7 @@ function check_exam_clash(input_courses){
     return exam_result;
 }
 module.exports= {
-    send_timetable
+    send_timetable,
+    plan_timetable
     
 };

@@ -16,6 +16,12 @@ const week13 = new Date('2021-04-12T00:00:00');
 
 const weekDates = [week1, week2, week3, week4, week5,week6,week7,week8,week9,week10,week11,week12,week13];
 
+
+// ics to json 
+const ical2json = require("ical2json");
+var output = ical2json.convert("C:\Users\aksha\Downloads\ClassSchedule");
+console.log(output);
+
 //convert the timetable format to .ics
 
 const directEvents = ical.sync.parseICS(``);

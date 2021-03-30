@@ -27,14 +27,14 @@ const timetableSchema = new Schema({
     },
     // each integer encodes a time slot
     fixedTimeSlots:{
-        type: [Number],
+        type: [Date],
         min: 11
     },
     courseFixed:{
         type: [course]
     },
     courseClashAllowed:{
-        type: [course]
+        type: [String]
     },
 });
 
