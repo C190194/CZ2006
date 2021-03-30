@@ -11,7 +11,7 @@ export const EventRoot = React.forwardRef(
       <Tippy
         arrow={true}
         interactive
-        isEnabled={!disabled}
+        disabled={disabled}
         hideOnClick={false}
         className={demoClasses.tooltip}
         content={
