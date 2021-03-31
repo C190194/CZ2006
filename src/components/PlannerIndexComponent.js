@@ -125,14 +125,23 @@ export default function ShareTimetable(props) {
       }
     });
 
-    axios
-      .post("/user/login", {
-        email: "astha@gmail.com",
-        password: "astha123",
-      })
-      .then((response) => {
-        console.log(response.data);
-      });
+    // axios
+    //   .post("/planning/send_timetable", {
+    //     courses: temp_course_arr,
+    //   })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //   });
+
+    // axios
+    //   .post("/user/login", {
+    //     email: "astha@gmail.com",
+    //     password: "astha123",
+    //   })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //   });
+
     // console.log(temp_course_arr);
 
     //testing
