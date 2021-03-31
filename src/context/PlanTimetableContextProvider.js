@@ -5,7 +5,7 @@ const PlanTimetableContext = React.createContext();
 
 function PlanTimetableContextProvider({ children }) {
   const [userDefinedTimeSlots, setUserDefinedTimeSlots] = useState([
-    [new Date("March 1, 2021 10:15:00"), new Date("March 1, 2021 12:15:00")], //each item is an array of start time and end time of a slot
+    // [new Date("March 1, 2021 10:15:00"), new Date("March 1, 2021 12:15:00")], //each item is an array of start time and end time of a slot
   ]);
 
   const [courseDivs, setCourseDivs] = useState([]);
