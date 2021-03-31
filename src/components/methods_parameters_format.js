@@ -13,6 +13,63 @@ const user_selected_time_slots_array = [
   [new Date("March 3, 2021 5:13:00"), new Date("March 1, 2021 11:13:00")],
 ];
 
+//course index(except fixed course index) need to be removed
+const plan_course_data_from_frontend = {
+  allow_clash_course_array: [course1, course2], //each item is a course object
+  not_allow_clash_course_array: [course3, course4],
+  user_selected_time_slots_array: user_selected_time_slots_array,
+};
+
+const course1 = {
+  courseCode: "AAA08D",
+  name: "ABSTRACT PAINTING: WHY IT'S HERE & HOW IT'S MADE*",
+  au: 3,
+  index: [
+    {
+      index_number: "39674",
+      lesson: [
+        {
+          type: "LEC/STUDIO",
+          group: "L1",
+          day: "MON",
+          full: "1230-1530",
+          start: "1230",
+          end: "1530",
+          duration: 3,
+          location: "NIE3-B2-01",
+          flag: 0,
+          remarks: "",
+          date_w1: "2021-08-09",
+          weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        },
+      ],
+    },
+    {
+      index_number: "39675",
+      lesson: [
+        {
+          type: "LEC/STUDIO",
+          group: "L2",
+          day: "FRI",
+          full: "0930-1230",
+          start: "0930",
+          end: "1230",
+          duration: 3,
+          location: "NIE3-B2-01",
+          flag: 0,
+          remarks: "",
+          date_w1: "2021-08-13",
+          weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        },
+      ],
+    },
+  ],
+  clashFree: false,
+  id: "2ufu8tyda",
+};
+
+const saved_timetable = [];
+
 // Backend will return (return_data_to_be_displayed_array, return_course_code_and_selected_index_object_array);
 //1 appointment = 1 time slot
 //1 course index can have multiple appointments
