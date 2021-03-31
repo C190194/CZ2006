@@ -1,502 +1,338 @@
+const { models } = require("mongoose");
+const CourseModal= require("../models/course.js");
+const databaseExam = require("../models/databaseExam");
+const ClashPlanner = require("./ClashPlan.js");
 
-
-
-var timetable_MON = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
+var times = { "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, "1330": {},
+                "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, "1830": {}, "1900": {},
+                "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}};
+//console.log(times);
+timetable = {
+    MON: times,
+    TUE: times,
+    WED: times,
+    THU: times,
+    FRI: times,
+    SAT: times
 };
 
-var timetable_TUE = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
-};
+var temp_timetable = {...timetable};
+var all_timetables = [];
+var index_comb = [];
 
-var timetable_WED = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
-};
 
-var timetable_THU = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
-};
+const send_timetable = async(req,res)=>{
+    const input_courses = [];
+    const clash_courses = [];
+    const free_slots = [];
+    input_courses = req.body.non_clash_courses;
+    clash_courses = req.body.clash_courses;
+    free_slots = req.body.free_slots;
+    const exam_result = new Array();
+    exam_result = check_exam_clash(input_courses);
+    for(i = 0; i <exam_result.length; i++){
+        if (exam_result[i][clash] == 0){
+            res.status(200).json(exam_result[i]);
+            break;
+        }
+        else{
+            //generated_timetables = plan_timetable(input_courses, clash_courses, temp_timetable);
+            //resultobj = delete_empty_slots(generated_timetables)
+            full_combinations = plan_timetable(input_courses, clash_courses, free_slots);
+            res.status(200).json({full_combinations}); //full_combinations is a list, anything needs to change???
+        };
+    }
 
-var timetable_FRI = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
-};
-
-var timetable_SAT = {
-    "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, 
-    "1330": {}, "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, 
-    "1830": {}, "1900": {}, "1930": {}, "2000": {}, "2030": {}, "2100": {}, "2130": {}, "2200": {}, "2230": {}, "2300": {}, 
-    "0830": {}, "0900": {} 
-};
-
-var full_timetable = {
-    "MON": timetable_MON,
-    "TUE": timetable_TUE,
-    "WED": timetable_WED,
-    "THU": timetable_THU,
-    "FRI": timetable_FRI,
-    "SAT": timetable_SAT
-};
-
-var  courseArray= [
-    {
-        "courseCode": "AAAAA", 
-        "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-        "au": 3.0,// float
-        "clashFree": true,// True or False
-                     // True means this course doesn't have 
-                     // fixed time, such as online courses
-        "index": [
-                {
-                    "index_number": "A1", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1130-1430", 
-                                "start": "1130", 
-                                "end": "1430", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                },
-                {
-                    "index_number": "A2", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1430-1730", 
-                                "start": "1430", 
-                                "end": "1730", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                }
-        ]
-    },
-    {
-        "courseCode": "BBBBB", 
-        "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-        "au": 3.0,// float
-        "clashFree": true,// True or False
-                     // True means this course doesn't have 
-                     // fixed time, such as online courses
-        "index": [
+}
+function delete_empty_slots (all_timetables){
+    for(j = 0; j < all_timetables.length;j++){
+        for(var i of Object.keys(all_timetable[j])){
+            for(var k of Object.keys(all_timetable[j][i]))
             {
-                "index_number": "B1", 
-                "lesson": [
-                    {
-                        "type": "LEC/STUDIO", 
-                        "group": "L1", 
-                        "day": "WED", 
-                        "date_w1": "2021-08-11",// "2021-08-09"
-                        "time": {
-                            "full": "1430-1730", 
-                            "start": "1430", 
-                            "end": "1730", 
-                            "duration": 3}, 
-                        "location": "NIE7-02-07", 
-                        "flag": 0, 
-                        "remarks": "",
-                        "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                    // 0 for no course in that week
-                                    // 1 for ~
-                    }
-                ]
-            },
+                if((JSON.stringify(all_timetable[j][i][k]) === '{}'))
+                {
+                    delete all_timetable[j][i][k];
+                }
+            }
+        }
+
+    }
+    return all_timetables;
+}
+
+
+
+
+function plan_timetable(input_courses, clash_courses, free_slots){ // clash_courses added
+    //console.log(free_slots);
+    //set all the free time slots
+    for (let f = 0; f < free_slots.length; f++){
+        let slot = free_slots[f];
+        let day = slot.getDay();
+        if (day == 1){
+            day = 'MON';
+        } else if (day == 2){
+            day = 'TUE';
+        } else if (day == 3){
+            day = 'WED';
+        } else if (day == 4){
+            day = 'THU';
+        } else if (day == 5){
+            day = 'FRI';
+        } else if (day == 6){
+            day = 'SAT';
+        }
+        let time = slot.getHours().toString() + slot.getMinutes().toString();
+        temp_timetable[day][time] = ["000000"];
+        //console.log(temp_timetable[day][time], day, time);
+    }
+    
+    
+    
+    //insert course 1 ke index
+    for(var i=0;i<input_courses[0]["index"].length;i++)
+    {
+        
+        if(!check_clash(input_courses[0]["courseCode"],input_courses[0]["index"][i],temp_timetable))
+        {
+            var tt = allot_course(input_courses[0]["courseCode"],input_courses[0]["index"][i],temp_timetable);
+        
+            all_timetables.push(tt);
+            let dic = {};
+            dic[input_courses[0]["courseCode"]] = input_courses[0]["index"][i].index_number;
+            index_comb.push(dic);
+            for (var member in all_timetables) delete temp_timetable[member];
+     
+        }  
+    }
+    //console.log(index_comb);
+
+    if(all_timetables.length==0)
+    {
+        return ["fixed time slot is clashing with "+input_courses[0]["courseCode"]];
+    }
+
+    for(var i=1;i<input_courses.length;i++)
+    {
+        const indexList=input_courses[i]["index"];
+        const arrlist=[];
+        const index_array = [];
+        
+        for (var j=0;j< indexList.length;j++)
+        {
+            for(var k=0;k<all_timetables.length;k++)
             {
-                "index_number": "B2", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1730-2030", 
-                                "start": "1730", 
-                                "end": "2030", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-            }    
-        ]
-    },
-    {
-        "courseCode": "CCCCC", 
-        "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-        "au": 3.0,// float
-        "clashFree": true,// True or False
-                     // True means this course doesn't have 
-                     // fixed time, such as online courses
-        "index": [
+                if(check_clash(input_courses[i]["courseCode"],indexList[j],all_timetables[k]))
                 {
-                    "index_number": "C1", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "0830-1130", 
-                                "start": "0830", 
-                                "end": "1130", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                },
-                {
-                    "index_number": "C2", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1430-1730", 
-                                "start": "1430", 
-                                "end": "1730", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
+                    //console.log("clash");
+                    continue;
                 }
-        ]
-    },
-    {
-        "courseCode": "DDDDD", 
-        "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-        "au": 3.0,// float
-        "clashFree": true,// True or False
-                     // True means this course doesn't have 
-                     // fixed time, such as online courses
-        "index": [
-                {
-                    "index_number": "D1", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1130-1430", 
-                                "start": "1130", 
-                                "end": "1430", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                },
-                {
-                    "index_number": "D2", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1430-1730", 
-                                "start": "1430", 
-                                "end": "1730", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
+                else{
+                    
+                    //add the j index to kth timetable and store separately
+                    var tt = allot_course(input_courses[i]["courseCode"],indexList[j],all_timetables[k]);
+                    //console.log(input_courses[i]["courseCode"] + " allotted");
+                    arrlist.push(tt);
+                    //console.log(index_comb[k]);
+                    //console.log(tt);
+                    let dic = {...index_comb[k]};
+                    dic[input_courses[i]["courseCode"]] = indexList[j].index_number;
+                    index_array.push(dic);
                 }
-        ]
-    },
-    {
-        "courseCode": "EEEEE", 
-        "name": "FASHION & DESIGN: WEARABLE ART AS A SECOND SKIN*", 
-        "au": 3.0,// float
-        "clashFree": true,// True or False
-                     // True means this course doesn't have 
-                     // fixed time, such as online courses
-        "index": [
-                {
-                    "index_number": "E1", 
-                    "lesson": [
-                        {
-                            "type": "LEC/STUDIO", 
-                            "group": "L1", 
-                            "day": "WED", 
-                            "date_w1": "2021-08-11",// "2021-08-09"
-                            "time": {
-                                "full": "1430-1730", 
-                                "start": "1430", 
-                                "end": "1730", 
-                                "duration": 3}, 
-                            "location": "NIE7-02-07", 
-                            "flag": 0, 
-                            "remarks": "",
-                            "weekList" : [1,1,1,1,1,1,1,1,1,1,1,1,1]// list with 13 elements
-                                        // 0 for no course in that week
-                                        // 1 for ~
-                        }
-                    ]
-                }
-        ]
+            }
+            
+        }
+        //add the separartely stored courses to all_timetables and remove the previous ones
+        all_timetables=[];
+        index_comb = [];
+        if(arrlist.length ==0)
+        {
+            return ["Cannot allot course because of clash "+input_courses[i]["courseCode"]];
+        }
+        Array.prototype.push.apply(all_timetables, arrlist);
+        Array.prototype.push.apply(index_comb, index_array);
+        
     }
-];
-
-
-
-function checkClash (newIndex){ // Dic -> {"code": lesson}, lesson -> [type, weekList]
-    var clashCourses = []
-    var newLessonList = newIndex.lesson;
-    for (var l = 0; l < newLessonList.length; l++){
-        var day = newLessonList[l].day;
-        var t = parseInt(newLessonList[l].time.start);
-        var end = parseInt(newLessonList[l].time.end);
-
-        while (t < end){
-            var t_str = t.toString();
-            if (t < 1000){
-                var t_str = "0" + t_str;
-            }
-            var timeslotDic = full_timetable[day][t_str];
-            var newLesson = [newLessonList[l].type, newLessonList[l].weekList];
-            if (Object.keys(timeslotDic).length == 1){ 
-                var oldCode = Object.keys(timeslotDic)[0];
-                var oldLesson = timeslotDic[oldCode];
-                for (var i = 0; i < 13; i++){
-                    if (oldLesson[1][i] && newLesson[1][i]){ // compare weeks
-                        if (oldLesson[0]=="LEC/STUDIO" || newLesson[0]=="LEC/STUDIO"){ 
-                            if (!clashCourses.includes(oldCode)){
-                                clashCourses.push(oldCode); // clash acceptable
-                            }
-                        } else { // no lecture
-                            return 0; // clash not acceptable
-                        }
-                    }
-                    // no clash
-                }
-            } else if (Object.keys(timeslotDic).length == 2){
-                return 0; // clash not acceptable
-            }
-
-        if (t_str.endsWith("30")){
-            t = t + 70;
-        } else {
-            t = t + 30;
-        }
-        }
-    } 
-    return clashCourses; 
+    //console.log(index_comb[1]);
+    //console.log(all_timetables[1]);
     
-}
-
-function removeIndex (code, indexObj){
-    var oldLessonList = indexObj.lesson;
-    for (var l = 0; l < oldLessonList.length; l++){
-        var day = oldLessonList[l].day;
-        var t = parseInt(oldLessonList[l].time.start);
-        var end = parseInt(oldLessonList[l].time.end);
-        
-        while (t < end){
-            var t_str = t.toString();
-            if (t < 1000){
-                var t_str = "0" + t_str;
-            }
-            delete full_timetable[day][t_str][code];
-
-            if (t_str.endsWith("30")){
-                t = t + 70;
-            } else {
-                t = t + 30;
-            }
-        }
-        
-    }
-}
-
-function addIndex (code, indexObj){
-    var newLessonList = indexObj.lesson;
-    for (var l = 0; l < newLessonList.length; l++){
-        var day = newLessonList[l].day;
-        var t = parseInt(newLessonList[l].time.start);
-        var end = parseInt(newLessonList[l].time.end);
-        
-        while (t < end){
-            var t_str = t.toString();
-            if (t < 1000){
-                var t_str = "0" + t_str;
-            }
-            full_timetable[day][t_str][code] = [newLessonList[l].type,
-                                                newLessonList[l].weekList] ;
-
-            if (t_str.endsWith("30")){
-                t = t + 70;
-            } else {
-                t = t + 30;
-            }
-        }
-    }
-}
-    
-
-// 1. Select an index for each course such that there are 
-// no more than 2 courses at each time slot
-// Brute Force
-function step1() {
-    var result_array = {
+    let result = {
         "0" : [],
         "2" : [],
         "3" : [],
         "4" : []
     }
-    // Initialize DFS searching progress and clashes after each course is added
-    var progress = [];
-    var clash_array = []; // store the course codes involved in clashes
-    for (var c = 0; c < courseArray.length; c++){
-        progress[c] = -1;
-    }
-    
-    
-
-    // DFS
-    for (var c = 0; c < courseArray.length; c++){ // choose course
-        var courseObject = courseArray[c];
-        console.log(courseObject.courseCode);
-        var accept = false;
-        // remove old index from timetable
-        if (progress[c] != -1){ // remove old index
-            removeIndex(courseObject.courseCode, courseObject.index[progress[c]]);
-        }
-        for (var i = progress[c] + 1; i < courseObject.index.length; i++){ // choose index
-            console.log(courseObject.index[i].index_number);
-            // reset clash array for this course
-            if (c == 0){
-                clash_array[c] = []; 
-            } else {
-                clash_array[c] = [...clash_array[c-1]];
-                console.log(clash_array[c]);
-            }
-            accept = false;
-            var indexObject = courseObject.index[i];
-            var condition = checkClash(indexObject);
-            console.log(condition);
-            if (Array.isArray(condition)){ // Acceptable
-                if (condition.length > 0){ // clash 
-                    for (var ci = 0; ci < condition.length; ci ++){
-                        if (!clash_array[c].includes(condition[ci])){
-                            clash_array[c].push(condition[ci]);
-                        }
-                    }
-                    clash_array[c].push(courseObject.courseCode);
-                    console.log(clash_array);
-                    if (clash_array[c].length > 4){ // At most 4 courses are allowed in clashes; New course is not counted in num_clashCourses
-                        continue; // next index
-                    } 
-                }
-                // found an index
-                progress[c] = i;
-                if (c == courseArray.length - 1){ // Last course
-                    var num_clashCourses = clash_array[c].length;
-                    result_array[num_clashCourses].push([...progress]); // Record an index set
-                    console.log(progress);
-                    continue;
-                }
-                addIndex(courseObject.courseCode, indexObject);
-                console.log(" added");
-                accept = true;
-                break;
-            } 
-            // unacceptable clash -> continue
-        }
-        if (!accept) { // All indexes of the course fail here / All indexes have been tested
-            if (c == courseArray.length - 1){ // Last course
-                progress[c] = -1; // Reset progress for this course
-            } else {
-                if (progress[c] != -1){ // remove old index
-                    removeIndex(courseObject.courseCode, courseObject.index[progress[c]]);
-                }
-                progress[c] = -1;
+    const clashPlan = new ClashPlanner();
+    for (let i = 0; i < all_timetables.length; i++){
+        let newResult = clashPlan.main(all_timetables[i],clash_courses);//+comb
+        ["0","2","3","4"].forEach(function (value){
+            for (let r = 0; r < newResult[value].length; r++){
+                result[value].push(Object.assign({}, index_comb[i], newResult[value][r]));
             }
             
-            if (c == 0){ // All combinations have been tested 
-                break;
-            }
-            c = c - 2; // Go to the last course
-        } 
+        })
     }
-    return result_array;
+    console.log(result["0"].concat(result["2"],result["3"],result["4"]));
     
+
+    return result["0"].concat(result["2"],result["3"],result["4"]);
 }
 
 
-// 2. Change indexes at clash slots to make every clash acceptable
+function check_clash(courseCode, index, temp_timetable)
+{
+    var lesson = index["lesson"];
+    var numLessons = lesson.length;
+    var i;
+    for(i=0;i<numLessons;i++)
+    {
+        var timeDetails=lesson[i].time;
+        var start=lesson[i].start;
+        var duration=lesson[i].duration;
+        var day=lesson[i].day;
+        var weeks=lesson[i].weekList;
+        var j;
+        const inc=[];
+        if(start.slice(-2)=="00")
+        {
+            inc.push(30);
+            inc.push(70);
+        }
+        else{
+            inc.push(70);
+            inc.push(30);
+        }
+        for(j=0;j<duration*2;j++)
+        {
+            if(!(JSON.stringify(temp_timetable[day][start]) === '{}'))
+            {
+                var k;
+                if(temp_timetable[day][start][0]=="000000")
+                {
+                    return true;
+                }
+                
+                for(k=0;k<13;k++)
+                {
+                    if(temp_timetable[day][start][3][k]==weeks[k]==1)
+                    {
+                        return true;
+                    }
+                }
+            }
+            var incr=parseInt(start);
+            incr=incr+inc[j%2];
+            start=incr.toString();
+            if(incr<1000)
+            {
+                start="0"+start;
+            } 
+        }
+        
+    }
+    return false;
+}
 
+function allot_course(courseCode,index,temp_timetable){
+         var copiedTT = JSON.parse(JSON.stringify(temp_timetable));
+         var newLessonList = index["lesson"];      
+            for (var l = 0; l < newLessonList.length; l++){
+                    var day = newLessonList[l].day;
+                    var t = parseInt(newLessonList[l].start);
+                    var end = parseInt(newLessonList[l].end);    
+                    while (t < end){
+                        var t_str = t.toString();
+                        if (t < 1000){
+                            var t_str = "0" + t_str;
+                            }
+                        copiedTT[day][t_str] = [courseCode,
+                                                index["index_number"],
+                                                newLessonList[l]['type'],
+                                                newLessonList[l]['weekList'], 
+                                                newLessonList[l]["group"], 
+                                                newLessonList[l]["location"],
+                                                newLessonList[l]["remarks"]];
+                            
+                            if (t_str.endsWith("30")){
+                                t = t + 70;
+                            } else {
+                                t = t + 30;
+                            }
+                        }
+                    }
+            return copiedTT;
 
+}
 
-//for (var c = 0; c < courseArray.length; c++):
+async function get_exam_details(courseCode,DatabaseExam){
+    const examobj=await DatabaseExam.findOne({courseCode})
+    if(!examobj){
+        return -1
+    }
 
+    return examobj;
+}
 
-// Test
-document.write("testing\n");
-console.log(step1());
-// This script can run on its own
+function check_exam_clash(input_courses){
+    for(i = 0;i < input_courses.length;i++){
+        exami = get_exam_details(input_courses[courseCode],DatabaseExam);
+        if(exami == -1){
+            exami_date = -1;
+            exami_time = -1;
+            exami = {};
+            exami["course"] = input_courses[courseCode];
+            exami["date"] = -1;
+            exami["day"] = -1;
+            exami["time"] = -1;
+            exami["duration"] = -1;
+        } else{
+            exami_date = exami['date'];
+            exami_time = exami['time'];
+            exami_duration = exami['duration'];}
+        for(j = i+1;j < (input_courses.length);j++){
+            exam = get_exam_details(input_courses[courseCode],DatabaseExam);
+            if(exam == -1){
+            exam_date = -1;
+            exam_time = -1;
+            exam = {};
+            exam["course"] = input_courses[courseCode];
+            exam["date"] = -1;
+            exam["day"] = -1;
+            exam["time"] = -1;
+            exam["duration"] = -1;
+        } else{
+            exam_date = exam['date'];
+            exam_time = exam['time'];
+            exam_duration = exam['duration'];
+        }
+        if(exami_date == exam_date)
+        {
+            if(exami_time <= exam_time && parseint(exami_time)+exami_duration >= exam_time)
+            {
+                exam_result[clash] = 0; //0 = true(clash), 1 = false(no clash)
+                exam_result[course1] = input_courses[i][courseCode];
+                exam_result[course2] = input_courses[j][courseCode];
+                return exam_result;
+
+            }
+            else if(exam_time <= exami_time && parseint(exam_time)+exami_duration >= exami_time)
+            {
+                exam_result[clash] = 0;     //0 = true(clash), 1 = false(no clash)
+                exam_result[course1] = input_courses[i][courseCode];
+                exam_result[course2] = input_courses[j][courseCode];
+                return exam_result;
+
+            }
+        }
+    }
+    }
+    exam_result[clash] = 1;     //0 = true(clash), 1 = false(no clash)
+    exam_result[course1] = 0;
+    exam_result[course2] = 0;
+    return exam_result;
+}
+module.exports= {
+    send_timetable,
+    plan_timetable
+    
+};

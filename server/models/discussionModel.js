@@ -8,33 +8,12 @@ const comment = new Schema({
         required: true
     },
     commentID: {
-        type: Number,
-        unique: true,
+        type: Number,        
         required: true
     },
     commentBody: {
         type: String,
         required: true
-    },
-    commentReply: {
-        replies:[reply]
-    }
-});
-
-//definining the schema of a reply to a comment
-const reply = new Schema({
-    studentId:{
-        type: String,
-        required: true
-    },
-    replyID: {
-        type: Number,
-        unique: true,
-        required: true
-    },
-    replyBody: {
-        type:String,
-        require:true
     }
 });
 
@@ -45,6 +24,9 @@ const discussion = new Schema({
         unique: true,
         required: true
         },
+    courseInfo:{
+        type: [[String]]
+    },
     numReviews:{
         type: Number,
         default:0,
@@ -52,7 +34,8 @@ const discussion = new Schema({
     },
     studentsRated:{
         //list of emails are stored here
-        type:[String]
+        type:[String],
+        default: []
     },
     usefulness: {
         type: Number,

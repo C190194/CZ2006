@@ -7,12 +7,10 @@ router.get('/', sharingController.timetable_index);
 
 router.get('/link', sharingController.link_share);
 
-router.get('/QR', sharingController.share_QR);
-
-router.get('/mail', sharingController.share_mail);
+// router.get('/QR', sharingController.share_QR);
 
 router.get('/export', sharingController.export_settings);
 
 router.get('/ics', sharingController.download_ics);
 
-modules.export = router;
+module.exports = router;
