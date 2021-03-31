@@ -146,7 +146,6 @@ function PlanTimetableContextProvider({ children }) {
     };
     // console.log(combination);
     const tempOTS = convertCombinationtoApps(combination);
-
     setOccupiedTimeSlots(tempOTS);
   }, [combinations]);
 
