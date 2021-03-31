@@ -12,7 +12,6 @@ import {
 } from "../context/PlanTimetableContextProvider";
 
 import "./PlanTimetable.css";
-import { appointments } from "../shares/appointments";
 
 function PlanTimetableContextConsumer(props) {
   const planTimetableContext = usePlanTimetable();
