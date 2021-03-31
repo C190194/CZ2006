@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import "./pageStyle.css";
 import CircularSlider from "@fseehawer/react-circular-slider";
 import SearchCourseDropdown from "../components/SearchCourseDropdown";
+import { useHistory } from "react-router-dom";
 
 function DiscussionForum(props) {
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -89,6 +90,14 @@ function DiscussionForum(props) {
     );
   });
 
+  const history = useHistory();
+
+  function handleSearchCourse(val) {
+    if (val !== null) {
+      history.push(`/discuss/${val.courseCode}`);
+    }
+  }
+
   return (
     <div className="container">
       <div className="page-title col-12">
@@ -105,15 +114,11 @@ function DiscussionForum(props) {
               id: Math.random().toString(36).substr(2, 9),
             }))}
             value={value}
-            onChange={event => setValue(val)}
+            onChange={(val) => setValue(val)}
           />
         </div>
         <div className="col-2">
-          <Button>
-            <Link to={`/discuss/${value.courseCode}`}>
-              Search
-            </Link>
-          </Button>
+          <Button onClick={() => handleSearchCourse(value)}>Search</Button>
         </div>
       </div>
       <div>Top Rated Course</div>
