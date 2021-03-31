@@ -103,8 +103,10 @@ export default function ShareTimetable(props) {
   const combinations = planTimetableContext.combinations;
   const setCombinations = planTimetableContext.setCombinations;
   const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
+  const userDefinedTimeSlots = planTimetableContext.userDefinedTimeSlots;
+  const occupiedTimeSlots = planTimetableContext.occupiedTimeSlots;
   const setIsPlanClicked = planTimetableContext.setIsPlanClicked;
-  // const allowClashCC = planTimetableContext.allowClashCC;
+  const allowClashCC = planTimetableContext.allowClashCC;
   const setAllowClashCC = planTimetableContext.setAllowClashCC;
 
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
@@ -114,20 +116,66 @@ export default function ShareTimetable(props) {
     // console.log(temp_course_divs);
     //pass course to backend
     // setIsPlanClicked(true);
+    const non_clash_courses = [];
+    const clash_courses = [];
 
-    const temp_course_arr = temp_course_divs.map((item) => {
-      if (item.isIndexFixed) {
-        let tempCourse = { ...item.course };
-        tempCourse.index = [item.currentIdx];
-        return tempCourse;
-      } else {
-        return item.course;
+    for (let i = 0; i < temp_course_divs.length; i++) {
+      //push courses into clash_courses
+      if (allowClashCC.includes(temp_course_divs[i].course.courseCode)) {
+        if (temp_course_divs[i].isIndexFixed) {
+          const tempCourse = { ...temp_course_divs[i].course };
+          tempCourse.index = [temp_course_divs[i].currentIdx];
+          clash_courses.push(tempCourse);
+        } else {
+          clash_courses.push(temp_course_divs[i].course);
+        }
       }
+      //push courses into non_clash_courses
+      else {
+        if (temp_course_divs[i].isIndexFixed) {
+          const tempCourse = { ...temp_course_divs[i].course };
+          tempCourse.index = [temp_course_divs[i].currentIdx];
+          non_clash_courses.push(tempCourse);
+        } else {
+          non_clash_courses.push(temp_course_divs[i].course);
+        }
+      }
+    }
+
+    // const input_course_arr = temp_course_divs.map((item) => {
+    //   if (item.isIndexFixed) {
+    //     const tempCourse = { ...item.course };
+    //     tempCourse.index = [item.currentIdx];
+    //     return tempCourse;
+    //   } else {
+    //     return item.course;
+    //   }
+    // });
+
+    console.log({
+      non_clash_courses: non_clash_courses,
+      clash_courses: clash_courses,
+      free_slots: userDefinedTimeSlots,
     });
 
     // axios
     //   .post("/planning/send_timetable", {
-    //     courses: temp_course_arr,
+    //     input_courses: temp_course_arr,
+    //     clash_courses: [],
+    //     free_slots: [
+    //       [
+    //         new Date("March 1, 2021 11:13:00"),
+    //         new Date("March 1, 2021 12:13:00"),
+    //       ], //each item is an array of start time and end time of a slot
+    //       [
+    //         new Date("March 2, 2021 9:13:00"),
+    //         new Date("March 1, 2021 11:13:00"),
+    //       ],
+    //       [
+    //         new Date("March 3, 2021 5:13:00"),
+    //         new Date("March 1, 2021 11:13:00"),
+    //       ],
+    //     ],
     //   })
     //   .then((response) => {
     //     console.log(response.data);
@@ -191,6 +239,10 @@ export default function ShareTimetable(props) {
   };
 
   const setIsIndexFixed = (value, idx) => {
+    // const indexFixedCourseDivIDs = courseDivs.map((item, i) => {
+    //   if (item.isIndexFixed) return i + 1;
+    // });
+
     const tempCourseDivs = [...courseDivs];
     tempCourseDivs[idx].isIndexFixed = value;
     setCourseDivs(tempCourseDivs);
