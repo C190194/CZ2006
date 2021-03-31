@@ -21,3 +21,17 @@ a {
 .comment-header {
     background: #99FFFF;
 }
+
+.course-detail-courseCode {
+  font-size: 2em;
+}
+
+.course-detail-courseName {
+  font-size: 1.8em;
+}
+
+.rating {
+  position:absolute;
+  margin-left: 12px;
+  margin-top: 10px;
+}

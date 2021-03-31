@@ -16,6 +16,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import CircularSlider from "@fseehawer/react-circular-slider";
+
 import "./pageStyle.css";
 
 function RenderComments({ comments /*, postComment, dishId */ }) {
@@ -53,233 +55,229 @@ function RenderComments({ comments /*, postComment, dishId */ }) {
   } else return <div></div>;
 }
 
-class DiscussionDetail extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    // const comments = this.props.comments.map((comment) => (
-    //   <div>
-    //     <div key={comment.id}>
-    //       <Card className="ml-2 mt-3">
-    //         <p className="ml-4">
-    //           <b>{comment.author} </b>
-    //         </p>
-
-    //         <p className="ml-5">{comment.comment}</p>
-    //       </Card>
-    //     </div>
-    //     <CommentForm dishId={comment.courseId} /*postComment={postComment}*/ />
-    //   </div>
-    // ));
-
-    return (
-      <div className="container">
-        <div className="row">
-          <div key={this.props.course.id} className="mt-1">
-            <Card tag="li">
-              <Media body className="ml-5">
-                <div className="row">
-                  <Media heading className="col-11">
-                    <b>{this.props.course.courseCode}</b>
+function DiscussionDetail(props) {
+  return (
+    <div className="container">
+      <div className="row">
+        <div key={props.course.id} className="mt-1">
+          <Card tag="li">
+            <Media body className="ml-5">
+              <div className="row">
+                <div className="col-8">
+                  <Media heading className="course-detail-courseCode row">
+                    <b>{props.course.courseCode}</b>
                   </Media>
-                  <Media className="col-1">{this.props.course.rating}</Media>
+                  <Media heading className="course-detail-courseName row">
+                    {props.course.name}
+                  </Media>
                 </div>
-                <Media heading>{this.props.course.name}</Media>
-                <p>{this.props.course.description}</p>
-              </Media>
-            </Card>
-          </div>
-        </div>
-        <div className="m-1">
-          <div className="row"></div>
-          {/* {comments} */}
-          <RenderComments comments={this.props.comments} />
+                <div className="col-3">
+                  <p className="row mt-2">Usefulness:</p>
+                  <p className="row mt-2">Easiness:</p>
+                  <p className="row mt-2">Time Investment:</p>
+                </div>
+                <div className="col-1">
+                  <div className="row mb-1">
+                    <CircularSlider
+                      width={60}
+                      dataIndex={props.course.usefulness}
+                      label="savings"
+                      hideLabelValue={true}
+                      verticalOffset="0.5rem"
+                      progressSize={8}
+                      trackColor="#fffff"
+                      progressColorFrom="#228B22"
+                      progressColorTo="#39FF14"
+                      trackSize={8}
+                      min={0}
+                      max={10}
+                      knobDraggable={false}
+                    />
+                    <div className="rating">{props.course.usefulness} </div>
+                  </div>
+                  <div className="row mb-1">
+                    <CircularSlider
+                      width={60}
+                      dataIndex={props.course.easiness}
+                      label="savings"
+                      hideLabelValue={true}
+                      verticalOffset="0.5rem"
+                      progressSize={8}
+                      trackColor="#fffff"
+                      progressColorFrom="#228B22"
+                      progressColorTo="#39FF14"
+                      trackSize={8}
+                      min={0}
+                      max={10}
+                      knobDraggable={false}
+                    />
+                    <div className="rating">{props.course.easiness} </div>
+                  </div>
+                  <div className="row mb-1">
+                    <CircularSlider
+                      width={60}
+                      dataIndex={props.course.timeinvestment}
+                      label="savings"
+                      hideLabelValue={true}
+                      verticalOffset="0.5rem"
+                      progressSize={8}
+                      trackColor="#fffff"
+                      progressColorFrom="#228B22"
+                      progressColorTo="#39FF14"
+                      trackSize={8}
+                      min={0}
+                      max={10}
+                      knobDraggable={false}
+                    />
+                    <div className="rating">{props.course.timeinvestment} </div>
+                  </div>
+                </div>
+                <Media className="col-1">{props.course.rating}</Media>
+              </div>
+              <p>{props.course.description}</p>
+            </Media>
+          </Card>
         </div>
       </div>
-    );
-  }
+      <div className="m-1">
+        <div className="row"></div>
+        {/* {comments} */}
+        <RenderComments comments={props.comments} />
+      </div>
+    </div>
+  );
 }
 
-const required = (val) => val && val.length;
-const maxLength = (len) => (val) => !val || val.length <= len;
-const minLength = (len) => (val) => val && val.length >= len;
+export default DiscussionDetail;
 
 function valuetext(value) {
   return `${value}°C`;
 }
 
-class CommentForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isModalOpen: false,
-    };
+function CommentForm() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [usefulness, setUsefulness] = useState(5);
+  const [timeinvestment, setTimeinvestment] = useState(5);
+  const [easiness, setEasiness] = useState(5);
 
-    this.toggleModal = this.toggleModal.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  function toggleModal() {
+    setIsModalOpen((prevState) => !prevState);
   }
 
-  toggleModal() {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen,
-    });
-  }
-
-  // handleSubmit(values) {
-  //   console.log("Current state is: " + JSON.stringify(values));
-  //   this.toggleModal();
-  //   this.props.postComment(
-  //     this.props.courseId,
-  //     values.rating,
-  //     values.author,
-  //     values.comment
-  //   );
-  // }
-
-  handleSubmit(values) {
+  function handleSubmit(values) {
     alert(
-      "Easiness:" +
-      values.rating +
-        " Usefulness: " +
-        document.getElementById("usefulness").value +
+      " Usefulness: " +
+        usefulness +
+        " Easiness: " +
+        easiness +
         "Time Investment " +
-        document.getElementById("timeinvestment").value +
+        timeinvestment +
         " Comment: " +
         values.comment
     );
   }
 
-  render() {
-    return (
-      <div>
-        <Modal
-          size="lg"
-          isOpen={this.state.isModalOpen}
-          toggle={this.toggleModal}
-        >
-          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
-          <ModalBody>
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+  return (
+    <div>
+      <Modal size="lg" isOpen={isModalOpen} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>Submit Comment</ModalHeader>
+        <ModalBody>
+          <LocalForm onSubmit={(values) => handleSubmit(values)}>
+            <Row htmlFor="usefulness" className="mt-2">
+              <Typography className="col-4" id="usefulness-slider" gutterBottom>
+                Usefulness:
+              </Typography>
+              <Slider
+                value={usefulness}
+                onChange={(event, newVal) => {
+                  setUsefulness(newVal);
+                }}
+                className="col-7"
+                defaultValue={5}
+                getAriaValueText={valuetext}
+                aria-labelledby="usefulness-slider"
+                valueLabelDisplay="auto"
+                step={1}
+                marks={true}
+                min={0}
+                max={10}
+              />
+            </Row>
+
+            <Row htmlFor="easiness" className="mt-2">
+              <Typography className="col-4" id="easiness-slider" gutterBottom>
+                Easiness:
+              </Typography>
+              <Slider
+                value={easiness}
+                onChange={(event, newVal) => {
+                  setEasiness(newVal);
+                }}
+                className="col-7"
+                defaultValue={5}
+                getAriaValueText={valuetext}
+                aria-labelledby="easiness-slider"
+                valueLabelDisplay="auto"
+                step={1}
+                marks={true}
+                min={0}
+                max={10}
+              />
+            </Row>
+
+            <Row htmlFor="timeinvestment" className="mt-2">
+              <Typography
+                className="col-4"
+                id="timeinvestment-slider"
+                gutterBottom
+              >
+                Time Investment:
+              </Typography>
+              <Slider
+                value={timeinvestment}
+                onChange={(event, newVal) => {
+                  setTimeinvestment(newVal);
+                }}
+                className="col-7"
+                defaultValue={5}
+                getAriaValueText={valuetext}
+                aria-labelledby="timeinvestment-slider"
+                valueLabelDisplay="auto"
+                step={1}
+                marks={true}
+                min={0}
+                max={10}
+              />
+            </Row>
+
             <Row classname="form-group">
-                <Label htmlfor="rating" md={12}>
-                  Rating
-                </Label>
-                <Col md={12}>
-                  <Control.select
-                    model=".rating"
-                    name="rating"
-                    className="form-control"
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Control.select>
-                </Col>
-              </Row>
-
-              <Row htmlFor="usefulness" className="mt-2">
-                <Typography
-                  className="col-4"
-                  id="usefulness-slider"
-                  gutterBottom
-                >
-                  Usefulness:
-                </Typography>
-                <Slider
-                  model=".usefulness"
-                  id="usefulness"
-                  name="usefulness"
-                  className="col-7"
-                  defaultValue={5}
-                  getAriaValueText={valuetext}
-                  aria-labelledby="usefulness-slider"
-                  valueLabelDisplay="auto"
-                  step={1}
-                  marks={true}
-                  min={0}
-                  max={10}
+              <Label htmlFor="comment" md={12}>
+                Comment
+              </Label>
+              <Col md={12}>
+                <Control.textarea
+                  model=".comment"
+                  id="comment"
+                  name="comment"
+                  rows="6"
+                  className="form-control"
                 />
-              </Row>
+              </Col>
+            </Row>
+            <Row className="form-group">
+              <Col md={{ size: 10 }}>
+                <Button type="submit" color="primary">
+                  Submit
+                </Button>
+              </Col>
+            </Row>
+          </LocalForm>
+        </ModalBody>
+      </Modal>
 
-              <Row htmlFor="easiness" className="mt-2">
-                <Typography className="col-4" id="easiness-slider" gutterBottom>
-                  Easiness:
-                </Typography>
-                <Slider
-                  model=".easiness"
-                  id="easiness"
-                  name="easiness"
-                  className="col-7"
-                  defaultValue={5}
-                  getAriaValueText={valuetext}
-                  aria-labelledby="easiness-slider"
-                  valueLabelDisplay="auto"
-                  step={1}
-                  marks={true}
-                  min={0}
-                  max={10}
-                />
-              </Row>
-
-              <Row htmlFor="timeinvestment" className="mt-2">
-                <Typography
-                  className="col-4"
-                  id="timeinvestment-slider"
-                  gutterBottom
-                >
-                  Time Investment:
-                </Typography>
-                <Slider
-                  model=".timeinvestment"
-                  id="timeinvestment"
-                  name="timeinvestment"
-                  className="col-7"
-                  defaultValue={5}
-                  getAriaValueText={valuetext}
-                  aria-labelledby="timeinvestment-slider"
-                  valueLabelDisplay="auto"
-                  step={1}
-                  marks={true}
-                  min={0}
-                  max={10}
-                />
-              </Row>
-
-              <Row classname="form-group">
-                <Label htmlFor="comment" md={12}>
-                  Comment
-                </Label>
-                <Col md={12}>
-                  <Control.textarea
-                    model=".comment"
-                    id="comment"
-                    name="comment"
-                    rows="6"
-                    className="form-control"
-                  />
-                </Col>
-              </Row>
-              <Row className="form-group">
-                <Col md={{ size: 10 }}>
-                  <Button type="submit" color="primary">
-                    Submit
-                  </Button>
-                </Col>
-              </Row>
-            </LocalForm>
-          </ModalBody>
-        </Modal>
-
-        <Button outline onClick={this.toggleModal}>
-          <span className="fa fa-pencil fa-lg"></span>Submit Comment
-        </Button>
-      </div>
-    );
-  }
+      <Button outline onClick={toggleModal}>
+        <span className="fa fa-pencil fa-lg"></span>Submit Comment
+      </Button>
+    </div>
+  );
 }
-
-export default DiscussionDetail;
