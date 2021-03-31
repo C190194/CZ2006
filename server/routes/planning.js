@@ -1,17 +1,14 @@
 //importing modules
-const express=require('express');
+const express = require("express");
 
 //importing controllers
-const plannner=require('../controllers/plannner');
+const plannner = require("../controllers/plannner");
 
 //express router
-const router=express.Router();
-
-
-
+const router = express.Router();
 
 //routing
 // route called in the beginning after login for basic student details
-router.get('/send_timetable', plannner.send_timetable);
+router.post("/send_timetable", plannner.send_timetable);
 
-module.exports=router;
+module.exports = router;
