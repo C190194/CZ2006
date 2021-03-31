@@ -248,15 +248,15 @@ class ClashPlanner {
                 result[catgry[i]].push(index_dic);
             }
         }
-        console.log(result['0'].length) // test
-        console.log(result['2'].length)
+        //console.log(result['0'].length) // test
+        //console.log(result['2'].length)
         return result;
     }
 
 
 
-    main(clash_courses) {
-        //this.full_timetable = timetable;
+    main(timetable, clash_courses) {
+        this.full_timetable = timetable;
         this.courseArray = clash_courses; 
         return this.plan();
     }
@@ -273,4 +273,3 @@ module.exports = ClashPlanner;
 //const test = new ClashPlanner();
 //let a = test.main(courses);
 
-// This script can run on its own
