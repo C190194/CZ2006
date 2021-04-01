@@ -7,10 +7,6 @@ const comment = new Schema({
         type: String,
         required: true
     },
-    commentID: {
-        type: Number,        
-        required: true
-    },
     commentBody: {
         type: String,
         required: true
@@ -40,17 +36,20 @@ const discussion = new Schema({
     usefulness: {
         type: Number,
         min: 1,
-        max: 10
+        max: 10,
+        default:null
     },
     easiness: {
         type: Number,
         min: 1,
-        max: 10
+        max: 10,
+        default:null
     },
     timeInvestment: {
         type: Number,
         min: 1,
-        max: 10
+        max: 10,
+        default:null
     },
     comments: [comment]
 });
