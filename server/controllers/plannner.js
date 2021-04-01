@@ -1,6 +1,7 @@
 const { models } = require("mongoose");
 const CourseModal= require("../models/course.js");
 const databaseExam = require("../models/databaseExam");
+const ClashPlanner = require("./ClashPlan.js");
 
 var times = { "0830": {}, "0900": {}, "0930": {}, "1000": {}, "1030": {}, "1100": {}, "1130": {}, "1200": {}, "1230": {}, "1300": {}, "1330": {},
                 "1400": {}, "1430": {}, "1500": {}, "1530": {}, "1600": {}, "1630": {}, "1700": {}, "1730": {}, "1800": {}, "1830": {}, "1900": {},
@@ -15,15 +16,18 @@ timetable = {
     SAT: times
 };
 
-var temp_timetable = timetable;
+var temp_timetable = {...timetable};
 var all_timetables = [];
-
-
+var index_comb = [];
 
 
 const send_timetable = async(req,res)=>{
     const input_courses = [];
-    input_courses = req.body.courses;
+    const clash_courses = [];
+    const free_slots = [];
+    input_courses = req.body.non_clash_courses;
+    clash_courses = req.body.clash_courses;
+    free_slots = req.body.free_slots;
     const exam_result = new Array();
     exam_result = check_exam_clash(input_courses);
     for(i = 0; i <exam_result.length; i++){
@@ -32,9 +36,10 @@ const send_timetable = async(req,res)=>{
             break;
         }
         else{
-            generated_timetables = plan_timetable(input_courses,temp_timetable);
-            resultobj = delete_empty_slots(generated_timetables)
-            res.status(200).json({resultobj});
+            //generated_timetables = plan_timetable(input_courses, clash_courses, temp_timetable);
+            //resultobj = delete_empty_slots(generated_timetables)
+            full_combinations = plan_timetable(input_courses, clash_courses, free_slots);
+            res.status(200).json({full_combinations}); //full_combinations is a list, anything needs to change???
         };
     }
 
@@ -56,7 +61,32 @@ function delete_empty_slots (all_timetables){
 }
 
 
-function plan_timetable(input_courses, temp_timetable){
+
+
+function plan_timetable(input_courses, clash_courses, free_slots){ // clash_courses added
+    //console.log(free_slots);
+    //set all the free time slots
+    for (let f = 0; f < free_slots.length; f++){
+        let slot = free_slots[f];
+        let day = slot.getDay();
+        if (day == 1){
+            day = 'MON';
+        } else if (day == 2){
+            day = 'TUE';
+        } else if (day == 3){
+            day = 'WED';
+        } else if (day == 4){
+            day = 'THU';
+        } else if (day == 5){
+            day = 'FRI';
+        } else if (day == 6){
+            day = 'SAT';
+        }
+        let time = slot.getHours().toString() + slot.getMinutes().toString();
+        temp_timetable[day][time] = ["000000"];
+        //console.log(temp_timetable[day][time], day, time);
+    }
+    
     
     
     //insert course 1 ke index
@@ -68,10 +98,14 @@ function plan_timetable(input_courses, temp_timetable){
             var tt = allot_course(input_courses[0]["courseCode"],input_courses[0]["index"][i],temp_timetable);
         
             all_timetables.push(tt);
+            let dic = {};
+            dic[input_courses[0]["courseCode"]] = input_courses[0]["index"][i].index_number;
+            index_comb.push(dic);
             for (var member in all_timetables) delete temp_timetable[member];
      
         }  
     }
+    //console.log(index_comb);
 
     if(all_timetables.length==0)
     {
@@ -82,6 +116,7 @@ function plan_timetable(input_courses, temp_timetable){
     {
         const indexList=input_courses[i]["index"];
         const arrlist=[];
+        const index_array = [];
         
         for (var j=0;j< indexList.length;j++)
         {
@@ -89,30 +124,58 @@ function plan_timetable(input_courses, temp_timetable){
             {
                 if(check_clash(input_courses[i]["courseCode"],indexList[j],all_timetables[k]))
                 {
-                    console.log("clash");
+                    //console.log("clash");
                     continue;
                 }
                 else{
                     
                     //add the j index to kth timetable and store separately
                     var tt = allot_course(input_courses[i]["courseCode"],indexList[j],all_timetables[k]);
-                    console.log(input_courses[i]["courseCode"] + " allotted");
+                    //console.log(input_courses[i]["courseCode"] + " allotted");
                     arrlist.push(tt);
+                    //console.log(index_comb[k]);
+                    //console.log(tt);
+                    let dic = {...index_comb[k]};
+                    dic[input_courses[i]["courseCode"]] = indexList[j].index_number;
+                    index_array.push(dic);
                 }
             }
             
         }
         //add the separartely stored courses to all_timetables and remove the previous ones
         all_timetables=[];
+        index_comb = [];
         if(arrlist.length ==0)
         {
             return ["Cannot allot course because of clash "+input_courses[i]["courseCode"]];
         }
         Array.prototype.push.apply(all_timetables, arrlist);
+        Array.prototype.push.apply(index_comb, index_array);
+        
     }
-    console.log(all_timetables);
-    console.log(all_timetables.length);
-    return all_timetables;
+    //console.log(index_comb[1]);
+    //console.log(all_timetables[1]);
+    
+    let result = {
+        "0" : [],
+        "2" : [],
+        "3" : [],
+        "4" : []
+    }
+    const clashPlan = new ClashPlanner();
+    for (let i = 0; i < all_timetables.length; i++){
+        let newResult = clashPlan.main(all_timetables[i],clash_courses);//+comb
+        ["0","2","3","4"].forEach(function (value){
+            for (let r = 0; r < newResult[value].length; r++){
+                result[value].push(Object.assign({}, index_comb[i], newResult[value][r]));
+            }
+            
+        })
+    }
+    console.log(result["0"].concat(result["2"],result["3"],result["4"]));
+    
+
+    return result["0"].concat(result["2"],result["3"],result["4"]);
 }
 
 
@@ -123,7 +186,7 @@ function check_clash(courseCode, index, temp_timetable)
     var i;
     for(i=0;i<numLessons;i++)
     {
-        //var timeDetails=lesson[i].time;
+        var timeDetails=lesson[i].time;
         var start=lesson[i].start;
         var duration=lesson[i].duration;
         var day=lesson[i].day;
