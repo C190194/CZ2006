@@ -3,6 +3,7 @@ const express = require("express");
 
 //importing controllers
 const plannner = require("../controllers/plannner");
+const plannner2 = require("../controllers/ClashPlan");
 
 //express router
 const router = express.Router();
@@ -2191,22 +2192,19 @@ var times = {
   2300: {},
 };
 
-timetable = {
-  MON: times,
-  TUE: times,
-  WED: times,
-  THU: times,
-  FRI: times,
-  SAT: times,
-};
-var temp_timetable = timetable;
-var free_slots = [new Date("March 1, 2021 08:30:00")];
+// timetable = {
+//   MON: times,
+//   TUE: times,
+//   WED: times,
+//   THU: times,
+//   FRI: times,
+//   SAT: times,
+// };
+// var temp_timetable = timetable;
+// var free_slots = [new Date("March 1, 2021 08:30:00")];
 
 //routing
 // route called in the beginning after login for basic student details
-router.get(
-  "/send_timetable",
-  plannner.plan_timetable(non_clash_courses, clash_courses, free_slots)
-);
+router.post("/send_timetable", plannner2.send_timetable);
 
 module.exports = router;
