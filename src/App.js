@@ -50,7 +50,8 @@ class App extends Component {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/login" component={Login} />
-            <Route exact
+            <Route
+              exact
               path="/discuss"
               component={() => <Discuss courses={this.state.courses} />}
             />
