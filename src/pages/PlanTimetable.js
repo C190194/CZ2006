@@ -122,6 +122,7 @@ export default function PlanTimetable() {
               prompt="Select courses..."
               id="courseCode"
               label="courseCode"
+              name="name"
               options={data.map((item) => ({
                 ...item,
                 id: Math.random().toString(36).substr(2, 9),

@@ -27,7 +27,6 @@ function DiscussionForum(props) {
           className="col-12 mt-1"
         >
           <Card tag="li">
-
             <CardBody>
               <Link to={`/discuss/${course.courseCode}`}>
                 <Media body className="ml-5">
@@ -91,6 +90,7 @@ function DiscussionForum(props) {
             prompt="Select courses..."
             id="courseCode"
             label="courseCode"
+            name="name"
             options={props.courses.map((item) => ({
               ...item,
               id: Math.random().toString(36).substr(2, 9),

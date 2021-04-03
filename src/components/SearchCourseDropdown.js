@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 export default function SearchCourseDropdown({
   options,
   label,
+  name,
   prompt,
   value,
   onChange,
@@ -22,7 +23,10 @@ export default function SearchCourseDropdown({
 
   function filter(options) {
     return options.filter(
-      (option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1
+      (option) =>
+        `${option[label]} ${option[name]}`
+          .toLowerCase()
+          .indexOf(query.toLowerCase()) > -1
     );
   }
 
@@ -62,7 +66,7 @@ export default function SearchCourseDropdown({
                 setOpen(false);
               }}
             >
-              {option[label]}
+              {`${option[label]} ${option[name]}`}
             </div>
           ))}
         </div>
