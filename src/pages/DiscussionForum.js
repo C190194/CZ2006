@@ -27,6 +27,7 @@ function DiscussionForum(props) {
           className="col-12 mt-1"
         >
           <Card tag="li">
+
             <CardBody>
               <Link to={`/discuss/${course.courseCode}`}>
                 <Media body className="ml-5">
