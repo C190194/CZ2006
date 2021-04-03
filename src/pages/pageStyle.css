@@ -35,3 +35,48 @@ a {
   margin-left: 12px;
   margin-top: 10px;
 }
+
+.discuss-filter{
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
+.scrollbar {
+  overflow: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+.reply {
+  font-size: 1.5em;
+}
+
+.cardbody{
+  background-color: #99FFFF;
+}
+
+.modal-header, .card-header {
+  background-color: #3399FF;
+}
+
+.modal-body {
+  background-color: #C0D9FF;
+}
+
+.comment-for-course:hover {
+  cursor: pointer;
+  background-color: #C5D2E6;
+}
+
+.submit-comment-button{
+  backgroundColor: #B7AC11;
+  color: #B7AC11;
+}
