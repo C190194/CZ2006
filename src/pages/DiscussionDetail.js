@@ -46,7 +46,8 @@ function RenderComments({ comments /*, postComment, dishId */ }) {
                 <Card
                   className="ml-1 mr-2 mt-2 comment-for-course"
                   onClick={() => {
-                    setSelectedComment(comment), toggleModal();
+                    setSelectedComment(comment);
+                    toggleModal();
                   }}
                 >
                   <CardBody>
@@ -197,7 +198,11 @@ function RenderComments({ comments /*, postComment, dishId */ }) {
                                         rows="6"
                                         className="form-control"
                                       />
-                                      <Button className="mt-2" type="submit" color="primary">
+                                      <Button
+                                        className="mt-2"
+                                        type="submit"
+                                        color="primary"
+                                      >
                                         Submit
                                       </Button>
                                     </Col>
@@ -466,10 +471,9 @@ function CommentForm() {
           </LocalForm>
         </ModalBody>
       </Modal>
-
       <Button className="submit-comment-button" outline onClick={toggleModal}>
         Submit Comment
-      </Button>{' '}
+      </Button>{" "}
     </div>
   );
 }
