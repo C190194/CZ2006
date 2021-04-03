@@ -116,7 +116,6 @@ export default function ShareTimetable(props) {
     // console.log(temp_course_divs);
     //pass course to backend
     // setIsPlanClicked(true);
-<<<<<<< Updated upstream
     const non_clash_courses = [];
     const clash_courses = [];
 
@@ -140,15 +139,6 @@ export default function ShareTimetable(props) {
         } else {
           non_clash_courses.push(temp_course_divs[i].course);
         }
-=======
-    const temp_course_arr = temp_course_divs.map((item) => {
-      if (item.isIndexFixed) {
-        let tempCourse = { ...item.course };
-        tempCourse.index = [item.currentIdx];
-        return tempCourse;
-      } else {
-        return item.course;
->>>>>>> Stashed changes
       }
     }
 
@@ -168,7 +158,6 @@ export default function ShareTimetable(props) {
       free_slots: userDefinedTimeSlots,
     });
 
-<<<<<<< Updated upstream
     // axios
     //   .post("/planning/send_timetable", {
     //     input_courses: temp_course_arr,
@@ -201,16 +190,6 @@ export default function ShareTimetable(props) {
     //     console.log(response.data);
     //   });
 
-=======
-    axios
-      .post("/user/login", {
-        email: "astha@gmail.com",
-        password: "astha123",
-      })
-      .then((response) => {
-        console.log(response.data);
-      });
->>>>>>> Stashed changes
     // console.log(temp_course_arr);
 
     //testing

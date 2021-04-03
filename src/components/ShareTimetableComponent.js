@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< Updated upstream
 // import { DropdownButton, Dropdown } from "react-bootstrap";
-=======
-import { DropdownButton, Dropdown } from "react-bootstrap";
->>>>>>> Stashed changes
 import "./ComponentsStyle.css";
 import {
   Button,
@@ -15,7 +11,6 @@ import {
   ModalBody,
 } from "reactstrap";
 import { FormatColorResetOutlined } from "@material-ui/icons";
-<<<<<<< Updated upstream
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -31,19 +26,6 @@ export default function ShareTimetableComponent(props) {
 
   const [state, setState] = useState({ isNavOpen: false, isModalOpen: false });
 
-=======
-
-export default function ShareTimetableComponent() {
-  const [state, setState] = useState({ isNavOpen: false, isModalOpen: false });
-
-  function toggleNav() {
-    setState({
-      ...state,
-      isNavOpen: !state.isNavOpen,
-    });
-  }
-
->>>>>>> Stashed changes
   function toggleModal() {
     setState({
       ...state,
@@ -104,19 +86,9 @@ export default function ShareTimetableComponent() {
 
   return (
     <>
-<<<<<<< Updated upstream
       <Button outline onClick={toggleModal}>
         <span className="fa fa-sign-in fa-lg"></span> Share Timetable
       </Button>
-=======
-      <Row>
-        <div className="col-9" />
-        <Button className="col-3" outline onClick={toggleModal}>
-          <span className="fa fa-sign-in fa-lg"></span> Share Timetable
-        </Button>
-      </Row>
-
->>>>>>> Stashed changes
       <Modal
         size="lg"
         isOpen={state.isModalOpen}
@@ -128,10 +100,7 @@ export default function ShareTimetableComponent() {
         </ModalHeader>
         <ModalBody class="modal fade bd-example-modal-lg">
           {subShareTimetableComponent()}
-<<<<<<< Updated upstream
           <Button>Share</Button>
-=======
->>>>>>> Stashed changes
         </ModalBody>
       </Modal>
     </>

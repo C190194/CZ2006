@@ -8,49 +8,6 @@ export default function AddFreeTimeSlotsComponent({
   tempUserDefinedTimeSlots,
   setTempUserDefinedTimeSlots,
 }) {
-<<<<<<< Updated upstream
-=======
-  // const [schedule, setSchedule] = useState(defaultSchedule);
-  const planTimetableContext = usePlanTimetable();
-  const initialSchedule = planTimetableContext.userDefinedTimeSlots;
-  const setSchedule = planTimetableContext.setUserDefinedTimeSlots;
-
-  const [customSchedule, setCustomSchedule] = useState(initialSchedule);
-  function isEqual(a, b) {
-    // if length is not equal
-    if (a.length != b.length) return "False";
-    else {
-      // comapring each element of array
-      for (var i = 0; i < a.length; i++) if (a[i] != b[i]) return "False";
-      return "True";
-    }
-  }
-  useEffect(() => {
-    if (JSON.stringify(customSchedule) === JSON.stringify(initialSchedule)) {
-      setfChangeIsMade(false);
-    } else {
-      setfChangeIsMade(true);
-    }
-    // setfChangeIsMade(true);
-    // console.log(schedule);
-    // console.log(schedule[0][0].getDay());
-    // console.log(schedule[0][0].getHours());
-    // console.log(schedule[0][0].getMinutes());
-
-    // for (var key in schedule[0][0]) {
-    //   console.log(schedule[0][0][key]);
-    // }
-  }, [customSchedule]);
-
-  useEffect(() => {
-    setSchedule(customSchedule);
-  }, [isChangeSaved]);
-
-  // useEffect(() => {
-  //   console.log("react scheduler");
-  // });
-
->>>>>>> Stashed changes
   return (
     <div
       className="container"

@@ -122,25 +122,11 @@ export default function MoreOptionsComponent(props) {
   };
 
   const handleSaveChanges = () => {
-<<<<<<< Updated upstream
     setIsChangeMade(false);
     setAllowClashCC(tempAllowClashCC);
     setUserDefinedTimeSlots(tempUserDefinedTimeSlots);
   };
 
-=======
-    //compare initial state and final state
-    // setIsChangeSaved(true);
-    setChangeIsMade(false);
-    setcChangeIsMade(false);
-    setfChangeIsMade(false);
-  };
-
-  useEffect(() => {
-    setChangeIsMade(fchangeIsMade || cchangeIsMade);
-  }, [fchangeIsMade, cchangeIsMade]);
-
->>>>>>> Stashed changes
   return (
     <>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -164,7 +150,6 @@ export default function MoreOptionsComponent(props) {
         </DialogTitle>
         <DialogContent dividers>
           <AddFreeTimeSlotsComponent
-<<<<<<< Updated upstream
             tempUserDefinedTimeSlots={tempUserDefinedTimeSlots}
             setTempUserDefinedTimeSlots={setTempUserDefinedTimeSlots}
           />
@@ -173,15 +158,6 @@ export default function MoreOptionsComponent(props) {
             tempAllowClashCC={tempAllowClashCC}
             setTempAllowClashCC={setTempAllowClashCC}
             courseDivs={courseDivs}
-=======
-            setfChangeIsMade={setfChangeIsMade}
-            isChangeSaved={isChangeSaved}
-          />
-
-          <AllowClashCheckBoxesComponent
-            setcChangeIsMade={setcChangeIsMade}
-            isChangeSaved={isChangeSaved}
->>>>>>> Stashed changes
           />
         </DialogContent>
         <DialogActions>
