@@ -1,5 +1,3 @@
-const { models } = require("mongoose");
-const CourseModal= require("../models/course.js");
 const ics = require('ics');
 const ics = require('./dist');
 //const date2 = new Date('1995-12-17T03:24:00');
@@ -23,7 +21,7 @@ const weekDates = [week1, week2, week3, week4, week5,week6,week7,week8,week9,wee
 const Day ={"MON":0, "TUE":1, "WED":2,"THU":3,"FRI":4,"SAT":5};
 
 var events=[];
-var event={title: '', description: '', start: [], end:[]};
+var event={title: '', description: '', start: [], duration:{}};
 
 // title: 'Dinner',
 //   description: 'Nightly thing I do',
@@ -31,9 +29,9 @@ var event={title: '', description: '', start: [], end:[]};
 //   start: [2018, 1, 15, 6, 30],
 //   duration: { minutes: 50 }
 
-function createICS(courses,freeTime)
+function createICS(appointments)
 {
-    const eventsAdd= editEvents(courses,freeTime);
+    const eventsAdd= editEvents(appointments);
     const { error, value } = ics.createEvents(eventsAdd);
       if (error) {
         console.log(error);
@@ -42,49 +40,29 @@ function createICS(courses,freeTime)
       return value;
 }
 
-function editEvents(courses,freeTime)
+function editEvents(appointments)
 {
-    for (var course in courses)
+    for (var i in appointments)
     {
-        for(var lesson in course["index"]["lesson"])
+        var weeklist = i.weekList;
+        //get the start date
+        //get the weeklist
+        for(var j =0;j<weeklist.length;j++)
         {
-
-            for(var j =0;j<lesson.weekList.length;j++)
+            if(weeklist[j]==1)
             {
-                if(weeklist[j]==1)
-                {
-                    var eventObj = event;
-                    var weekStart = weekDates[j];
-                    //var weekDay = (getDaysDiff(weekDates(j),startDate))%7;
-                    eventObj['title']=course.courseCode+" "+lesson.type;
-                    eventObj['description']=lesson["group"]+" "+lesson["location"];
-                    var eventDate = addDays(weekStart,Day[lesson.day]);
-                    eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),parseInt(lesson.start.substr(0,2)),parseInt(lesson.start.substr(2,2))];
-                    eventObj['end']= [eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),parseInt(lesson.end.substr(0,2)),parseInt(lesson.end.substr(2,2))];
-
-                }
-                events.push(eventObj);
-            
+                var eventObj = event;
+                var weekDay = Day[i.day];
+                eventObj['title']=i.title+" "+i.type;
+                eventObj['description']=i.group+" "+i.location;
+                var eventDate = addDays(weekDates(j),weekDay);
+                var dur = i.duration;
+                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),eventDate.getHours(),eventDate.getMinutes()];
+                eventObj['duration'] = {'hours': i.duration, 'minutes':0};
             }
+            events.push(eventObj);
         }
 
-    }
-    if(freeTime[0].length>0)
-    {
-        for(var j=0;j<13;j++)
-        {
-            var weekStart = weekDates[j];
-            for(var slot in freeTime)
-            {
-                eventObj['title']="Blocked";
-                eventObj['description']="Busy";
-                var eventDate = addDays(weekStart,slot[0].getDay()-1);
-                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),slot[0].getHours(),slot[0].getMinutes()];
-                eventObj['end']= [eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),slot[1].getHours(),slot[1].getMinutes()];
-                events.push(eventObj);
-                
-            }
-        }
     }
     return events;
 }
@@ -105,3 +83,4 @@ function addDays(date, days)
     return result;
       
 }
+

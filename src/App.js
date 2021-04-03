@@ -33,8 +33,9 @@ class App extends Component {
         <DiscussionDetail
           course={
             this.state.courses.filter(
+
+              //(course) => course.id === parseInt(match.params.id, 10)
               (course) => course.courseCode === match.params.courseCode
-              //(course) => course.courseCode === parseInt(match.params.id, 10)
             )[0]
           }
           comments={this.state.comments.filter(

@@ -42,7 +42,7 @@ const CourseDiv = function (props) {
 
   return (
     <>
-      <div className="row">
+      <div className="row" style={{ color: "white" }}>
         <div className="col-4">{courseCode}</div>
         <div className="col-3">
           <MUIButton
@@ -72,7 +72,12 @@ const CourseDiv = function (props) {
       <div className="row">
         <div className="col-2">
           <FormControl className={classes.formControl} disabled={isIndexFixed}>
-            <InputLabel htmlFor="index-native-simple">Index</InputLabel>
+            <InputLabel
+              htmlFor="index-native-simple"
+              style={{ color: "white" }}
+            >
+              Index
+            </InputLabel>
             <Select
               value={indexes.indexOf(currentIdx)}
               native
@@ -321,7 +326,9 @@ export default function ShareTimetable(props) {
             style={{
               border: "2px solid black",
               borderRadius: "5px",
-              background: resourcesData[idx].color,
+              background: resourcesData[idx]
+                ? resourcesData[idx].color
+                : "#42a5f5",
             }}
           >
             <CourseDiv
