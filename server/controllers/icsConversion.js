@@ -18,9 +18,10 @@ const week12 = new Date('2021-04-05T00:00:00');
 const week13 = new Date('2021-04-12T00:00:00');
 
 const weekDates = [week1, week2, week3, week4, week5,week6,week7,week8,week9,week10,week11,week12,week13];
+const Day ={"MON":0, "TUE":1, "WED":2,"THU":3,"FRI":4,"SAT":5};
 
 var events=[];
-var eventObj={title: '', description: '', start: [], duration:{}};
+var event={title: '', description: '', start: [], duration:{}};
 
 // title: 'Dinner',
 //   description: 'Nightly thing I do',
@@ -43,25 +44,23 @@ function editEvents(appointments)
 {
     for (var i in appointments)
     {
+        var weeklist = i.weekList;
         //get the start date
         //get the weeklist
         for(var j =0;j<weeklist.length;j++)
         {
             if(weeklist[j]==1)
             {
-                var weekDay = (getDaysDiff(weekDates(j),startDate))%7;
-                eventObj['title']=''//courseCode+type;
-                eventObj['description']=''//group + location;
+                var eventObj = event;
+                var weekDay = Day[i.day];
+                eventObj['title']=i.title+" "+i.type;
+                eventObj['description']=i.group+" "+i.location;
                 var eventDate = addDays(weekDates(j),weekDay);
-                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate,eventDate.getHours,eventDate.getMinutes];
-                //set end or duration
-
+                var dur = i.duration;
+                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),eventDate.getHours(),eventDate.getMinutes()];
+                eventObj['duration'] = {'hours': i.duration, 'minutes':0};
             }
             events.push(eventObj);
-            for(var j of eventObj)
-            {
-                //clear the eventObj;
-            }
         }
 
     }
@@ -84,3 +83,4 @@ function addDays(date, days)
     return result;
       
 }
+
