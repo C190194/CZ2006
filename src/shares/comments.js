@@ -1,6 +1,7 @@
 export const COMMENTS = [
   {
     id: 0,
+
     courseCode: "BU8201",
     usefulness: 8,
     easiness: 10,
@@ -41,6 +42,7 @@ export const COMMENTS = [
   },
   {
     id: 2,
+
     courseCode: "BU8201",
     usefulness: 8,
     easiness: 10,
@@ -51,6 +53,7 @@ export const COMMENTS = [
   },
   {
     id: 3,
+
     courseCode: "BU8201",
     usefulness: 8,
     easiness: 10,
@@ -93,6 +96,7 @@ export const COMMENTS = [
   },
   {
     id: 5,
+
     courseCode: "CZ2001",
     usefulness: 8,
     easiness: 10,
@@ -103,6 +107,7 @@ export const COMMENTS = [
   },
   {
     id: 6,
+
     courseCode: "CZ2001",
     usefulness: 8,
     easiness: 10,
@@ -113,6 +118,7 @@ export const COMMENTS = [
   },
   {
     id: 7,
+
     courseCode: "CZ2001",
     usefulness: 8,
     easiness: 10,
