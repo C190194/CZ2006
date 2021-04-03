@@ -33,12 +33,12 @@ class App extends Component {
         <DiscussionDetail
           course={
             this.state.courses.filter(
-              (course) => course.id === parseInt(match.params.id, 10)
+              (course) => course.courseCode === match.params.courseCode
               //(course) => course.courseCode === parseInt(match.params.id, 10)
             )[0]
           }
           comments={this.state.comments.filter(
-            (comment) => comment.courseId === parseInt(match.params.id, 10)
+            (comment) => comment.courseCode === match.params.courseCode
           )}
         />
       );
@@ -50,11 +50,12 @@ class App extends Component {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/login" component={Login} />
-            <Route exact
+            <Route
+              exact
               path="/discuss"
               component={() => <Discuss courses={this.state.courses} />}
             />
-            <Route path="/discuss/:id" component={CourseWithId} />
+            <Route path="/discuss/:courseCode" component={CourseWithId} />
             <Route path="/findcommon" component={Common} />
             <Route path="/planner" component={Planner} />
             <Route path="/share" component={Share} />

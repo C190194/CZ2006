@@ -27,7 +27,7 @@ class Discuss extends Component {
           className="col-12 mt-1"
         >
           <Card tag="li">
-            <Link to={`/discuss/${course.id}`}>
+            <Link to={`/discuss/${course.courseCode}`}>
               <Media body className="ml-5">
                 <div className="row">
                   <Media heading className="col-11">
