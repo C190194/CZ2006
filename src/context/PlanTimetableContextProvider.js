@@ -141,6 +141,7 @@ function PlanTimetableContextProvider({ children }) {
   };
 
   useEffect(() => {
+    // console.log("useeffect2")
     const combination = {
       ...combinations[currentTimeTablePage - 1],
     };
@@ -150,6 +151,7 @@ function PlanTimetableContextProvider({ children }) {
   }, [combinations]);
 
   useEffect(() => {
+    // console.log("useeffect1")
     const combination = {
       ...combinations[currentTimeTablePage - 1],
     };
