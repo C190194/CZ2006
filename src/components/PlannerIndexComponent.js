@@ -121,6 +121,16 @@ export default function ShareTimetable(props) {
     // console.log(temp_course_arr);
 
     //testing
+    const courseSelected = [
+      { courseCode: "cz2006", index_number: "10145" },
+      { courseCode: "cz2007", index_number: "10145" },
+      // {course:{},index_number:"10145"}
+    ];
+
+    console.log(courseSelected);
+
+    // console.log(courseSelected[0]["courseId"]);
+    // setIsPlanClicked(true);
     // setCombinations([
     //   { CZ1016: "10061", CZ1103: "10064" },
     //   { CZ1016: "10060", CZ1103: "10063" },

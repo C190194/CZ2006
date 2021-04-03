@@ -141,7 +141,7 @@ class CommentForm extends Component {
   handleSubmit(values) {
     alert(
       "Easiness:" +
-      values.rating +
+        values.rating +
         " Usefulness: " +
         document.getElementById("usefulness").value +
         "Time Investment " +
@@ -162,7 +162,7 @@ class CommentForm extends Component {
           <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-            <Row classname="form-group">
+              <Row classname="form-group">
                 <Label htmlfor="rating" md={12}>
                   Rating
                 </Label>

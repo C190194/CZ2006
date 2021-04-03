@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 import "./Login.css";
+import { AddAlertRounded } from "@material-ui/icons";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,8 +17,26 @@ export default function Login() {
   }
 
   function handleSubmit(event) {
-    alert(email + " " + password);
+    // alert(email + " " + password);
     event.preventDefault();
+    axios
+      .post("/user/login", {
+        // email: "astha@gmail.com",
+        // password: "astha123",
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        console.log(response);
+        history.push("/planner");
+      })
+      .catch(function (error) {
+        if (error.response) {
+          alert(error.response.data.message);
+          // console.log(error.response.status);
+          // console.log(error.response.headers);
+        }
+      });
   }
 
   function forgotPwd() {
