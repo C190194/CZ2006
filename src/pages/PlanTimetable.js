@@ -3,81 +3,15 @@ import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
 import PlannerIndexComponent from "../components/PlannerIndexComponent";
 import MoreOptionsComponent from "../components/MoreOptionsComponent";
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
-import PlannerSearchCourseComponent from "../components/PlannerSearchCourseComponent";
+import SearchCourseDropdown from "../components/SearchCourseDropdown";
 import ShareTimetableComponent from "../components/ShareTimetableComponent";
-
+import { Button } from "reactstrap";
 import {
   PlanTimetableContextProvider,
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
 
 import "./PlanTimetable.css";
-import { appointments } from "../shares/appointments";
-
-function Dropdown({ options, label, prompt, value, onChange }) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const ref = useRef(null);
-
-  useEffect(() => {
-    document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
-  }, []);
-
-  function close(e) {
-    setOpen(e && e.target === ref.current);
-  }
-
-  function filter(options) {
-    return options.filter(
-      (option) => option[label].toLowerCase().indexOf(query.toLowerCase()) > -1
-    );
-  }
-
-  function displayValue() {
-    if (query.length > 0) return query;
-    if (value) return value[label];
-    return "";
-  }
-
-  return (
-    <div>
-      <div className="dropdown">
-        <div className="control" onClick={() => setOpen((prev) => !prev)}>
-          <div className="selected-value">
-            <input
-              type="text"
-              ref={ref}
-              placeholder={value ? value[label] : prompt}
-              value={displayValue()}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                onChange(null);
-              }}
-              onClick={() => setOpen((prev) => !prev)}
-            />
-          </div>
-          <div className={`arrow ${open ? "open" : null}`} />
-        </div>
-        <div className={`options ${open ? "open" : null}`}>
-          {filter(options).map((option) => (
-            <div
-              key={option.id}
-              className={`option ${value === option ? "selected" : null}`}
-              onClick={() => {
-                setQuery("");
-                onChange(option);
-                setOpen(false);
-              }}
-            >
-              {option[label]}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function PlanTimetableContextConsumer(props) {
   const planTimetableContext = usePlanTimetable();
@@ -86,6 +20,11 @@ function PlanTimetableContextConsumer(props) {
   const currentTimeTablePage = planTimetableContext.currentTimeTablePage;
   const setCurrentTimeTablePage = planTimetableContext.setCurrentTimeTablePage;
   const occupiedTimeSlots = planTimetableContext.occupiedTimeSlots;
+
+  const courseDivs = planTimetableContext.courseDivs;
+  const userDefinedTimeSlots = planTimetableContext.userDefinedTimeSlots;
+  const allowClashCC = planTimetableContext.allowClashCC;
+
   // const setIsPageChanged = planTimetableContext.setIsPageChanged;
   //Backend: addTimetables
   // const addTimeTables = (tempTimeTables) => {
@@ -95,6 +34,25 @@ function PlanTimetableContextConsumer(props) {
   const updateTimeTablePageNum = (tempPage) => {
     setCurrentTimeTablePage(tempPage);
     // setIsPageChanged(true);
+  };
+
+  //call backend
+  const saveCurrentTT = () => {
+    const courseFixed = {};
+    courseDivs.forEach((courseDiv) => {
+      if (courseDiv.isIndexFixed) {
+        courseFixed[courseDiv.course.courseCode] =
+          courseDiv.currentIdx.index_number;
+      }
+    });
+    const reqbody = {
+      timetableID: Math.random().toString(36).substr(2, 9),
+      courseSelected: combinations[currentTimeTablePage - 1],
+      fixedTimeSlots: userDefinedTimeSlots,
+      courseFixed: courseFixed,
+      courseClashAllowed: allowClashCC,
+    };
+    console.log(reqbody);
   };
 
   return (
@@ -110,9 +68,13 @@ function PlanTimetableContextConsumer(props) {
             currentTimeTablePage={currentTimeTablePage}
             updateTimeTablePageNum={updateTimeTablePageNum}
           />
+          <ShareTimetableComponent
+            combinationslength={combinations.length}
+            currentTimeTablePage={currentTimeTablePage}
+          />
+          <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
         </div>
         <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
-        <ShareTimetableComponent />
       </div>
     </div>
   );
@@ -156,7 +118,7 @@ export default function PlanTimetable() {
             <b>Course Planner</b>
           </div>
           <div className="row" style={{ width: 200 }}>
-            <Dropdown
+            <SearchCourseDropdown
               prompt="Select courses..."
               id="courseCode"
               label="courseCode"
