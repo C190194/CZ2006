@@ -2,6 +2,7 @@ const Discussion = require('../models/discussionModel');
 const User = require('../models/user');
 const Course = require('../models/course');
 const mongoose = require('mongoose');
+const { async } = require('node-ical');
 const Schema = mongoose.Schema;
 var CourseContent = mongoose.model('CourseContent', new Schema(), 'CourseContent');
 
@@ -27,6 +28,54 @@ const course_page=async(req,res)=>{
     }
 };
 
+const add_reply=async(req,res)=>{
+
+    try {
+        const courseCode = req.params.id;
+        console.log(courseCode);
+
+        let tempCourse = await Discussion.find({courseCode:courseCode});
+        tempCourse=tempCourse[0];
+
+        console.log(tempCourse);
+        tempComment = tempCourse.comments.find(obj => obj.commentID == req.body.commentID);
+
+        const replyID = Date.now();
+        // console.log(tempComment);
+
+        const reply ={
+            studentID: req.body.studentID,
+            replyID: replyID,
+            replyBody: req.body.replyBody
+            
+        };
+
+        console.log(reply)
+
+        await Discussion.update(
+            {
+                courseCode:req.params.id,
+                "comments.commentID": req.body.commentID
+            },
+            {
+                $push:{
+                    comments:{
+                        replies: reply
+                    }
+                }
+            }
+        );
+
+        temp = await Discussion.findOne({courseCode:courseCode});
+        res.status(200).send(temp);
+
+    }
+    catch (err){
+        console.log(err);
+        res.status(400).send(err);
+    }
+}
+
 const update_course_page=async(req,res)=>{
     try{
         const courseCode = req.params.id;
@@ -35,6 +84,8 @@ const update_course_page=async(req,res)=>{
         let temp = await Discussion.find({courseCode:courseCode});
         temp=temp[0];
         
+        const commentID = Date.now();
+
         console.log(temp.numReviews);
         const numRev = temp.numReviews + 1;
         let use = 0;
@@ -67,9 +118,9 @@ const update_course_page=async(req,res)=>{
                 {
                     $push:{
                         comments:{
-                            studentId: req.body.studentId,
-                            commentBody: req.body.commentBody
-                        },
+                            studentID: req.body.studentID,
+                            commentID: commentID, //CHANGE TO AUTO LATER
+                            commentBody: req.body.commentBody                        },
                         studentsRated:req.body.studentsRated
                     },
                     $inc: {
@@ -129,6 +180,7 @@ const add_course_page=async(req, res)=>{
 module.exports={
     discussion_index,
     course_page,
+    add_reply,
     update_course_page,
     add_course_page
 }
