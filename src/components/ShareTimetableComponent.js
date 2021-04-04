@@ -16,7 +16,8 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 
 export default function ShareTimetableComponent(props) {
-  const { combinationslength, currentTimeTablePage } = props;
+  const { combinations, currentTimeTablePage } = props;
+  const combinationslength = combinations.length;
   const pages = [];
   for (let i = 0; i < combinationslength; i++) {
     pages.push(i + 1);
@@ -84,6 +85,17 @@ export default function ShareTimetableComponent(props) {
     );
   }
 
+  const generateLink = () => {
+    // console.log(useLocation());
+    // console.log(window.location.href);
+    const tempCombinationArray = [];
+    for (const [key, value] of Object.entries(combinations[selectedPage - 1])) {
+      tempCombinationArray.push(`${key}=${value}`);
+    }
+    console.log(`${window.location.href}?${tempCombinationArray.join("&")}`);
+    // combinations[];
+  };
+
   return (
     <>
       <Button outline onClick={toggleModal}>
@@ -100,7 +112,7 @@ export default function ShareTimetableComponent(props) {
         </ModalHeader>
         <ModalBody class="modal fade bd-example-modal-lg">
           {subShareTimetableComponent()}
-          <Button>Share</Button>
+          <Button onClick={generateLink}>Share</Button>
         </ModalBody>
       </Modal>
     </>
