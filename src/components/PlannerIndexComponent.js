@@ -63,7 +63,7 @@ const CourseDiv = function (props) {
             className={classes.button}
             startIcon={<FlagIcon />}
             onClick={() => {
-              Object.keys(currentIdx).length === 0
+              currentIdx === undefined || Object.keys(currentIdx).length === 0
                 ? alert("You cannot fix an empty index!")
                 : setIsIndexFixed(!isIndexFixed);
             }}
@@ -142,11 +142,17 @@ export default function ShareTimetable(props) {
   useEffect(() => {
     getData();
   }, []);
+
   const setCombinationsByQuery = (searchParams) => {
     if (searchParams.toString() && data.length !== 0) {
-      const selectedCourses = data.filter((item) =>
-        searchParams.has(item.courseCode)
-      );
+      const selectedCourses = [];
+      for (let p of searchParams.keys()) {
+        selectedCourses.push(data.find((item) => item.courseCode === p));
+      }
+
+      // const selectedCourses = data.filter((item) =>
+      //   searchParams.has(item.courseCode)
+      // );
 
       setCourseDivs(
         selectedCourses.map((item) => {
