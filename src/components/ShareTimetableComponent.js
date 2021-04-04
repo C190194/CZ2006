@@ -19,6 +19,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 
 export default function ShareTimetableComponent(props) {
   const { combinations, currentTimeTablePage } = props;
+  const [link, setLink] = useState("");
   // const planTimetableContext = usePlanTimetable();
 
   // const combinations = planTimetableContext.combinations;
@@ -101,7 +102,12 @@ export default function ShareTimetableComponent(props) {
     for (const [key, value] of Object.entries(combinations[selectedPage - 1])) {
       tempCombinationArray.push(`${key}=${value}`);
     }
-    console.log(
+    // console.log(
+    //   `${window.location.origin}${
+    //     window.location.pathname
+    //   }?${tempCombinationArray.join("&")}`
+    // );
+    setLink(
       `${window.location.origin}${
         window.location.pathname
       }?${tempCombinationArray.join("&")}`
@@ -126,6 +132,7 @@ export default function ShareTimetableComponent(props) {
         <ModalBody class="modal fade bd-example-modal-lg">
           {subShareTimetableComponent()}
           <Button onClick={generateLink}>Share</Button>
+          <div>{link}</div>
         </ModalBody>
       </Modal>
     </>
