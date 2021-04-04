@@ -14,6 +14,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FaceIcon from "@material-ui/icons/Face";
 import EventIcon from "@material-ui/icons/Event";
+// import useToken from "../custom hooks/useToken";
+import { useApp } from "../context/AppContextProvider";
 
 const StyledMenu = withStyles({
   paper: {
@@ -47,6 +49,11 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function CustomizedMenus() {
+  // const { token, setToken } = useToken();
+  const appContext = useApp();
+  const token = appContext.token;
+  const setToken = appContext.setToken;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -76,26 +83,45 @@ export default function CustomizedMenus() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Link to="/login">
-          <StyledMenuItem>
-            <ListItemIcon>
-              <ExitToAppIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Login" />
-          </StyledMenuItem>
-        </Link>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <FaceIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <EventIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Saved timetables" />
-        </StyledMenuItem>
+        {token ? (
+          [
+            <StyledMenuItem
+              key="1"
+              onClick={() => {
+                // console.log("logout");
+                // setToken(undefined);
+                sessionStorage.clear();
+                window.location.reload(false);
+              }}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </StyledMenuItem>,
+            <StyledMenuItem key="2">
+              <ListItemIcon>
+                <FaceIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+            </StyledMenuItem>,
+            <StyledMenuItem key="3">
+              <ListItemIcon>
+                <EventIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Saved timetables" />
+            </StyledMenuItem>,
+          ]
+        ) : (
+          <Link to="/login">
+            <StyledMenuItem>
+              <ListItemIcon>
+                <ExitToAppIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Login" />
+            </StyledMenuItem>
+          </Link>
+        )}
       </StyledMenu>
     </div>
   );
