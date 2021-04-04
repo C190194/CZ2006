@@ -40,6 +40,11 @@ const discussion = new Schema({
         unique: true,
         required: true
         },
+    school:{
+        type: String,
+        required: true,
+        index: true
+    },
     courseInfo:{
         type: [[String]]
     },
@@ -66,6 +71,12 @@ const discussion = new Schema({
         default:null
     },
     timeInvestment: {
+        type: Number,
+        min: 1,
+        max: 10,
+        default:null
+    },
+    overallRating:{
         type: Number,
         min: 1,
         max: 10,
