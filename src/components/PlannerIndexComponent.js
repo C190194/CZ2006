@@ -269,8 +269,8 @@ export default function ShareTimetable(props) {
       if (
         !courseDivs.some((e) => e.course.courseCode === tempCourse.courseCode)
       ) {
-        setCourseDivs((prevCourseDivs) => [
-          ...prevCourseDivs,
+        setCourseDivs([
+          ...courseDivs,
           {
             course: tempCourse,
             currentIdx: currentIdxVar,
@@ -310,9 +310,10 @@ export default function ShareTimetable(props) {
       delete tempCs[i][tempCourseDiv.course.courseCode];
     }
 
-    setAllowClashCC((prevstate) =>
-      prevstate.filter((item) => item !== tempCourseDiv.course.courseCode)
+    const tempClashCC = allowClashCC.filter(
+      (item) => item !== tempCourseDiv.course.courseCode
     );
+    setAllowClashCC(tempClashCC);
     //delete the course code in allowclash array
     // setall;
 
