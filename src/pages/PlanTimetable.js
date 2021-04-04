@@ -69,7 +69,7 @@ function PlanTimetableContextConsumer(props) {
             updateTimeTablePageNum={updateTimeTablePageNum}
           />
           <ShareTimetableComponent
-            combinationslength={combinations.length}
+            combinations={combinations}
             currentTimeTablePage={currentTimeTablePage}
           />
           <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
@@ -93,13 +93,14 @@ export default function PlanTimetable() {
       },
     })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         return response.json();
       })
       .then(function (myJson) {
         // console.log(myJson);
         //i only chose 200 courses
         setData(myJson);
+        sessionStorage.setItem("coursesData", JSON.stringify(myJson));
       });
   };
 

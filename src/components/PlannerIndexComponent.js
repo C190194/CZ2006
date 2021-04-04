@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -113,6 +115,61 @@ export default function ShareTimetable(props) {
   const setIsPlanClicked = planTimetableContext.setIsPlanClicked;
   const allowClashCC = planTimetableContext.allowClashCC;
   const setAllowClashCC = planTimetableContext.setAllowClashCC;
+
+  // console.log(useLocation());
+  // console.log(window.location.href);
+
+  var searchParams = new URLSearchParams(useLocation().search);
+
+  const [data, setData] = useState([]);
+
+  const getData = () => {
+    fetch("output.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        setData(myJson);
+        sessionStorage.setItem("coursesData", JSON.stringify(myJson));
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+  const setCombinationsByQuery = (searchParams) => {
+    if (searchParams.toString() && data.length !== 0) {
+      const selectedCourses = data.filter((item) =>
+        searchParams.has(item.courseCode)
+      );
+
+      setCourseDivs(
+        selectedCourses.map((item) => {
+          return {
+            course: item,
+            currentIdx: {},
+            isIndexFixed: false,
+          };
+        })
+      );
+
+      const tempCombo = {};
+
+      for (let p of searchParams) {
+        tempCombo[p[0]] = p[1];
+      }
+      setIsPlanClicked(true);
+      setCombinations([tempCombo]);
+    }
+  };
+  useEffect(() => {
+    setCombinationsByQuery(searchParams);
+  }, [data]);
 
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
