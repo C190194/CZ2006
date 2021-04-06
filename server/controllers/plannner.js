@@ -260,7 +260,7 @@ function allot_course(courseCode,index,temp_timetable){
                             }
                         }
                     }
-            return copiedTT;
+            return copiedTT;``
 
 }
 
@@ -275,7 +275,7 @@ async function get_exam_details(courseCode,DatabaseExam){
 
 function check_exam_clash(input_courses){
     for(i = 0;i < input_courses.length;i++){
-        exami = get_exam_details(input_courses[courseCode],DatabaseExam);
+        exami = get_exam_details(input_courses[i][courseCode],DatabaseExam);
         if(exami == -1){
             exami_date = -1;
             exami_time = -1;
@@ -290,7 +290,7 @@ function check_exam_clash(input_courses){
             exami_time = exami['time'];
             exami_duration = exami['duration'];}
         for(j = i+1;j < (input_courses.length);j++){
-            exam = get_exam_details(input_courses[courseCode],DatabaseExam);
+            exam = get_exam_details(input_courses[j][courseCode],DatabaseExam);
             if(exam == -1){
             exam_date = -1;
             exam_time = -1;
@@ -332,7 +332,7 @@ function check_exam_clash(input_courses){
     return exam_result;
 }
 module.exports= {
-    send_timetable,
-    plan_timetable
+    send_timetable
+    //plan_timetable
     
 };

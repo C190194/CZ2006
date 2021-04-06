@@ -45,7 +45,7 @@ const get_top_courses=async(req,res)=>{
 
 const course_page=async(req,res)=>{
     try{
-        const courseCode = req.params.id;
+        const courseCode = req.body.courseCode;
         console.log(courseCode);
         const Dis = await Discussion.findOne({courseCode:courseCode});
         if (Dis) res.status(200).send(Dis);
@@ -59,7 +59,7 @@ const course_page=async(req,res)=>{
 const add_reply=async(req,res)=>{
 
     try {
-        const courseCode = req.params.id;
+        const courseCode = req.body.courseCode;
         console.log(courseCode);
 
         let tempCourse = await Discussion.find({courseCode:courseCode});
@@ -81,7 +81,7 @@ const add_reply=async(req,res)=>{
 
         await Discussion.update(
             {
-                courseCode:req.params.id,
+                courseCode:req.body.courseCode,
                 "comments.commentID": req.body.commentID
             },
             {
@@ -103,7 +103,7 @@ const add_reply=async(req,res)=>{
 
 const update_course_page=async(req,res)=>{
     try{
-        const courseCode = req.params.id;
+        const courseCode = req.body.courseCode;
         console.log(courseCode);
 
         let temp = await Discussion.find({courseCode:courseCode});
@@ -140,7 +140,7 @@ const update_course_page=async(req,res)=>{
             // console.log(use, req.body.usefulness, (req.body.usefulness-use), temp.numReviews, (req.body.usefulness-use)/numRev);
             await Discussion.updateOne(
                 {
-                    courseCode:req.params.id
+                    courseCode:req.body.courseCode
                 },
                 {
                     $push:{
