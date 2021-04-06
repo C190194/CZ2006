@@ -1,16 +1,36 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const reply = new Schema({
+    studentID:{
+        type: String,
+        required: true
+    },
+    replyID: {
+        type: Number,
+        required: true
+    },
+    replyBody: {
+        type:String,
+        require:true
+    }
+});
+
 //definining the schema of a comment
 const comment = new Schema({
-    studentId:{
+    studentID:{
         type: String,
+        required: true
+    },
+    commentID: {
+        type: Number,
         required: true
     },
     commentBody: {
         type: String,
         required: true
-    }
+    },
+    replies:[reply]
 });
 
 //defining the schema of discussion forum
@@ -20,6 +40,11 @@ const discussion = new Schema({
         unique: true,
         required: true
         },
+    school:{
+        type: String,
+        required: true,
+        index: true
+    },
     courseInfo:{
         type: [[String]]
     },
@@ -46,6 +71,12 @@ const discussion = new Schema({
         default:null
     },
     timeInvestment: {
+        type: Number,
+        min: 1,
+        max: 10,
+        default:null
+    },
+    overallRating:{
         type: Number,
         min: 1,
         max: 10,
