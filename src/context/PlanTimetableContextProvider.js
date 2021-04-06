@@ -4,20 +4,56 @@ import { appointments } from "../shares/appointments";
 const PlanTimetableContext = React.createContext();
 
 function PlanTimetableContextProvider({ children }) {
-  const [userDefinedTimeSlots, setUserDefinedTimeSlots] = useState([
-    // [new Date("March 1, 2021 10:15:00"), new Date("March 1, 2021 12:15:00")], //each item is an array of start time and end time of a slot
-  ]);
+  const [userDefinedTimeSlots, saveUserDefinedTimeSlots] = useState(
+    sessionStorage.getItem("userDefinedTimeSlots")
+      ? JSON.parse(sessionStorage.getItem("userDefinedTimeSlots")).map((item) =>
+          item.map((date) => new Date(date))
+        )
+      : []
+  );
+  //   [
+  //   // [new Date("March 1, 2021 10:15:00"), new Date("March 1, 2021 12:15:00")], //each item is an array of start time and end time of a slot
+  // ]
+  const setUserDefinedTimeSlots = (timeslots) => {
+    saveUserDefinedTimeSlots(timeslots);
+    sessionStorage.setItem("userDefinedTimeSlots", JSON.stringify(timeslots));
+  };
 
-  const [courseDivs, setCourseDivs] = useState([]);
+  const [courseDivs, saveCourseDivs] = useState(
+    sessionStorage.getItem("courseDivs")
+      ? JSON.parse(sessionStorage.getItem("courseDivs"))
+      : []
+  );
   // {
   //           course: tempCourse,
   //           currentIdx: currentIdxVar,
   //           isIndexFixed: false,
   //         },
-  const [allowClashCC, setAllowClashCC] = useState([]);
+  const setCourseDivs = (courseDivsVar) => {
+    saveCourseDivs(courseDivsVar);
+    sessionStorage.setItem("courseDivs", JSON.stringify(courseDivsVar));
+  };
+  const [allowClashCC, saveAllowClashCC] = useState(
+    sessionStorage.getItem("allowClashCC")
+      ? JSON.parse(sessionStorage.getItem("allowClashCC"))
+      : []
+  );
+  const setAllowClashCC = (allowClashCCVar) => {
+    saveAllowClashCC(allowClashCCVar);
+    sessionStorage.setItem("allowClashCC", JSON.stringify(allowClashCCVar));
+  };
 
   const [currentTimeTablePage, setCurrentTimeTablePage] = useState(1);
-  const [combinations, setCombinations] = useState([{}]); //timetable combinations
+  const [combinations, saveCombinations] = useState(
+    sessionStorage.getItem("combinations")
+      ? JSON.parse(sessionStorage.getItem("combinations"))
+      : [{}]
+  ); //timetable combinations
+  const setCombinations = (combinationsVar) => {
+    saveCombinations(combinationsVar);
+    sessionStorage.setItem("combinations", JSON.stringify(combinationsVar));
+  };
+
   //combinations = [{coursecode:index,...},...] each item is a combination of course indexes
   const [occupiedTimeSlots, setOccupiedTimeSlots] = useState([]); //appointment format(react scheduler)
   const [isPlanClicked, setIsPlanClicked] = useState(false);
@@ -42,12 +78,9 @@ function PlanTimetableContextProvider({ children }) {
       const tempIndex = tempCourseDiv.course.index.find(
         (item) => item.index_number === idxStr
       );
-
-      setCourseDivs((prevCourseDivs) => {
-        const tempCDs = [...prevCourseDivs];
-        tempCDs[idx].currentIdx = tempIndex;
-        return tempCDs;
-      });
+      const tempCDs = [...courseDivs];
+      tempCDs[idx].currentIdx = tempIndex;
+      setCourseDivs(tempCDs);
 
       returnAppointments = tempIndex.lesson.map((lesson) => {
         return {
@@ -81,12 +114,9 @@ function PlanTimetableContextProvider({ children }) {
       const tempIndex = tempCourseDiv.course.index.find(
         (item) => item.index_number === idxStr
       );
-
-      setCourseDivs((prevCourseDivs) => {
-        const tempCDs = [...prevCourseDivs];
-        tempCDs[idx].currentIdx = tempIndex;
-        return tempCDs;
-      });
+      const tempCDs = [...courseDivs];
+      tempCDs[idx].currentIdx = tempIndex;
+      setCourseDivs(tempCDs);
 
       returnAppointments = tempIndex.lesson.map((lesson) => {
         return {

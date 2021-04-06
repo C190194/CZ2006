@@ -7,7 +7,7 @@ import axios from "axios";
 import "./Login.css";
 import { AddAlertRounded } from "@material-ui/icons";
 
-export default function Login() {
+export default function Login({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
@@ -27,14 +27,13 @@ export default function Login() {
         password: password,
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data.token);
+        setToken(response.data.token);
         history.push("/planner");
       })
       .catch(function (error) {
         if (error.response) {
           alert(error.response.data.message);
-          // console.log(error.response.status);
-          // console.log(error.response.headers);
         }
       });
   }
