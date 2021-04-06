@@ -225,29 +225,30 @@ export default function ShareTimetable(props) {
       clash_courses: clash_courses,
       free_slots: userDefinedTimeSlots,
     });
-
-    // axios
-    //   .post("/planning/send_timetable", {
-    //     input_courses: temp_course_arr,
-    //     clash_courses: [],
-    //     free_slots: [
-    //       [
-    //         new Date("March 1, 2021 11:13:00"),
-    //         new Date("March 1, 2021 12:13:00"),
-    //       ], //each item is an array of start time and end time of a slot
-    //       [
-    //         new Date("March 2, 2021 9:13:00"),
-    //         new Date("March 1, 2021 11:13:00"),
-    //       ],
-    //       [
-    //         new Date("March 3, 2021 5:13:00"),
-    //         new Date("March 1, 2021 11:13:00"),
-    //       ],
-    //     ],
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   });
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post(
+        "/planning/send_timetable",
+        {
+          non_clash_courses: non_clash_courses,
+          clash_courses: clash_courses,
+          free_slots: userDefinedTimeSlots,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response.data);
+        if (typeof response.data.message[0] === "string") {
+          alert(response.data.message[0]);
+        } else {
+          setCombinations(response.data.message);
+        }
+      });
 
     // axios
     //   .post("/user/login", {
@@ -267,7 +268,7 @@ export default function ShareTimetable(props) {
       // {course:{},index_number:"10145"}
     ];
 
-    console.log(courseSelected);
+    // console.log(courseSelected);
 
     // console.log(courseSelected[0]["courseId"]);
     // setIsPlanClicked(true);
