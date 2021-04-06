@@ -1,19 +1,23 @@
-// var i;
-// var times = 100;
-// var t1 = Date.now();
-// // for (i = 0; i < times; i++) {
-// //   var id = Math.random().toString(36).substr(2, 9);
-//new Date().getTime().toString()
-// // }
-// var t2 = Date.now();
-// // var z = t2 - t1;
+var paramsString = "?q=344&topic=api&CZ2001=";
+var searchParams = new URLSearchParams(paramsString);
 
-// console.log(t1);
-
-var i;
-var times = 100000;
-var t1 = Date.now();
-for (i = 0; i < times; i++) {
-  var id = new Date().getTime().toString();
+//Iterate the search parameters.
+const tempCombo = {};
+for (let p of searchParams.keys()) {
+  // console.log(typeof p[1]);
+  console.log(p);
 }
-console.log(Date.now() - t1);
+
+// undefined.length;
+// console.log(tempCombo);
+const arr = [
+  [1, 2],
+  [3, 4],
+];
+console.log(arr.map((item) => item.map((item2) => item2 + 1)));
+console.log(Date.now().toString());
+const user = { name: "liew" };
+
+if (!user.name2) {
+  console.log("yes");
+}

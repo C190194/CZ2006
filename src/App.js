@@ -14,11 +14,13 @@ import Common from "./pages/FindCommon";
 import Share from "./pages/ShareTimetable";
 import ForgotPassword from "./pages/ForgotPassword";
 import Register from "./pages/Register";
+
 // import useToken from "./custom hooks/useToken";
 import { AppContextProvider, useApp } from "./context/AppContextProvider";
 
 import { COURSES } from "./pages/discussionData";
 import { COMMENTS } from "./shares/comments";
+import SavedTimetables from "./pages/SavedTimetables";
 
 function AppContextConsumer() {
   const [courses, setCourses] = useState(COURSES);
@@ -63,6 +65,7 @@ function AppContextConsumer() {
           <Route path="/share" component={Share} />
           <Route path="/forgotpwd" component={ForgotPassword} />
           <Route path="/register" component={Register} />
+          <Route path="/savedtimetables" component={SavedTimetables} />
         </Switch>
       </Router>
     </>

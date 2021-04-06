@@ -46,7 +46,7 @@ function PlanTimetableContextConsumer(props) {
       }
     });
     const reqbody = {
-      timetableID: Math.random().toString(36).substr(2, 9),
+      timetableID: Date.now().toString(),
       courseSelected: combinations[currentTimeTablePage - 1],
       fixedTimeSlots: userDefinedTimeSlots,
       courseFixed: courseFixed,

@@ -132,7 +132,9 @@ export default function ShareTimetableComponent(props) {
         <ModalBody class="modal fade bd-example-modal-lg">
           {subShareTimetableComponent()}
           <Button onClick={generateLink}>Share</Button>
-          <div>{link}</div>
+          <a href={link} target="_blank">
+            {link}
+          </a>
         </ModalBody>
       </Modal>
     </>
