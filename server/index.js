@@ -9,19 +9,25 @@ connectDB();
 //{ useNewUrlParser: true ,useUnifiedTopology: true },
 //()=>console.log('Connected to DB'));
 //Import routes
-const authRoute = require("./routes/user");
-const planRoute = require("./routes/planning");
-const discussion = require("./routes/discussionRoute");
-const sharing = require("./routes/sharing");
+
 const sendAllCourses = require("./routes/sendAllCourses");
+const authRoute=require('./routes/user');
+const planRoute = require('./routes/planning');
+const discussion = require('./routes/discussionRoute');
+const sharing = require('./routes/sharing');
+const saveTimetable = require('./routes/saving');
+ 
 
 app.use(express.json({ extended: false }));
 
 app.use(cors());
 
 //Route middlewares
-app.use("/user", authRoute);
-app.use("/planning", planRoute);
+app.use('/user', authRoute);
+app.use('/planning', planRoute);
+app.use('/discuss', discussion);
+app.use('/share', sharing);
+app.use('/saving',saveTimetable );
 
 app.use("/discuss", discussion);
 app.use("/share", sharing);
