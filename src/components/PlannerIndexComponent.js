@@ -116,13 +116,7 @@ export default function ShareTimetable(props) {
   const allowClashCC = planTimetableContext.allowClashCC;
   const setAllowClashCC = planTimetableContext.setAllowClashCC;
 
-  // console.log(useLocation());
-  // console.log(window.location.href);
-
-  var searchParams = new URLSearchParams(useLocation().search);
-
   const [data, setData] = useState([]);
-
   const getData = () => {
     fetch("output.json", {
       headers: {
@@ -142,6 +136,35 @@ export default function ShareTimetable(props) {
   useEffect(() => {
     getData();
   }, []);
+  let location = useLocation();
+
+  useEffect(() => {
+    // console.log(location);
+    if (location.state && data.length != 0) {
+      // console.log("state exists");
+      const selectedCourses = [];
+
+      for (const courseCode in location.state.courseSelected) {
+        selectedCourses.push(
+          data.find((item) => item.courseCode === courseCode)
+        );
+      }
+
+      setCourseDivs(
+        selectedCourses.map((item) => {
+          return {
+            course: item,
+            currentIdx: {},
+            isIndexFixed: item.courseCode in location.state.courseFixed,
+          };
+        })
+      );
+      setIsPlanClicked(true);
+      setCombinations([location.state.courseSelected]);
+    }
+  }, [data]);
+
+  var searchParams = new URLSearchParams(useLocation().search);
 
   const setCombinationsByQuery = (searchParams) => {
     if (searchParams.toString() && data.length !== 0) {

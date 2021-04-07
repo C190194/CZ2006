@@ -18,6 +18,10 @@ console.log(arr.map((item) => item.map((item2) => item2 + 1)));
 console.log(Date.now().toString());
 const user = { name: "liew" };
 
-if (!user.name2) {
+console.log(typeof ("name" in user));
+
+if ({}) {
   console.log("yes");
+} else {
+  console.log("no");
 }

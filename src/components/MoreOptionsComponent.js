@@ -12,6 +12,7 @@ import Slide from "@material-ui/core/Slide";
 import AddFreeTimeSlotsComponent from "./AddFreeTimeSlotsComponent";
 import AllowClashCheckBoxesComponent from "./AllowClashCheckBoxesComponent";
 import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
+import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -120,6 +121,18 @@ export default function MoreOptionsComponent(props) {
     }
     // setIsChangeSaved(false);
   };
+  let location = useLocation();
+
+  useEffect(() => {
+    // console.log(location);
+    if (location.state) {
+      // console.log("state exists");
+
+      // setCombinations([location.state.courseSelected]);
+      setUserDefinedTimeSlots(location.state.fixedTimeSlots);
+      setAllowClashCC(location.state.courseClashAllowed);
+    }
+  }, []);
 
   const handleSaveChanges = () => {
     setIsChangeMade(false);
