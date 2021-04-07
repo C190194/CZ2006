@@ -115,6 +115,11 @@ export default function FindCommon() {
     timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
       .occupiedTimeSlots;
 
+  //call backend method
+  const retrieveSavedTimetable = () => {
+    const dummy = { timetableID: Math.random().toString(36).substr(2, 9) };
+  };
+
   return (
     <div className="container">
       <div className="row">
