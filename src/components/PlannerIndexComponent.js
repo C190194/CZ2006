@@ -225,6 +225,8 @@ export default function ShareTimetable(props) {
       clash_courses: clash_courses,
       free_slots: userDefinedTimeSlots,
     });
+
+    setIsPlanClicked(true);
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json",
