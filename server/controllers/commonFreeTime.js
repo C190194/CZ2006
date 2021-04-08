@@ -66,17 +66,18 @@ function findFreeTime(appointment_list, week){
     let resultList = [];
     let timeOccupied = {...timetable_week};
     for(i = 0; i < appointment_list.length; i++){
+        console.log("come on");
         let appoint = appointment_list[i];
             
         let start = new Date(appoint.startDate);
         let end = new Date(appoint.endDate);
-        let day = start.getUTCDay();
+        let day = start.getDay();
         console.log(day);
-        if (start.getUTCMinutes()==30){
-            start = start.getUTCHours() + 0.5;
+        if (start.getMinutes()==30){
+            start = start.getHours() + 0.5;
         }
-        if (end.getUTCMinutes()==30){
-            end = end.getUTCHours() + 0.5;
+        if (end.getMinutes()==30){
+            end = end.getHours() + 0.5;
         }
         console.log(start, end);
         for (let t = start; t < end; t = t + 0.5){
@@ -104,13 +105,13 @@ function findFreeTime(appointment_list, week){
                 } else { // save the last time slot and start a new one
                     start = new Date(monday);
                     start.setUTCDate(start.getUTCDate() + oldDay - 1);
-                    start.setUTCHours(Math.floor(oldStartTime));
+                    start.setHours(Math.floor(oldStartTime));
                     if (oldStartTime%1 == 0.5){
                         start.setUTCMinutes(30);
                     }
                     end = new Date(monday);
                     end.setUTCDate(end.getUTCDate() + oldDay - 1);
-                    end.setUTCHours(Math.floor(endTime));
+                    end.setHours(Math.floor(endTime));
                     if (endTime%1 == 0.5){
                         end.setUTCMinutes(30);
                     }
@@ -156,19 +157,20 @@ function findFreeTime(appointment_list, week){
 module.exports.return_freeTime = return_freeTime;
 
 //Test
+/*
 a_list = [
     {
-        "title": 'CZ3005',
-        "type": 'LAB',
-        //"day": 6, // determined by icsToAppointment
-        "startDate": '2021-04-06T09:30:00.000Z',
-        "endDate": '2021-04-06T10:30:00.000Z',
-        "group": 'SW1',
-        "location": 'SW1'
+        title: 'CZ3005',
+        type: 'LAB',
+        startDate: new Date("2021-04-08T01:30:00.000Z"), // only the time is useful
+        endDate: new Date("2021-04-08T03:30:00.000Z"), 
+        group: 'TS2',
+        location: 'SW1',
+        id: 1
     }
 ];
-let resultList = findFreeTime([], 12);
-console.log(resultList);
+let resultList = findFreeTime(a_list, 12);
+console.log(resultList);*/
 /*
 let startDate = new Date(a_list.startDate);
 let date1 = new Date("2021-04-04T22:30Z"); // use local time (no Z)

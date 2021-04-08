@@ -1,5 +1,4 @@
 const ics = require('ics');
-const ics = require('./dist');
 //const date2 = new Date('1995-12-17T03:24:00');
 //all starting week dates
 
@@ -21,7 +20,7 @@ const weekDates = [week1, week2, week3, week4, week5,week6,week7,week8,week9,wee
 const Day ={"MON":0, "TUE":1, "WED":2,"THU":3,"FRI":4,"SAT":5};
 
 var events=[];
-var event={title: '', description: '', start: [], duration:{}};
+var event={title: '', description: '', start: [], end: []};
 
 // title: 'Dinner',
 //   description: 'Nightly thing I do',
@@ -37,13 +36,15 @@ function createICS(appointments)
         console.log(error);
         return;
       }
+      
       return value;
 }
 
 function editEvents(appointments)
 {
-    for (var i in appointments)
+    for (var a = 0; a < appointments.length; a++)
     {
+        i = appointments[a];
         var weeklist = i.weekList;
         //get the start date
         //get the weeklist
@@ -51,19 +52,29 @@ function editEvents(appointments)
         {
             if(weeklist[j]==1)
             {
+                //console.log("added");
                 var eventObj = event;
-                var weekDay = Day[i.day];
+                var weekDay = Day[i.day]; // Monday is 0
                 eventObj['title']=i.title+" "+i.type;
                 eventObj['description']=i.group+" "+i.location;
-                var eventDate = addDays(weekDates(j),weekDay);
-                var dur = i.duration;
-                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth(),eventDate.getDate(),eventDate.getHours(),eventDate.getMinutes()];
-                eventObj['duration'] = {'hours': i.duration, 'minutes':0};
+
+                var eventDate = addDays(weekDates[j],weekDay);
+                let sHour = i.startDate.getHours();
+                let eHour = i.endDate.getHours();
+                let sMin = i.startDate.getMinutes();
+                let eMin = i.endDate.getMinutes();
+                //console.log(sTime);
+                eventObj['start']=[eventDate.getFullYear(),eventDate.getMonth()+1,eventDate.getDate(),sHour,sMin];
+                eventObj['end']=[eventDate.getFullYear(),eventDate.getMonth()+1,eventDate.getDate(),eHour,eMin];
+                //var dur = i.duration;
+                //eventObj['duration'] = {'hours': i.duration, 'minutes':0};
+                events.push(eventObj);
             }
-            events.push(eventObj);
+            
         }
 
     }
+    console.log(events);
     return events;
 }
 
@@ -84,3 +95,25 @@ function addDays(date, days)
       
 }
 
+module.exports=createICS;
+
+// test
+/*
+let a = [
+{
+    title: 'CZ3005',
+    type: 'LAB',
+    day: 'THU',
+    startDate: new Date(2021, 1, 1, 9, 30), // only the time is useful
+    endDate: new Date(2021, 1, 1, 11, 30), 
+    group: 'TS2',
+    location: 'SW1',
+    weekList: [0,0,0,0,0,0,0,0,0,0,0,1,0],
+    id: 1
+}
+];
+
+let r = createICS(a);
+console.log(r);
+let d = new Date(2021, 9-1, 30);
+console.log(d.getTime());*/

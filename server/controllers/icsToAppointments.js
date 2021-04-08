@@ -70,12 +70,17 @@ const return_appointments = async(req,res)=>{
 
 function getAppointments(ics, thisWeek){
     let appointments = [];
-    let data = ical.sync.parseFile(ics);
-    //let data = ical.sync.parseICS(icsStr);
-    //console.log(data);
+    //let data = ical.sync.parseFile(ics);
+    let data = ical.sync.parseICS(ics); // string 
+    console.log(data);
     for (const ev of Object.values(data)){
         let event = {};
+        //let startDate = new Date(ev.start);
+        //console.log(ev.start);
         let startDate = new Date(ev.start);
+        //console.log(startDate);
+        //startDate=startDate.getDate();
+        //console.log(startDate);
         let endDate = new Date(ev.end);
         let week_start = teaching_weeks[thisWeek-1];
         console.log(thisWeek);
@@ -105,27 +110,3 @@ function getAppointments(ics, thisWeek){
 }
 
 module.exports.return_appointments = return_appointments;
-
-// Test
-const icsList = `
-BEGIN:VCALENDAR
-VERSION:2.0
-CALSCALE:GREGORIAN
-BEGIN:VEVENT
-SUMMARY:CZ2001 LEC/STUDIO
-DTSTART:2021-04-06T09:30:00.000Z
-DTEND:2021-04-06T11:30:00.000Z
-DESCRIPTION:TS1 LT1
-UID:7014-1567468800-1567555199@peterbraden@peterbraden.co.uk
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:CZ3005 LAB
-DTSTART:2021-04-05T09:30:00.000Z
-DTEND:2021-04-05T11:30:00.000Z
-DESCRIPTION:TS2 SW1
-UID:7014-1567468800-1567555199@peterbraden@peterbraden.
-END:VEVENT
-END:VCALENDAR
-`;
-let a = getAppointments(icsList,12);
-console.log(a);
