@@ -33,11 +33,11 @@ const createICS = async(req,res)=>
     const eventsAdd = editEvents(appointments);
     const { error, value } = ics.createEvents(eventsAdd);
       if (error) {
-        console.log(error);
+        res.status(200).json(error);
         return;
       }
       
-      return value;
+      res.status(200).json(value);
 }
 
 function editEvents(appointments)
