@@ -17,6 +17,7 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
+import axios from "axios";
 
 import "./PlanTimetable.css";
 
@@ -74,6 +75,34 @@ function PlanTimetableContextConsumer(props) {
     console.log(reqbody);
   };
 
+  const downloadfile = () => {
+    const FileDownload = require("js-file-download");
+    console.log(occupiedTimeSlots);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    console.log(typeof occupiedTimeSlots[0].startDate);
+    console.log(occupiedTimeSlots);
+
+    axios
+      .post(
+        "/icsString/get_ics_string",
+        { appointments: occupiedTimeSlots },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response);
+
+        console.log(response.data);
+        FileDownload(response.data, "testing.ics");
+      });
+    // FileDownload("sdfsdf", "testing.ics");
+  };
+
   return (
     <div className="row">
       <div className="col-2">
@@ -92,6 +121,7 @@ function PlanTimetableContextConsumer(props) {
             currentTimeTablePage={currentTimeTablePage}
           />
           <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
+          <Button onClick={downloadfile}>Download</Button>
         </div>
         <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
       </div>
