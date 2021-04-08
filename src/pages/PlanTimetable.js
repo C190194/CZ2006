@@ -45,16 +45,28 @@ function PlanTimetableContextConsumer(props) {
 
   //call backend
   const saveCurrentTT = () => {
-    const courseFixed = {};
+    const courseFixed = [];
     courseDivs.forEach((courseDiv) => {
       if (courseDiv.isIndexFixed) {
-        courseFixed[courseDiv.course.courseCode] =
-          courseDiv.currentIdx.index_number;
+        courseFixed.push({
+          courseID: courseDiv.course.courseCode,
+          indexNum: courseDiv.currentIdx.index_number,
+        });
+        // [courseDiv.course.courseCode] = courseDiv.currentIdx.index_number;
       }
     });
+
+    const courseSelected = [];
+    // console.log(combinations);
+    for (const [key, value] of Object.entries(
+      combinations[currentTimeTablePage - 1]
+    )) {
+      courseSelected.push({ courseID: key, indexNum: value });
+    }
+
     const reqbody = {
       timetableID: Date.now().toString(),
-      courseSelected: combinations[currentTimeTablePage - 1],
+      courseSelected: courseSelected,
       fixedTimeSlots: userDefinedTimeSlots,
       courseFixed: courseFixed,
       courseClashAllowed: allowClashCC,
