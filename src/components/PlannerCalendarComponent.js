@@ -50,7 +50,7 @@ export default function PlannerCalendarComponent(props) {
     return day + " " + monthNames[monthIndex] + " " + year;
   }
 
-  const currentDate = "2021-03-02";
+  // const currentDate = "2021-03-02";
 
   const AppointmentContent = (data) => {
     return (
@@ -86,7 +86,7 @@ export default function PlannerCalendarComponent(props) {
           firstDayOfWeek={1}
           // style={{ height: 400 }}
         >
-          <ViewState currentDate={currentDate} />
+          <ViewState currentDate={props.currentDate} />
           <WeekView
             startDayHour={8}
             endDayHour={22}
