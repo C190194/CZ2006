@@ -30,7 +30,7 @@ var event={title: '', description: '', start: [], end: []};
 
 function createICS(appointments)
 {
-    const eventsAdd= editEvents(appointments);
+    const eventsAdd = editEvents(appointments);
     const { error, value } = ics.createEvents(eventsAdd);
       if (error) {
         console.log(error);
@@ -45,6 +45,7 @@ function editEvents(appointments)
     for (var a = 0; a < appointments.length; a++)
     {
         i = appointments[a];
+        console.log(i);
         var weeklist = i.weekList;
         //get the start date
         //get the weeklist
@@ -68,7 +69,7 @@ function editEvents(appointments)
                 eventObj['end']=[eventDate.getFullYear(),eventDate.getMonth()+1,eventDate.getDate(),eHour,eMin];
                 //var dur = i.duration;
                 //eventObj['duration'] = {'hours': i.duration, 'minutes':0};
-                events.push(eventObj);
+                events.push({...eventObj});
             }
             
         }
@@ -96,24 +97,3 @@ function addDays(date, days)
 }
 
 module.exports=createICS;
-
-// test
-/*
-let a = [
-{
-    title: 'CZ3005',
-    type: 'LAB',
-    day: 'THU',
-    startDate: new Date(2021, 1, 1, 9, 30), // only the time is useful
-    endDate: new Date(2021, 1, 1, 11, 30), 
-    group: 'TS2',
-    location: 'SW1',
-    weekList: [0,0,0,0,0,0,0,0,0,0,0,1,0],
-    id: 1
-}
-];
-
-let r = createICS(a);
-console.log(r);
-let d = new Date(2021, 9-1, 30);
-console.log(d.getTime());*/
