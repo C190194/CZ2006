@@ -1,120 +1,184 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useHistory } from "react-router-dom";
+
 import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
 import appointments from "../shares/today-appointments";
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
 import { Button } from "reactstrap";
+import MUIButton from "@material-ui/core/Button";
+import CloseIcon from "@material-ui/icons/Close";
+
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Paper from "@material-ui/core/Paper";
+
+const useStyles = makeStyles((theme) => ({
+  toggleContainer: {
+    margin: theme.spacing(2, 0),
+  },
+}));
+
+function ToggleButtonNotEmpty(props) {
+  const { setWeekView } = props;
+  const [week, setWeek] = React.useState("currentweek");
+
+  const handleWeek = (event, newWeek) => {
+    if (newWeek !== null) {
+      console.log(newWeek);
+      setWeek(newWeek);
+      if (newWeek === "currentweek") {
+        setWeekView(0);
+      } else {
+        setWeekView(1);
+      }
+    }
+  };
+
+  const classes = useStyles();
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item sm={12} md={6}>
+        <div className={classes.toggleContainer}>
+          <ToggleButtonGroup
+            value={week}
+            exclusive
+            onChange={handleWeek}
+            aria-label="text alignment"
+          >
+            <ToggleButton value="currentweek" aria-label="left aligned">
+              Current Week
+            </ToggleButton>
+            <ToggleButton value="nextweek" aria-label="justified">
+              Next Week
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
+      </Grid>
+    </Grid>
+  );
+}
+
+const GetTimetableData = function (props) {
+  const { selectedICSfile, deleteElement, chooseICSfile, idx } = props;
+
+  return (
+    <Paper
+      elevation={5}
+      style={{
+        // width: "180px",
+        // overflowWrap: "break-word",
+        wordWrap: "break-word",
+      }}
+    >
+      <h5>{"Timetable" + (idx + 1)}</h5>
+      <MUIButton
+        variant="outlined"
+        color="secondary"
+        startIcon={<CloseIcon />}
+        onClick={deleteElement}
+        style={{ width: "40px", minWidth: "40px" }}
+      ></MUIButton>
+      <input type="file" name="file" accept=".ics" onChange={chooseICSfile} />
+      <p>{selectedICSfile.fileName}</p>
+    </Paper>
+  );
+};
 
 export default function FindCommon() {
-  const [timetablesState, setTimetablesState] = useState({
-    timeTables: [
-      {
-        page: "Timetable 1",
-        occupiedTimeSlots: [appointments[0], appointments[1]],
-      },
-      {
-        page: "Timetable 2",
-        occupiedTimeSlots: [appointments[0], appointments[2]],
-      },
-      {
-        page: "Common Time Slots",
-        occupiedTimeSlots: [appointments[0], appointments[2]],
-      },
-    ],
-    currentTimeTablePage: 1,
-  });
+  const [selectedICSfiles, setSelectedICSfiles] = useState([
+    {
+      // page: "Timetable" + selectedICSfiles.indexOf(this),
+      fileName: "liew.ics",
+      fileData: "haha",
+      results: [
+        [appointments[0], appointments[1]],
+        [appointments[0], appointments[2]],
+      ],
+    },
+  ]);
 
-  const [selectedFile1, setSelectedFile1] = useState();
-  const [isFile1Picked, setIsFile1Picked] = useState(false);
-  const [selectedFile2, setSelectedFile2] = useState();
-  const [isFile2Picked, setIsFile2Picked] = useState(false);
+  const [commonFreeTimeSlots, setCommonFreeTimeSlots] = useState([
+    [appointments[0]],
+    [appointments[0], appointments[2]],
+  ]);
 
-  const changeHandler1 = (event) => {
-    setSelectedFile1(event.target.files[0]);
-    setIsFile1Picked(true);
+  const [weekView, setWeekView] = useState(0); //0-current week , 1-next week
+  const [currentPage, setCurrentPage] = useState(1); //1 = index 0
+
+  // sessionStorage.setItem("selectedICSfiles", JSON.stringify(dummyfiles));
+  // console.log(JSON.parse(sessionStorage.getItem("selectedICSfiles")));
+
+  const location = useLocation();
+  useEffect(() => {
+    console.log("find common");
+    // console.log(history);
+    console.log(location);
+
+    if (location.state) {
+      console.log("state exists");
+    }
+  }, []);
+
+  const deleteElement = (idx) => {
+    const tempSelectedICSfiles = [...selectedICSfiles];
+    tempSelectedICSfiles.splice(idx, 1);
+    setSelectedICSfiles(tempSelectedICSfiles);
   };
 
-  const changeHandler2 = (event) => {
-    setSelectedFile2(event.target.files[0]);
-    setIsFile2Picked(true);
+  const addTimetable = () => {
+    const tempSelectedICSfiles = [
+      ...selectedICSfiles,
+      {
+        fileName: null,
+        fileData: null,
+        results: [],
+      },
+    ];
+    setSelectedICSfiles(tempSelectedICSfiles);
   };
 
-  const handleSubmission = () => {};
-  function File1UploadPage() {
-    return (
-      <div>
-        <input type="file" name="file" onChange={changeHandler1} />
-        {isFile1Picked ? (
-          <div>
-            <p>File1name: {selectedFile1.name}</p>
-            <p>File1type: {selectedFile1.type}</p>
-            <p>Size in bytes: {selectedFile1.size}</p>
-            <p>
-              lastModifiedDate:{" "}
-              {selectedFile1.lastModifiedDate.toLocaleDateString()}
-            </p>
-          </div>
-        ) : (
-          <p>Select a file to show details</p>
-        )}
-        <div>
-          <button onClick={handleSubmission}>Submit</button>
-        </div>
-      </div>
-    );
-  }
+  //call backend method
+  const submitFiles = () => {
+    const reqbody = { icsList: [] };
+    reqbody.icsList = selectedICSfiles.map((item) => item.fileData);
+    // reqbody.week = getCurrentWeek();
+    console.log(reqbody);
+  };
 
-  function File2UploadPage() {
-    return (
-      <div>
-        <input type="file" name="file2" onChange={changeHandler2} />
-        {isFile2Picked ? (
-          <div>
-            <p>File2name: {selectedFile2.name}</p>
-            <p>File2type: {selectedFile2.type}</p>
-            <p>Size in bytes: {selectedFile2.size}</p>
-            <p>
-              lastModifiedDate:{" "}
-              {selectedFile2.lastModifiedDate.toLocaleDateString()}
-            </p>
-          </div>
-        ) : (
-          <p>Select a file to show details</p>
-        )}
-        <div>
-          <button onClick={handleSubmission}>Submit</button>
-        </div>
-      </div>
-    );
-  }
+  //call backend method
+  const generateCommonFreeTimeSlots = () => {
+    const reqbody = { appointmentList: [[], []] };
+    for (let i = 0; i < selectedICSfiles.length; i++) {
+      reqbody.appointmentList[0].push(...selectedICSfiles[i].results[0]);
+      reqbody.appointmentList[1].push(...selectedICSfiles[i].results[1]);
+    }
+    // reqbody.appointmentList.push(selectedICSfiles.map((item) => ...[1,2,3]);
+    // reqbody.week = getCurrentWeek();
+    console.log(reqbody);
+  };
 
+  const chooseICSfile = (i, event) => {
+    if (event.target.files[0]) {
+      const tempSelectedICSfiles = [...selectedICSfiles];
+      tempSelectedICSfiles[i].fileName = event.target.files[0].name;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        // The file's text will be printed here
+        // console.log(e.target.result);
+        tempSelectedICSfiles[i].fileData = e.target.result;
+      };
+      reader.readAsText(event.target.files[0]);
+      setSelectedICSfiles(tempSelectedICSfiles);
+    }
+  };
   const updateTimeTablePageNum = (tempPage) => {
-    setTimetablesState((prevTimetablesState) => ({
-      ...prevTimetablesState,
-      currentTimeTablePage: tempPage,
-    }));
+    console.log(tempPage);
+    setCurrentPage(tempPage);
+    // setIsPageChanged(true);
   };
-
-  const useSavedTimetable1 = () => {
-    //select saved timetables
-    const tempttstate = { ...timetablesState };
-    const tempTimetables = [...tempttstate.timeTables];
-    tempTimetables[0] = {
-      ...tempTimetables[0],
-      occupiedTimeSlots: [appointments[0], appointments[2]],
-    };
-
-    setTimetablesState((prevTimetablesState) => ({
-      ...prevTimetablesState,
-      timeTables: tempTimetables,
-    }));
-
-    // console.log(timetablesState);
-  };
-
-  var datatobepassed =
-    timetablesState.timeTables[timetablesState.currentTimeTablePage - 1]
-      .occupiedTimeSlots;
-
   return (
     <div className="container">
       <div className="row">
@@ -124,39 +188,42 @@ export default function FindCommon() {
       </div>
       <div className="row">
         <div className="col-2">
-          <div className="row">
-            <h4>Timetables</h4>
-          </div>
-          <div className="row">
-            <h5>Timetable 1</h5>
-          </div>
-          <div className="row">
-            <File1UploadPage />
-          </div>
-          <div className="row">
-            <Button onClick={useSavedTimetable1}>Use saved timetable</Button>
-          </div>
-          <br />
-          <div className="row">
-            <h5>Timetable 2</h5>
-          </div>
-          <div className="row">
-            <File2UploadPage />
-          </div>
-          <div className="row">
-            <Button>Use saved timetable</Button>
-          </div>
+          <h4>Timetables</h4>
+          <Button onClick={addTimetable}>Add timetable</Button>
+          <Button onClick={submitFiles}>Submit files</Button>
+          <Button onClick={generateCommonFreeTimeSlots}>
+            Generate Common Free Time Slots
+          </Button>
+
+          {selectedICSfiles.map((item, idx) => {
+            return (
+              <GetTimetableData
+                selectedICSfile={item}
+                deleteElement={deleteElement}
+                chooseICSfile={chooseICSfile.bind(this, idx)}
+                idx={idx}
+              />
+            );
+          })}
         </div>
+
         <div className="col-10">
+          <ToggleButtonNotEmpty
+            setWeekView={setWeekView}
+          ></ToggleButtonNotEmpty>
+
           <SelectTimetablePageComponent
-            combinations={timetablesState.timeTables}
+            combinations={[
+              ...selectedICSfiles,
+              { page: "Common Free Time Slots", results: commonFreeTimeSlots },
+            ]}
             updateTimeTablePageNum={updateTimeTablePageNum}
           />
           <PlannerCalendarComponent
             timeTableData={
-              timetablesState.timeTables[
-                timetablesState.currentTimeTablePage - 1
-              ].occupiedTimeSlots
+              currentPage !== selectedICSfiles.length + 1
+                ? selectedICSfiles[currentPage - 1].results[weekView]
+                : commonFreeTimeSlots[weekView]
             }
           />
         </div>

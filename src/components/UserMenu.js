@@ -99,18 +99,21 @@ export default function CustomizedMenus() {
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </StyledMenuItem>,
+
             <StyledMenuItem key="2">
               <ListItemIcon>
                 <FaceIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Profile" />
             </StyledMenuItem>,
-            <StyledMenuItem key="3">
-              <ListItemIcon>
-                <EventIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Saved timetables" />
-            </StyledMenuItem>,
+            <Link to="/savedtimetables">
+              <StyledMenuItem key="3">
+                <ListItemIcon>
+                  <EventIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Saved timetables" />
+              </StyledMenuItem>
+            </Link>,
           ]
         ) : (
           <Link to="/login">

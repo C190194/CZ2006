@@ -2221,6 +2221,6 @@ var free_slots = [new Date("March 1, 2021 08:30:00")];
 
 //routing
 // route called in the beginning after login for basic student details
-router.get("/send_timetable", plannner.send_timetable);
+router.post("/send_timetable", plannner.send_timetable);
 
 module.exports = router;

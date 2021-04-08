@@ -10,6 +10,13 @@ import {
   PlanTimetableContextProvider,
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 
 import "./PlanTimetable.css";
 
@@ -46,7 +53,7 @@ function PlanTimetableContextConsumer(props) {
       }
     });
     const reqbody = {
-      timetableID: Math.random().toString(36).substr(2, 9),
+      timetableID: Date.now().toString(),
       courseSelected: combinations[currentTimeTablePage - 1],
       fixedTimeSlots: userDefinedTimeSlots,
       courseFixed: courseFixed,
@@ -69,7 +76,7 @@ function PlanTimetableContextConsumer(props) {
             updateTimeTablePageNum={updateTimeTablePageNum}
           />
           <ShareTimetableComponent
-            combinationslength={combinations.length}
+            combinations={combinations}
             currentTimeTablePage={currentTimeTablePage}
           />
           <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
@@ -83,6 +90,17 @@ function PlanTimetableContextConsumer(props) {
 export default function PlanTimetable() {
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
+  // const props = useParams();
+  // console.log(props);
+
+  //if this page is redirected from savedtimetables
+  // let location = useLocation();
+
+  // useEffect(() => {
+  //   console.log(location);
+  //   if (location.state) {
+  //   }
+  // }, []);
 
   //method to add course(div)
   const getData = () => {
@@ -93,13 +111,14 @@ export default function PlanTimetable() {
       },
     })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         return response.json();
       })
       .then(function (myJson) {
         // console.log(myJson);
         //i only chose 200 courses
         setData(myJson);
+        sessionStorage.setItem("coursesData", JSON.stringify(myJson));
       });
   };
 

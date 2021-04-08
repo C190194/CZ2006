@@ -82,17 +82,22 @@ function PlanTimetableContextProvider({ children }) {
       tempCDs[idx].currentIdx = tempIndex;
       setCourseDivs(tempCDs);
 
-      returnAppointments = tempIndex.lesson.map((lesson) => {
-        return {
-          ...lesson,
-          title: tempCourseDiv.course.courseCode,
-          id: Math.random().toString(36).substr(2, 9),
-          startDate: convertToDate(lesson.day, lesson.start),
-          endDate: convertToDate(lesson.day, lesson.end),
-          courseDivID: idx + 1,
-        };
-      });
-    } else if (Object.keys(tempCourseDiv.currentIdx).length !== 0) {
+      if (tempIndex) {
+        returnAppointments = tempIndex.lesson.map((lesson) => {
+          return {
+            ...lesson,
+            title: tempCourseDiv.course.courseCode,
+            id: Math.random().toString(36).substr(2, 9),
+            startDate: convertToDate(lesson.day, lesson.start),
+            endDate: convertToDate(lesson.day, lesson.end),
+            courseDivID: idx + 1,
+          };
+        });
+      }
+    } else if (
+      tempCourseDiv.currentIdx !== undefined &&
+      Object.keys(tempCourseDiv.currentIdx).length !== 0
+    ) {
       returnAppointments = tempCourseDiv.currentIdx.lesson.map((lesson) => {
         return {
           ...lesson,
@@ -118,16 +123,18 @@ function PlanTimetableContextProvider({ children }) {
       tempCDs[idx].currentIdx = tempIndex;
       setCourseDivs(tempCDs);
 
-      returnAppointments = tempIndex.lesson.map((lesson) => {
-        return {
-          ...lesson,
-          title: tempCourseDiv.course.courseCode,
-          id: Math.random().toString(36).substr(2, 9),
-          startDate: convertToDate(lesson.day, lesson.start),
-          endDate: convertToDate(lesson.day, lesson.end),
-          courseDivID: idx + 1,
-        };
-      });
+      if (tempIndex) {
+        returnAppointments = tempIndex.lesson.map((lesson) => {
+          return {
+            ...lesson,
+            title: tempCourseDiv.course.courseCode,
+            id: Math.random().toString(36).substr(2, 9),
+            startDate: convertToDate(lesson.day, lesson.start),
+            endDate: convertToDate(lesson.day, lesson.end),
+            courseDivID: idx + 1,
+          };
+        });
+      }
     }
 
     return returnAppointments;

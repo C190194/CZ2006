@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
@@ -61,7 +63,7 @@ const CourseDiv = function (props) {
             className={classes.button}
             startIcon={<FlagIcon />}
             onClick={() => {
-              Object.keys(currentIdx).length === 0
+              currentIdx === undefined || Object.keys(currentIdx).length === 0
                 ? alert("You cannot fix an empty index!")
                 : setIsIndexFixed(!isIndexFixed);
             }}
@@ -114,6 +116,90 @@ export default function ShareTimetable(props) {
   const allowClashCC = planTimetableContext.allowClashCC;
   const setAllowClashCC = planTimetableContext.setAllowClashCC;
 
+  const [data, setData] = useState([]);
+  const getData = () => {
+    fetch("output.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myJson) {
+        setData(myJson);
+        sessionStorage.setItem("coursesData", JSON.stringify(myJson));
+      });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+  let location = useLocation();
+
+  useEffect(() => {
+    // console.log(location);
+    if (location.state && data.length != 0) {
+      // console.log("state exists");
+      const selectedCourses = [];
+
+      for (const courseCode in location.state.courseSelected) {
+        selectedCourses.push(
+          data.find((item) => item.courseCode === courseCode)
+        );
+      }
+
+      setCourseDivs(
+        selectedCourses.map((item) => {
+          return {
+            course: item,
+            currentIdx: {},
+            isIndexFixed: item.courseCode in location.state.courseFixed,
+          };
+        })
+      );
+      setIsPlanClicked(true);
+      setCombinations([location.state.courseSelected]);
+    }
+  }, [data]);
+
+  var searchParams = new URLSearchParams(useLocation().search);
+
+  const setCombinationsByQuery = (searchParams) => {
+    if (searchParams.toString() && data.length !== 0) {
+      const selectedCourses = [];
+      for (let p of searchParams.keys()) {
+        selectedCourses.push(data.find((item) => item.courseCode === p));
+      }
+
+      // const selectedCourses = data.filter((item) =>
+      //   searchParams.has(item.courseCode)
+      // );
+
+      setCourseDivs(
+        selectedCourses.map((item) => {
+          return {
+            course: item,
+            currentIdx: {},
+            isIndexFixed: false,
+          };
+        })
+      );
+
+      const tempCombo = {};
+
+      for (let p of searchParams) {
+        tempCombo[p[0]] = p[1];
+      }
+      setIsPlanClicked(true);
+      setCombinations([tempCombo]);
+    }
+  };
+  useEffect(() => {
+    setCombinationsByQuery(searchParams);
+  }, [data]);
+
   //Backend: this method will retrieve all course indexes then call backend method to return timetables
   //if clash then give a error message
   //convert courseDivs to courses
@@ -163,28 +249,31 @@ export default function ShareTimetable(props) {
       free_slots: userDefinedTimeSlots,
     });
 
-    // axios
-    //   .post("/planning/send_timetable", {
-    //     input_courses: temp_course_arr,
-    //     clash_courses: [],
-    //     free_slots: [
-    //       [
-    //         new Date("March 1, 2021 11:13:00"),
-    //         new Date("March 1, 2021 12:13:00"),
-    //       ], //each item is an array of start time and end time of a slot
-    //       [
-    //         new Date("March 2, 2021 9:13:00"),
-    //         new Date("March 1, 2021 11:13:00"),
-    //       ],
-    //       [
-    //         new Date("March 3, 2021 5:13:00"),
-    //         new Date("March 1, 2021 11:13:00"),
-    //       ],
-    //     ],
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   });
+    setIsPlanClicked(true);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post(
+        "/planning/send_timetable",
+        {
+          non_clash_courses: non_clash_courses,
+          clash_courses: clash_courses,
+          free_slots: userDefinedTimeSlots,
+        },
+        axiosConfig
+      )
+      .then((response) => {
+        console.log(response.data);
+        if (typeof response.data.message[0] === "string") {
+          alert(response.data.message[0]);
+        } else {
+          setCombinations(response.data.message);
+        }
+      });
 
     // axios
     //   .post("/user/login", {
@@ -204,7 +293,7 @@ export default function ShareTimetable(props) {
       // {course:{},index_number:"10145"}
     ];
 
-    console.log(courseSelected);
+    // console.log(courseSelected);
 
     // console.log(courseSelected[0]["courseId"]);
     // setIsPlanClicked(true);

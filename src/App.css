@@ -1,12 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
-
+input[type="file"] {
+  color: rgba(0, 0, 0, 0);
+}
 .home,
 .reports,
 .products {

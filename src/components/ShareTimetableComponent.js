@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 // import { DropdownButton, Dropdown } from "react-bootstrap";
+// import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
+
 import "./ComponentsStyle.css";
 import {
   Button,
@@ -16,7 +18,13 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 
 export default function ShareTimetableComponent(props) {
-  const { combinationslength, currentTimeTablePage } = props;
+  const { combinations, currentTimeTablePage } = props;
+  const [link, setLink] = useState("");
+  // const planTimetableContext = usePlanTimetable();
+
+  // const combinations = planTimetableContext.combinations;
+
+  const combinationslength = combinations.length;
   const pages = [];
   for (let i = 0; i < combinationslength; i++) {
     pages.push(i + 1);
@@ -84,6 +92,29 @@ export default function ShareTimetableComponent(props) {
     );
   }
 
+  const generateLink = () => {
+    // console.log(useLocation());
+    // console.log(window.location.pathname);
+    // console.log(window.location.origin);
+
+    // console.log(combinations);
+    const tempCombinationArray = [];
+    for (const [key, value] of Object.entries(combinations[selectedPage - 1])) {
+      tempCombinationArray.push(`${key}=${value}`);
+    }
+    // console.log(
+    //   `${window.location.origin}${
+    //     window.location.pathname
+    //   }?${tempCombinationArray.join("&")}`
+    // );
+    setLink(
+      `${window.location.origin}${
+        window.location.pathname
+      }?${tempCombinationArray.join("&")}`
+    );
+    // combinations[];
+  };
+
   return (
     <>
       <Button outline onClick={toggleModal}>
@@ -100,7 +131,10 @@ export default function ShareTimetableComponent(props) {
         </ModalHeader>
         <ModalBody class="modal fade bd-example-modal-lg">
           {subShareTimetableComponent()}
-          <Button>Share</Button>
+          <Button onClick={generateLink}>Share</Button>
+          <a href={link} target="_blank">
+            {link}
+          </a>
         </ModalBody>
       </Modal>
     </>
