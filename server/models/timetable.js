@@ -16,7 +16,8 @@ const course = new Schema({
 const timetableSchema = new Schema({
     timetableID:{
         unique: true,
-        type: Number,
+        type: String,
+        index: true,
         required: true,
         min:1
     },

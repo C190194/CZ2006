@@ -274,6 +274,7 @@ function check_clash(courseCode, index, temp_timetable) {
   return false;
 }
 
+
 function allot_course(courseCode, index, temp_timetable) {
   var copiedTT = JSON.parse(JSON.stringify(temp_timetable));
   var newLessonList = index["lesson"];
@@ -296,6 +297,7 @@ function allot_course(courseCode, index, temp_timetable) {
         newLessonList[l]["remarks"],
       ];
 
+
       if (t_str.endsWith("30")) {
         t = t + 70;
       } else {
@@ -307,11 +309,13 @@ function allot_course(courseCode, index, temp_timetable) {
   return copiedTT;
 }
 
+
 async function get_exam_details(courseCode, DatabaseExam) {
   const examobj = await DatabaseExam.findOne({ courseCode });
   if (!examobj) {
     return -1;
   }
+
 
   return examobj;
 }
@@ -376,7 +380,9 @@ function check_exam_clash(input_courses) {
   exam_result["course2"] = 0;
   return exam_result;
 }
+
 module.exports = {
   send_timetable,
   plan_timetable,
+
 };
