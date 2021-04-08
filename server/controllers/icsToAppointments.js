@@ -39,12 +39,14 @@ const GetWeek = require("./getWeek");
 // req.body.week : integer representing the current week.
 // return [result1, result2] : array result1 holds appointment arrays for ics files in the current week;
 //                             array result2 holds appointment arrays for ics files in the next week.
+
 const return_appointments = async (req, res) => {
   let ics_list = [];
   let input_ics_list = [];
   let week = 0;
   ics_list = req.body.icsList;
   week = req.body.week;
+
 
   let result1 = [];
   let result2 = [];
