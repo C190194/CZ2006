@@ -44,7 +44,7 @@ function editEvents(appointments)
 {
     for (var a = 0; a < appointments.length; a++)
     {
-        i = appointments[a];
+        let i = appointments[a];
         console.log(i);
         var weeklist = i.weekList;
         //get the start date
