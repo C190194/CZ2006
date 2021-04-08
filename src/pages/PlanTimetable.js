@@ -123,7 +123,10 @@ function PlanTimetableContextConsumer(props) {
           <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
           <Button onClick={downloadfile}>Download</Button>
         </div>
-        <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
+        <PlannerCalendarComponent
+          timeTableData={occupiedTimeSlots}
+          currentDate={"2021-03-02"}
+        />
       </div>
     </div>
   );
