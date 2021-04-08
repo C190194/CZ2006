@@ -53,6 +53,7 @@ const createICS = async (req, res) => {
   res.status(200).json(value);
 };
 
+
 function editEvents(appointments) {
   for (var a = 0; a < appointments.length; a++) {
     let i = appointments[a];
@@ -63,6 +64,7 @@ function editEvents(appointments) {
     for (var j = 0; j < weeklist.length; j++) {
       if (weeklist[j] == 1) {
         //console.log("added");
+
 
         var eventObj = event;
         var weekDay = Day[i.day]; // Monday is 0
