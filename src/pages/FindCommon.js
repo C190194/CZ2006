@@ -229,8 +229,33 @@ export default function FindCommon() {
         reqbody.appointmentList[1].push(...selectedICSfiles[i].results[1]);
       }
     }
+    reqbody.week = getWeek();
     // reqbody.appointmentList.push(selectedICSfiles.map((item) => ...[1,2,3]);
     // reqbody.week = getCurrentWeek();
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+    axios
+      .post("/commonfreetime/get_commonFreeTime", reqbody, axiosConfig)
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+        // const tempCommonFreetimeslots = [...commonFreeTimeSlots]
+        // tempCommonFreetimeslots[0]=respo
+        setCommonFreeTimeSlots(response.data);
+        //  const tempSelectedICSfiles = [...selectedICSfiles];
+        //  response.data[0].forEach((element, idx) => {
+        //    // console.log(idx);
+        //    tempSelectedICSfiles[idx].results[0] = element;
+        //  });
+        //  response.data[1].forEach((element, idx) => {
+        //    //  console.log(idx);
+        //    tempSelectedICSfiles[idx].results[1] = element;
+        //  });
+      });
     console.log(reqbody);
   };
 

@@ -14,6 +14,7 @@ const week10 = new Date("2021-03-22T00:00:00Z");
 const week11 = new Date("2021-03-29T00:00:00Z");
 const week12 = new Date("2021-04-05T00:00:00Z");
 const week13 = new Date("2021-04-12T00:00:00Z");
+const end = new Date("2021-04-19T00:00:00Z");
 
 const teaching_weeks = [
   week1,
@@ -29,6 +30,7 @@ const teaching_weeks = [
   week11,
   week12,
   week13,
+  end,
 ];
 
 const GetWeek = require("./getWeek");
@@ -52,6 +54,7 @@ const return_appointments = async (req, res) => {
       input_ics_list.push(ics_list[i]);
     }
   }
+  console.log(input_ics_list);
   if (week == -1) {
     for (let i = 0; i < input_ics_list.length; i++) {
       let appointments = getAppointments(input_ics_list[i], 8);
@@ -71,14 +74,20 @@ const return_appointments = async (req, res) => {
     }
     //result1 = [13, result1];
   } else if (week != 14) {
+    console.log("Week" + week);
     for (let i = 0; i < input_ics_list.length; i++) {
       let appointments = getAppointments(input_ics_list[i], week);
       result1.push([...appointments]);
+      console.log("result1:");
+      console.log(result1);
     }
     //result1 = [week, result1];
     for (let i = 0; i < input_ics_list.length; i++) {
       let appointments = getAppointments(input_ics_list[i], week + 1);
       result2.push([...appointments]);
+      console.log("result2:");
+
+      console.log(result2);
     }
     //result2 = [week+1, result2];
   }
@@ -91,8 +100,8 @@ function getAppointments(ics, thisWeek) {
   let appointments = [];
   //let data = ical.sync.parseFile(ics);
   let data = ical.sync.parseICS(ics); // string
+  console.log(thisWeek);
   console.log(data);
-  console.log(Object.keys(data));
   for (const ev of Object.values(data)) {
     let event = {};
     //let startDate = new Date(ev.start);
@@ -103,8 +112,6 @@ function getAppointments(ics, thisWeek) {
     //console.log(startDate);
     let endDate = new Date(ev.end);
     let week_start = teaching_weeks[thisWeek - 1];
-    console.log(thisWeek);
-    console.log(week_start);
     let week_end = teaching_weeks[thisWeek];
     if (week_start < startDate && startDate < week_end) {
       //const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -121,9 +128,6 @@ function getAppointments(ics, thisWeek) {
       event["location"] = description_tuple[1];
       appointments.push(event);
     }
-  }
-  for (let i = 0; i < appointments.length; i++) {
-    appointments[i]["id"] = i;
   }
 
   for (let i = 0; i < appointments.length; i++) {
