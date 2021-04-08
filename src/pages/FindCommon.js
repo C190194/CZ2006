@@ -134,7 +134,7 @@ export default function FindCommon() {
       {
         fileName: null,
         fileData: null,
-        results: null,
+        results: [],
       },
     ];
     setSelectedICSfiles(tempSelectedICSfiles);
@@ -153,7 +153,7 @@ export default function FindCommon() {
     const reqbody = { appointmentList: [[], []] };
     console.log(selectedICSfiles);
     for (let i = 0; i < selectedICSfiles.length; i++) {
-      if (selectedICSfiles[i].results) {
+      if (selectedICSfiles[i].results.length !== 0) {
         reqbody.appointmentList[0].push(...selectedICSfiles[i].results[0]);
         reqbody.appointmentList[1].push(...selectedICSfiles[i].results[1]);
       }
