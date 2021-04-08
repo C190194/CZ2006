@@ -10,6 +10,13 @@ import {
   PlanTimetableContextProvider,
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 
 import "./PlanTimetable.css";
 
@@ -83,6 +90,17 @@ function PlanTimetableContextConsumer(props) {
 export default function PlanTimetable() {
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
+  // const props = useParams();
+  // console.log(props);
+
+  //if this page is redirected from savedtimetables
+  // let location = useLocation();
+
+  // useEffect(() => {
+  //   console.log(location);
+  //   if (location.state) {
+  //   }
+  // }, []);
 
   //method to add course(div)
   const getData = () => {

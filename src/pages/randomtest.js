@@ -17,7 +17,30 @@ const arr = [
 console.log(arr.map((item) => item.map((item2) => item2 + 1)));
 console.log(Date.now().toString());
 const user = { name: "liew" };
+user.age = 12412;
 
-if (!user.name2) {
+console.log(user);
+
+const something = null;
+if (something) {
   console.log("yes");
+} else {
+  console.log("no");
+}
+const week1 = new Date("2021-01-11T00:00:00");
+
+function getCurrentWeek() {
+  const dateNow = new Date.now();
+  var diff = getDaysDiff(dateNow, week1);
+  var weeks = diff / 7;
+  if (weeks > 7) {
+    weeks--;
+  }
+  return weeks;
+}
+
+function getDaysDiff(date1, date2) {
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
 }
