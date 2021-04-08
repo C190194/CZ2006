@@ -25,7 +25,7 @@ const GetWeek = require('./getWeek');
 //                             array result2 holds appointment arrays for ics files in the next week.
 const return_appointments = async(req,res)=>{
     const ics_list = [];
-    const input_ics_list = []
+    const input_ics_list = [];
     const week = 0;
     ics_list = req.body.icsList;
     week = req.body.week;
