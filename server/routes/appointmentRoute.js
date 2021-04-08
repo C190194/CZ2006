@@ -8,6 +8,6 @@ const Appointment = require('../controllers/icsToAppointments');
 const router=express.Router();
 
 //routing
-router.get('/get_appointments', Appointment.return_appointments);
+router.post('/get_appointments', Appointment.return_appointments);
 
 module.exports=router;
