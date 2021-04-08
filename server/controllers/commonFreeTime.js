@@ -155,30 +155,3 @@ function findFreeTime(appointment_list, week){
 }
 
 module.exports.return_freeTime = return_freeTime;
-
-//Test
-/*
-a_list = [
-    {
-        title: 'CZ3005',
-        type: 'LAB',
-        startDate: new Date("2021-04-08T01:30:00.000Z"), // only the time is useful
-        endDate: new Date("2021-04-08T03:30:00.000Z"), 
-        group: 'TS2',
-        location: 'SW1',
-        id: 1
-    }
-];
-let resultList = findFreeTime(a_list, 12);
-console.log(resultList);*/
-/*
-let startDate = new Date(a_list.startDate);
-let date1 = new Date("2021-04-04T22:30Z"); // use local time (no Z)
-let date2 = new Date("2021-04-06T22:34");
-console.log(date1<date2)
-console.log(date1.getUTCDate()) // Sunday is 0
-let date3 = new Date(date1);
-date3.setUTCHours(7);
-date3.setUTCMinutes(30);
-console.log(date3.toISOString());
-console.log(date1);*/
