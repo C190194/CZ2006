@@ -27,9 +27,9 @@ var event={title: '', description: '', start: [], end: []};
 //   busyStatus: 'FREE',
 //   start: [2018, 1, 15, 6, 30],
 //   duration: { minutes: 50 }
-
-function createICS(appointments)
+const createICS = async(req,res)=>
 {
+    const appointments = req.body.appointments;
     const eventsAdd = editEvents(appointments);
     const { error, value } = ics.createEvents(eventsAdd);
       if (error) {
@@ -96,4 +96,4 @@ function addDays(date, days)
       
 }
 
-module.exports=createICS;
+module.exports.createICS=createICS;
