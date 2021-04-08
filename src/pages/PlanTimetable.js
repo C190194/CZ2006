@@ -86,19 +86,57 @@ function PlanTimetableContextConsumer(props) {
     };
 
     console.log(typeof occupiedTimeSlots[0].startDate);
-    console.log(occupiedTimeSlots);
+    // console.log(occupiedTimeSlots);
 
+    const dummy = [
+      {
+        type: "LEC/STUDIO",
+        group: "L3",
+        day: "THU",
+        full: "1130-1430",
+        start: "1130",
+        end: "1430",
+        duration: 3,
+        location: "NIE7-02-07",
+        flag: 0,
+        remarks: "",
+        date_w1: "2021-08-12",
+        weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        title: "AAA08B",
+        id: "fejvsx0d6",
+        startDate: "2021-03-04T03:30:00.000Z",
+        endDate: "2021-03-04T06:30:00.000Z",
+        courseDivID: 1,
+      },
+    ];
+    const convertUserDefinedTimeSlotstoAppointments = (occupiedTimeSlots) => {
+      return occupiedTimeSlots.map((item) => {
+        const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        console.log(item);
+        return {
+          title: "Free Time Slot",
+          weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          startDate: item[0],
+          endDate: item[1],
+          day: dayNames[item[0].getDay()],
+        };
+      });
+    };
+    const udtsAppointments = convertUserDefinedTimeSlotstoAppointments(
+      userDefinedTimeSlots
+    );
+    console.log(udtsAppointments);
     axios
       .post(
         "/icsString/get_ics_string",
-        { appointments: occupiedTimeSlots },
+        { appointments: [...occupiedTimeSlots, ...udtsAppointments] },
         axiosConfig
       )
       .then((response) => {
         console.log(response);
 
         console.log(response.data);
-        FileDownload(response.data, "testing.ics");
+        FileDownload(response.data, "testing2.ics");
       });
     // FileDownload("sdfsdf", "testing.ics");
   };

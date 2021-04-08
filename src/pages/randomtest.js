@@ -84,7 +84,7 @@ function getMonday(d) {
 
 const newdate = new Date();
 newdate.setDate(getMonday(new Date()).getDate() + 7);
-console.log(newdate.toISOString());
+console.log(new Date("2021-04-10T14:10:05.107Z").getDay());
 const testing = {
   icsList: [
     "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\nPRODID:adamgibbons/ics\r\nMETHOD:PUBLISH\r\nX-PUBLISHED-TTL:PT1H\r\nBEGIN:VEVENT\r\nUID:fgdd\r\nSUMMARY:CZ3006 LAB\r\nDTSTAMP:20210408T112700Z\r\nDTSTART:20210416T013000Z\r\nDTEND:20210416T033000Z\r\nDESCRIPTION:TS2 SW1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:adsfsadf\r\nSUMMARY:CZ3006 LAB\r\nDTSTAMP:20210408T112700Z\r\nDTSTART:20210417T013000Z\r\nDTEND:20210417T033000Z\r\nDESCRIPTION:TS2 SW1\r\nEND:VEVENT\r\nEND:VCALENDAR",
