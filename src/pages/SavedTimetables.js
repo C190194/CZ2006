@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -16,8 +16,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SavedTimetables() {
+  const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
     console.log("retrieve saved time tables");
+    // console.log(history);
+    console.log(location);
+
+    if (location.state) {
+      console.log("state exists");
+    }
   }, []);
 
   const classes = useStyles();
@@ -67,7 +75,7 @@ export default function SavedTimetables() {
           <div className="col-4">
             <Link
               to={{
-                pathname: "/planner",
+                pathname: location.state ? "/findcommon" : "/planner",
                 state: item,
               }}
             >
