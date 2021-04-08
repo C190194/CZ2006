@@ -50,7 +50,7 @@ export default function PlannerCalendarComponent(props) {
     return day + " " + monthNames[monthIndex] + " " + year;
   }
 
-  const currentDate = "2021-03-02";
+  const currentDate = "2021-04-06";
 
   const AppointmentContent = (data) => {
     return (
