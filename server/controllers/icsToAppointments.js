@@ -25,7 +25,7 @@ const GetWeek = require('./getWeek');
 //                             array result2 holds appointment arrays for ics files in the next week.
 const return_appointments = async(req,res)=>{
     const ics_list = [];
-    const input_ics_list = [];
+    let input_ics_list = [];
     const week = 0;
     ics_list = req.body.icsList;
     week = req.body.week;
@@ -38,35 +38,34 @@ const return_appointments = async(req,res)=>{
             input_ics_list.push(ics_list[i]);
         }
     }
-
     
     if (week == -1){
         for(i = 0; i < input_ics_list.length; i++){
             let appointments = getAppointments(input_ics_list[i], 8);
-            result2.push(appointments);
+            result2.push([...appointments]);
         }
         //result2 = [8, result2];
     } else if (week == 0){
         for(i = 0; i < input_ics_list.length; i++){
             let appointments = getAppointments(input_ics_list[i], 1);
-            result2.push(appointments);
+            result2.push([...appointments]);
         }
         //result2 = [1, result2];
     } else if (week == 13){
         for(i = 0; i < input_ics_list.length; i++){
             let appointments = getAppointments(input_ics_list[i], 13);
-            result1.push(appointments);
+            result1.push([...appointments]);
         }
         //result1 = [13, result1];
     } else if (week != 14){
         for(i = 0; i < input_ics_list.length; i++){
             let appointments = getAppointments(input_ics_list[i], week);
-            result1.push(appointments);
+            result1.push([...appointments]);
         }
         //result1 = [week, result1];
         for(i = 0; i < input_ics_list.length; i++){
             let appointments = getAppointments(input_ics_list[i], week+1);
-            result2.push(appointments);
+            result2.push([...appointments]);
         }
         //result2 = [week+1, result2];
     }
@@ -80,6 +79,7 @@ function getAppointments(ics, thisWeek){
     //let data = ical.sync.parseFile(ics);
     let data = ical.sync.parseICS(ics); // string 
     console.log(data);
+    console.log(Object.keys(data));
     for (const ev of Object.values(data)){
         let event = {};
         //let startDate = new Date(ev.start);
