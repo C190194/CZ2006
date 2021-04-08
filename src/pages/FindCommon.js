@@ -89,57 +89,6 @@ const GetTimetableData = function (props) {
 };
 
 export default function FindCommon() {
-  const [selectedICSfiles, setSelectedICSfiles] = useState([
-    {
-      // page: "Timetable" + selectedICSfiles.indexOf(this),
-      fileName: "liew.ics",
-      fileData: "haha",
-      results: [
-        [appointments[0], appointments[1]],
-        [appointments[0], appointments[2]],
-      ],
-    },
-  ]);
-
-  const [commonFreeTimeSlots, setCommonFreeTimeSlots] = useState([
-    [appointments[0]],
-    [appointments[0], appointments[2]],
-  ]);
-
-  const [weekView, setWeekView] = useState(0); //0-current week , 1-next week
-  const [currentPage, setCurrentPage] = useState(1); //1 = index 0
-
-  // sessionStorage.setItem("selectedICSfiles", JSON.stringify(dummyfiles));
-  // console.log(JSON.parse(sessionStorage.getItem("selectedICSfiles")));
-
-  const location = useLocation();
-  useEffect(() => {
-    console.log("find common");
-    // console.log(history);
-    console.log(location);
-
-    if (location.state) {
-      console.log("state exists");
-    }
-  }, []);
-
-  const deleteElement = (idx) => {
-    const tempSelectedICSfiles = [...selectedICSfiles];
-    tempSelectedICSfiles.splice(idx, 1);
-    setSelectedICSfiles(tempSelectedICSfiles);
-  };
-
-  const addTimetable = () => {
-    const tempSelectedICSfiles = [
-      ...selectedICSfiles,
-      {
-        fileName: null,
-        fileData: null,
-        results: [],
-      },
-    ];
-    setSelectedICSfiles(tempSelectedICSfiles);
-  };
   const week1 = new Date("2021-01-11T00:00:00Z");
   const week2 = new Date("2021-01-18T00:00:00Z");
   const week3 = new Date("2021-01-25T00:00:00Z");
@@ -187,6 +136,59 @@ export default function FindCommon() {
       }
     }
   }
+  const [selectedICSfiles, setSelectedICSfiles] = useState([
+    {
+      // page: "Timetable" + selectedICSfiles.indexOf(this),
+      fileName: "liew.ics",
+      fileData: "haha",
+      results: [
+        [appointments[0], appointments[1]],
+        [appointments[0], appointments[2]],
+      ],
+    },
+  ]);
+
+  const [commonFreeTimeSlots, setCommonFreeTimeSlots] = useState([
+    [appointments[0]],
+    [appointments[0], appointments[2]],
+  ]);
+
+  const [weekView, setWeekView] = useState(0); //0-current week , 1-next week
+  const [currentPage, setCurrentPage] = useState(1); //1 = index 0
+  const [currentWeek, setCurrentWeek] = useState(getWeek());
+
+  // sessionStorage.setItem("selectedICSfiles", JSON.stringify(dummyfiles));
+  // console.log(JSON.parse(sessionStorage.getItem("selectedICSfiles")));
+
+  const location = useLocation();
+  useEffect(() => {
+    console.log("find common");
+    // console.log(history);
+    console.log(location);
+
+    if (location.state) {
+      console.log("state exists");
+    }
+  }, []);
+
+  const deleteElement = (idx) => {
+    const tempSelectedICSfiles = [...selectedICSfiles];
+    tempSelectedICSfiles.splice(idx, 1);
+    setSelectedICSfiles(tempSelectedICSfiles);
+  };
+
+  const addTimetable = () => {
+    const tempSelectedICSfiles = [
+      ...selectedICSfiles,
+      {
+        fileName: null,
+        fileData: null,
+        results: [],
+      },
+    ];
+    setSelectedICSfiles(tempSelectedICSfiles);
+  };
+
   //call backend method
   const submitFiles = () => {
     const reqbody = { icsList: [] };
@@ -194,6 +196,7 @@ export default function FindCommon() {
     reqbody.week = getWeek();
     // reqbody.week = getCurrentWeek();
     console.log(reqbody);
+    setCurrentWeek(getWeek());
 
     let axiosConfig = {
       headers: {
@@ -221,6 +224,14 @@ export default function FindCommon() {
 
   //call backend method
   const generateCommonFreeTimeSlots = () => {
+    if (getWeek() !== currentWeek) {
+      setCurrentWeek(getWeek());
+
+      submitFiles();
+    } else {
+      console.log("same week");
+    }
+
     const reqbody = { appointmentList: [[], []] };
     console.log(selectedICSfiles);
     for (let i = 0; i < selectedICSfiles.length; i++) {
@@ -278,6 +289,14 @@ export default function FindCommon() {
     setCurrentPage(tempPage);
     // setIsPageChanged(true);
   };
+
+  function getMonday(d) {
+    var day = d.getDay(),
+      diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
+  } // Mon Nov 08 2010
+  const newdate = new Date();
+  newdate.setDate(getMonday(newdate).getDate() + weekView * 7);
   return (
     <div className="container">
       <div className="row">
@@ -326,6 +345,7 @@ export default function FindCommon() {
                 ? selectedICSfiles[currentPage - 1].results[weekView]
                 : commonFreeTimeSlots[weekView]
             }
+            currentDate={newdate.toISOString()}
           />
         </div>
       </div>

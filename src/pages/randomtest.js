@@ -27,6 +27,7 @@ if (something) {
 } else {
   console.log("no");
 }
+
 const week1 = new Date("2021-01-11T00:00:00Z");
 const week2 = new Date("2021-01-18T00:00:00Z");
 const week3 = new Date("2021-01-25T00:00:00Z");
@@ -74,8 +75,16 @@ function getWeek() {
     }
   }
 }
+function getMonday(d) {
+  d = new Date(d);
+  var day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
+} // Mon Nov 08 2010
 
-console.log(getWeek());
+const newdate = new Date();
+newdate.setDate(getMonday(new Date()).getDate() + 7);
+console.log(newdate.toISOString());
 const testing = {
   icsList: [
     "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\nPRODID:adamgibbons/ics\r\nMETHOD:PUBLISH\r\nX-PUBLISHED-TTL:PT1H\r\nBEGIN:VEVENT\r\nUID:fgdd\r\nSUMMARY:CZ3006 LAB\r\nDTSTAMP:20210408T112700Z\r\nDTSTART:20210416T013000Z\r\nDTEND:20210416T033000Z\r\nDESCRIPTION:TS2 SW1\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:adsfsadf\r\nSUMMARY:CZ3006 LAB\r\nDTSTAMP:20210408T112700Z\r\nDTSTART:20210417T013000Z\r\nDTEND:20210417T033000Z\r\nDESCRIPTION:TS2 SW1\r\nEND:VEVENT\r\nEND:VCALENDAR",
