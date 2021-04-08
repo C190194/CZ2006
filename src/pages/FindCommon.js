@@ -82,7 +82,7 @@ const GetTimetableData = function (props) {
         style={{ width: "40px", minWidth: "40px" }}
       ></MUIButton>
       <input type="file" name="file" accept=".ics" onChange={chooseICSfile} />
-      <p>{selectedICSfile.fileName}</p>
+      <p>{selectedICSfile.fileName || "No file chosen"}</p>
     </Paper>
   );
 };
@@ -134,7 +134,7 @@ export default function FindCommon() {
       {
         fileName: null,
         fileData: null,
-        results: [],
+        results: null,
       },
     ];
     setSelectedICSfiles(tempSelectedICSfiles);
@@ -151,9 +151,12 @@ export default function FindCommon() {
   //call backend method
   const generateCommonFreeTimeSlots = () => {
     const reqbody = { appointmentList: [[], []] };
+    console.log(selectedICSfiles);
     for (let i = 0; i < selectedICSfiles.length; i++) {
-      reqbody.appointmentList[0].push(...selectedICSfiles[i].results[0]);
-      reqbody.appointmentList[1].push(...selectedICSfiles[i].results[1]);
+      if (selectedICSfiles[i].results) {
+        reqbody.appointmentList[0].push(...selectedICSfiles[i].results[0]);
+        reqbody.appointmentList[1].push(...selectedICSfiles[i].results[1]);
+      }
     }
     // reqbody.appointmentList.push(selectedICSfiles.map((item) => ...[1,2,3]);
     // reqbody.week = getCurrentWeek();
@@ -190,7 +193,9 @@ export default function FindCommon() {
         <div className="col-2">
           <h4>Timetables</h4>
           <Button onClick={addTimetable}>Add timetable</Button>
+          <br />
           <Button onClick={submitFiles}>Submit files</Button>
+          <br />
           <Button onClick={generateCommonFreeTimeSlots}>
             Generate Common Free Time Slots
           </Button>
