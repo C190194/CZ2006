@@ -18,6 +18,7 @@ const sharing = require("./routes/sharing");
 const saveTimetable = require("./routes/saving");
 const appointmentRoute = require("./routes/appointmentRoute");
 const commonFreeTimeRoute = require("./routes/commonFreeTimeRoute");
+const icsStringRoute = require("./routes/icsStringRoute");
 
 app.use(express.json({ extended: false }));
 
@@ -31,6 +32,7 @@ app.use("/share", sharing);
 app.use("/saving", saveTimetable);
 app.use("/commonfreetime", commonFreeTimeRoute);
 app.use("/appointment", appointmentRoute);
+app.use("/icsString", icsStringRoute);
 
 app.use("/discuss", discussion);
 app.use("/share", sharing);
