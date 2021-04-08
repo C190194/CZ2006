@@ -8,6 +8,6 @@ const CommonFreeTime = require('../controllers/commonFreeTime');
 const router=express.Router();
 
 //routing
-router.get('/get_commonFreeTime', CommonFreeTime.return_freeTime);
+router.post('/get_commonFreeTime', CommonFreeTime.return_freeTime);
 
 module.exports=router;
