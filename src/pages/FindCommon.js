@@ -15,9 +15,21 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 
+import MUbutton from "@material-ui/core/Button";
+
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+
 const useStyles = makeStyles((theme) => ({
   toggleContainer: {
     margin: theme.spacing(2, 0),
+  },
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  input: {
+    display: "none",
   },
 }));
 
@@ -82,6 +94,7 @@ const GetTimetableData = function (props) {
         onClick={deleteElement}
         style={{ width: "40px", minWidth: "40px" }}
       ></MUIButton>
+
       <input type="file" name="file" accept=".ics" onChange={chooseICSfile} />
       <p>{selectedICSfile.fileName || "No file chosen"}</p>
     </Paper>
@@ -89,6 +102,8 @@ const GetTimetableData = function (props) {
 };
 
 export default function FindCommon() {
+  const classes = useStyles();
+
   const week1 = new Date("2021-01-11T00:00:00Z");
   const week2 = new Date("2021-01-18T00:00:00Z");
   const week3 = new Date("2021-01-25T00:00:00Z");
@@ -137,25 +152,26 @@ export default function FindCommon() {
     }
   }
   const [selectedICSfiles, setSelectedICSfiles] = useState([
-    {
-      // page: "Timetable" + selectedICSfiles.indexOf(this),
-      fileName: "liew.ics",
-      fileData: "haha",
-      results: [
-        [appointments[0], appointments[1]],
-        [appointments[0], appointments[2]],
-      ],
-    },
+    // {
+    //   // page: "Timetable" + selectedICSfiles.indexOf(this),
+    //   fileName: "liew.ics",
+    //   fileData: "haha",
+    //   results: [
+    //     [appointments[0], appointments[1]],
+    //     [appointments[0], appointments[2]],
+    //   ],
+    // },
   ]);
 
   const [commonFreeTimeSlots, setCommonFreeTimeSlots] = useState([
-    [appointments[0]],
-    [appointments[0], appointments[2]],
+    // [appointments[0]],
+    // [appointments[0], appointments[2]],
   ]);
 
   const [weekView, setWeekView] = useState(0); //0-current week , 1-next week
   const [currentPage, setCurrentPage] = useState(1); //1 = index 0
   const [currentWeek, setCurrentWeek] = useState(getWeek());
+  const [allFilesLoadedToggle, setAllFilesLoadedToggle] = useState(false);
 
   // sessionStorage.setItem("selectedICSfiles", JSON.stringify(dummyfiles));
   // console.log(JSON.parse(sessionStorage.getItem("selectedICSfiles")));
@@ -177,11 +193,11 @@ export default function FindCommon() {
     setSelectedICSfiles(tempSelectedICSfiles);
   };
 
-  const addTimetable = () => {
+  const addTimetable = (file) => {
     const tempSelectedICSfiles = [
       ...selectedICSfiles,
       {
-        fileName: null,
+        fileName: file.name,
         fileData: null,
         results: [],
       },
@@ -190,37 +206,95 @@ export default function FindCommon() {
   };
 
   //call backend method
-  const submitFiles = () => {
-    const reqbody = { icsList: [] };
-    reqbody.icsList = selectedICSfiles.map((item) => item.fileData);
-    reqbody.week = getWeek();
-    // reqbody.week = getCurrentWeek();
-    console.log(reqbody);
+  const submitFiles = (event) => {
     setCurrentWeek(getWeek());
+    const tempSelectedICSfiles = [...selectedICSfiles];
 
-    let axiosConfig = {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-
-    axios
-      .post("/appointment/get_appointments", reqbody, axiosConfig)
-      .then((response) => {
-        console.log(response);
-        console.log(response.data);
-        const tempSelectedICSfiles = [...selectedICSfiles];
-        response.data[0].forEach((element, idx) => {
-          // console.log(idx);
-          tempSelectedICSfiles[idx].results[0] = element;
-        });
-        response.data[1].forEach((element, idx) => {
-          //  console.log(idx);
-          tempSelectedICSfiles[idx].results[1] = element;
-        });
+    for (let i = 0; i < event.target.files.length; i++) {
+      // console.log(event.target.files[i]);
+      tempSelectedICSfiles.push({
+        fileName: event.target.files[i].name,
+        fileData: null,
+        results: [],
       });
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        // The file's text will be printed here
+        // console.log(e.target.result);
+
+        tempSelectedICSfiles[selectedICSfiles.length + i].fileData =
+          e.target.result;
+        if (i === event.target.files.length - 1)
+          setAllFilesLoadedToggle((prevState) => !prevState);
+      };
+      reader.readAsText(event.target.files[i]);
+
+      // tempSelectedICSfiles[i].fileName = event.target.files[0].name;
+
+      // setSelectedICSfiles(tempSelectedICSfiles);
+    }
+
+    // console.log("why");
+    // console.log(tempSelectedICSfiles);
+    // console.log(tempSelectedICSfiles[0]);
+
+    // setSelectedICSfiles(tempSelectedICSfiles);
+
+    // if (event.target.files[0]) {
+    //   const tempSelectedICSfiles = [...selectedICSfiles];
+    //   tempSelectedICSfiles[i].fileName = event.target.files[0].name;
+    //   const reader = new FileReader();
+    //   reader.onload = function (e) {
+    //     // The file's text will be printed here
+    //     // console.log(e.target.result);
+    //     tempSelectedICSfiles[i].fileData = e.target.result;
+    //   };
+    //   reader.readAsText(event.target.files[0]);
+    //   setSelectedICSfiles(tempSelectedICSfiles);
+    // }
+    // console.log("debug");
+    // console.log(tempSelectedICSfiles);
+
+    setSelectedICSfiles(tempSelectedICSfiles);
   };
+
+  useEffect(() => {
+    if (selectedICSfiles.length !== 0) {
+      // console.log("useffect");
+
+      // console.log(selectedICSfiles[0]);
+      const tempSelectedICSfiles = [...selectedICSfiles];
+      const reqbody = { icsList: [] };
+      // console.log(tempSelectedICSfiles.map((item) => item.fileData));
+      reqbody.icsList = tempSelectedICSfiles.map((item) => item.fileData);
+      reqbody.week = getWeek();
+      // reqbody.week = getCurrentWeek();
+      console.log(reqbody);
+      let axiosConfig = {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+      axios
+        .post("/appointment/get_appointments", reqbody, axiosConfig)
+        .then((response) => {
+          // console.log(response);
+          // console.log(response.data);
+          response.data[0].forEach((element, idx) => {
+            // console.log(idx);
+            tempSelectedICSfiles[idx].results[0] = element;
+          });
+          response.data[1].forEach((element, idx) => {
+            //  console.log(idx);
+            tempSelectedICSfiles[idx].results[1] = element;
+          });
+        });
+      console.log("fetched data");
+      console.log(tempSelectedICSfiles);
+      setSelectedICSfiles(tempSelectedICSfiles);
+    }
+  }, [allFilesLoadedToggle]);
 
   //call backend method
   const generateCommonFreeTimeSlots = () => {
@@ -254,21 +328,16 @@ export default function FindCommon() {
       .then((response) => {
         console.log(response);
         console.log(response.data);
-        // const tempCommonFreetimeslots = [...commonFreeTimeSlots]
-        // tempCommonFreetimeslots[0]=respo
+
         setCommonFreeTimeSlots(response.data);
-        //  const tempSelectedICSfiles = [...selectedICSfiles];
-        //  response.data[0].forEach((element, idx) => {
-        //    // console.log(idx);
-        //    tempSelectedICSfiles[idx].results[0] = element;
-        //  });
-        //  response.data[1].forEach((element, idx) => {
-        //    //  console.log(idx);
-        //    tempSelectedICSfiles[idx].results[1] = element;
-        //  });
       });
     console.log(reqbody);
   };
+
+  useEffect(() => {
+    console.log("rerender");
+    console.log(selectedICSfiles);
+  });
 
   const chooseICSfile = (i, event) => {
     if (event.target.files[0]) {
@@ -307,10 +376,26 @@ export default function FindCommon() {
       <div className="row">
         <div className="col-2">
           <h4>Timetables</h4>
-          <Button onClick={addTimetable}>Add timetable</Button>
-          <br />
-          <Button onClick={submitFiles}>Submit files</Button>
-          <br />
+          <input
+            className={classes.input}
+            id="contained-button-file"
+            multiple
+            type="file"
+            name="file"
+            accept=".ics"
+            onChange={submitFiles}
+          />
+          <label htmlFor="contained-button-file">
+            <MUbutton
+              variant="contained"
+              color="default"
+              component="span"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload .ics files
+            </MUbutton>
+          </label>
+
           <Button onClick={generateCommonFreeTimeSlots}>
             Generate Common Free Time Slots
           </Button>
