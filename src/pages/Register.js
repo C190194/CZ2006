@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Register.css";
@@ -13,12 +13,29 @@ export default function Register() {
   const [yos, setYos] = useState(""); //year of study
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return (
+      email.length > 0 &&
+      username.length > 0 &&
+      password.length > 0 &&
+      cos.length > 0 &&
+      yos.length > 0
+    );
   }
 
   function handleSubmit(event) {
-    alert(email + " " + password + " " + cpassword);
     event.preventDefault();
+    if (password !== cpassword) {
+      alert("Password doesn't match!");
+    } else {
+      const reqbody = {
+        email: email,
+        name: username,
+        password: password,
+        courseOfStudy: cos,
+        yearOfStudy: yos,
+      };
+      alert(JSON.stringify(reqbody));
+    }
   }
 
   return (
