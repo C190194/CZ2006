@@ -347,7 +347,7 @@ export default function FindCommon() {
             return (
               <GetTimetableData
                 selectedICSfile={item}
-                deleteElement={deleteElement}
+                deleteElement={() => deleteElement(idx)}
                 chooseICSfile={chooseICSfile.bind(this, idx)}
                 idx={idx}
               />
