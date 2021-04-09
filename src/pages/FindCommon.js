@@ -263,10 +263,9 @@ export default function FindCommon() {
       // console.log("useffect");
 
       // console.log(selectedICSfiles[0]);
-      const tempSelectedICSfiles = [...selectedICSfiles];
       const reqbody = { icsList: [] };
       // console.log(tempSelectedICSfiles.map((item) => item.fileData));
-      reqbody.icsList = tempSelectedICSfiles.map((item) => item.fileData);
+      reqbody.icsList = selectedICSfiles.map((item) => item.fileData);
       reqbody.week = getWeek();
       // reqbody.week = getCurrentWeek();
       console.log(reqbody);
@@ -279,6 +278,8 @@ export default function FindCommon() {
       axios
         .post("/appointment/get_appointments", reqbody, axiosConfig)
         .then((response) => {
+          const tempSelectedICSfiles = [...selectedICSfiles];
+
           // console.log(response);
           // console.log(response.data);
           response.data[0].forEach((element, idx) => {
@@ -289,10 +290,11 @@ export default function FindCommon() {
             //  console.log(idx);
             tempSelectedICSfiles[idx].results[1] = element;
           });
+          setSelectedICSfiles(tempSelectedICSfiles);
         });
-      console.log("fetched data");
-      console.log(tempSelectedICSfiles);
-      setSelectedICSfiles(tempSelectedICSfiles);
+      // console.log("fetched data");
+      // console.log(tempSelectedICSfiles);
+      // setSelectedICSfiles(tempSelectedICSfiles);
     }
   }, [allFilesLoadedToggle]);
 
