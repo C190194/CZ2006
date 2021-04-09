@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useHistory } from "react-router-dom";
 
 import PlannerCalendarComponent from "../components/PlannerCalendarComponent";
-import appointments from "../shares/today-appointments";
+
 import SelectTimetablePageComponent from "../components/SelectTimetablePageComponent";
 import { Button } from "reactstrap";
 import MUIButton from "@material-ui/core/Button";
@@ -151,17 +151,7 @@ export default function FindCommon() {
       }
     }
   }
-  const [selectedICSfiles, setSelectedICSfiles] = useState([
-    // {
-    //   // page: "Timetable" + selectedICSfiles.indexOf(this),
-    //   fileName: "liew.ics",
-    //   fileData: "haha",
-    //   results: [
-    //     [appointments[0], appointments[1]],
-    //     [appointments[0], appointments[2]],
-    //   ],
-    // },
-  ]);
+  const [selectedICSfiles, setSelectedICSfiles] = useState([]);
 
   const [commonFreeTimeSlots, setCommonFreeTimeSlots] = useState([
     // [appointments[0]],
@@ -193,25 +183,12 @@ export default function FindCommon() {
     setSelectedICSfiles(tempSelectedICSfiles);
   };
 
-  const addTimetable = (file) => {
-    const tempSelectedICSfiles = [
-      ...selectedICSfiles,
-      {
-        fileName: file.name,
-        fileData: null,
-        results: [],
-      },
-    ];
-    setSelectedICSfiles(tempSelectedICSfiles);
-  };
-
   //call backend method
   const submitFiles = (event) => {
     setCurrentWeek(getWeek());
     const tempSelectedICSfiles = [...selectedICSfiles];
 
     for (let i = 0; i < event.target.files.length; i++) {
-      // console.log(event.target.files[i]);
       tempSelectedICSfiles.push({
         fileName: event.target.files[i].name,
         fileData: null,
@@ -220,7 +197,6 @@ export default function FindCommon() {
       const reader = new FileReader();
       reader.onload = function (e) {
         // The file's text will be printed here
-        // console.log(e.target.result);
 
         tempSelectedICSfiles[selectedICSfiles.length + i].fileData =
           e.target.result;
@@ -228,41 +204,13 @@ export default function FindCommon() {
           setAllFilesLoadedToggle((prevState) => !prevState);
       };
       reader.readAsText(event.target.files[i]);
-
-      // tempSelectedICSfiles[i].fileName = event.target.files[0].name;
-
-      // setSelectedICSfiles(tempSelectedICSfiles);
     }
-
-    // console.log("why");
-    // console.log(tempSelectedICSfiles);
-    // console.log(tempSelectedICSfiles[0]);
-
-    // setSelectedICSfiles(tempSelectedICSfiles);
-
-    // if (event.target.files[0]) {
-    //   const tempSelectedICSfiles = [...selectedICSfiles];
-    //   tempSelectedICSfiles[i].fileName = event.target.files[0].name;
-    //   const reader = new FileReader();
-    //   reader.onload = function (e) {
-    //     // The file's text will be printed here
-    //     // console.log(e.target.result);
-    //     tempSelectedICSfiles[i].fileData = e.target.result;
-    //   };
-    //   reader.readAsText(event.target.files[0]);
-    //   setSelectedICSfiles(tempSelectedICSfiles);
-    // }
-    // console.log("debug");
-    // console.log(tempSelectedICSfiles);
 
     setSelectedICSfiles(tempSelectedICSfiles);
   };
 
   useEffect(() => {
     if (selectedICSfiles.length !== 0) {
-      // console.log("useffect");
-
-      // console.log(selectedICSfiles[0]);
       const reqbody = { icsList: [] };
       // console.log(tempSelectedICSfiles.map((item) => item.fileData));
       reqbody.icsList = selectedICSfiles.map((item) => item.fileData);
@@ -280,21 +228,14 @@ export default function FindCommon() {
         .then((response) => {
           const tempSelectedICSfiles = [...selectedICSfiles];
 
-          // console.log(response);
-          // console.log(response.data);
           response.data[0].forEach((element, idx) => {
-            // console.log(idx);
             tempSelectedICSfiles[idx].results[0] = element;
           });
           response.data[1].forEach((element, idx) => {
-            //  console.log(idx);
             tempSelectedICSfiles[idx].results[1] = element;
           });
           setSelectedICSfiles(tempSelectedICSfiles);
         });
-      // console.log("fetched data");
-      // console.log(tempSelectedICSfiles);
-      // setSelectedICSfiles(tempSelectedICSfiles);
     }
   }, [allFilesLoadedToggle]);
 
