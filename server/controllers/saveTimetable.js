@@ -1,7 +1,8 @@
 const Timetable = require('../models/timetable');
+const User = require('../models/user');
 
 const saveTimetable  = async(req, res)=>{
-    const {timetableID,courseSelected,courseFixed, fixedTimeSlots,courseClashAllowed} = req.body;
+    const {userEmail,timetableID,courseSelected,courseFixed, fixedTimeSlots,courseClashAllowed} = req.body;
 
     for (courseCode in courseSelected){
 
@@ -14,6 +15,31 @@ const saveTimetable  = async(req, res)=>{
         courseFixed: courseFixed,
         courseClashAllowed: courseClashAllowed
     })
+
+    User.update(
+        {
+            email: req.body.userEmail
+        },{
+        $push:{
+            timetables: req.body.timetableID
+        }},
+        function(
+            err,
+            result
+        ) {
+            if (result.nModified == 0) {
+               //console.log("print")
+                if (finalMessage)
+                    res.status(500).send("Update error in user")
+                else
+                    finalMessage = false
+            }
+            else{
+               finalMessage = true;
+              
+               res.status(200).send('Success');
+            }
+        })  
     //result = JSON.parse(JSON.stringify(timetable));
     console.log(timetable);
     timetable.save().then((timetable)=>{
