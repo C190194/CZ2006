@@ -34,7 +34,7 @@ const weekDates = [
 const Day = { MON: 0, TUE: 1, WED: 2, THU: 3, FRI: 4, SAT: 5 };
 
 var events = [];
-var event = { title: "", description: "", start: [], end: [] };
+var event = { title: "", description: "",  location: "", start: [], end: [] };
 
 // title: 'Dinner',
 //   description: 'Nightly thing I do',
@@ -43,15 +43,18 @@ var event = { title: "", description: "", start: [], end: [] };
 //   duration: { minutes: 50 }
 const createICS = async (req, res) => {
   const appointments = req.body.appointments;
-  const eventsAdd = editEvents(appointments);
-  const { error, value } = ics.createEvents(eventsAdd);
-  if (error) {
-    res.status(200).json(error);
-    return;
-  }
 
-  res.status(200).json(value);
+  res.status(200).json(generateEvents(appointments));
 };
+
+function generateEvents(appointments){
+    const eventsAdd = editEvents(appointments);
+    const { error, value } = ics.createEvents(eventsAdd);
+    if (error) {
+        return error;
+    }
+    return value;
+}
 
 
 function editEvents(appointments) {
@@ -69,7 +72,9 @@ function editEvents(appointments) {
         var eventObj = event;
         var weekDay = Day[i.day]; // Monday is 0
         eventObj["title"] = i.title + " " + i.type;
-        eventObj["description"] = i.group + " " + i.location;
+        eventObj["description"] = i.group;
+        //eventObj["group"] = i.group;
+        eventObj["location"] = i.location;
 
         var eventDate = addDays(weekDates[j], weekDay);
         let startDate = new Date(i.startDate);
