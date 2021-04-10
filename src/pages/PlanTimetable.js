@@ -65,7 +65,9 @@ function PlanTimetableContextConsumer(props) {
       courseSelected.push({ courseID: key, indexNum: value });
     }
 
+    const userEmail = JSON.parse(sessionStorage.getItem("userData")).email;
     const reqbody = {
+      userEmail: userEmail,
       timetableID: Date.now().toString(),
       courseSelected: courseSelected,
       fixedTimeSlots: userDefinedTimeSlots,
@@ -73,6 +75,16 @@ function PlanTimetableContextConsumer(props) {
       courseClashAllowed: allowClashCC,
     };
     console.log(reqbody);
+
+    // axios.post("/saving/saveTimetable", reqbody).then((response) => {
+    //   console.log(response.data);
+    //   // if (typeof response.data.message[0] === "string") {
+    //   //   alert(response.data.message[0]);
+    //   // } else {
+    //   //   setCombinations(response.data.message);
+    //   // }
+    // });
+    // console.log(reqbody);
   };
 
   const downloadfile = () => {
@@ -88,27 +100,27 @@ function PlanTimetableContextConsumer(props) {
     console.log(typeof occupiedTimeSlots[0].startDate);
     // console.log(occupiedTimeSlots);
 
-    const dummy = [
-      {
-        type: "LEC/STUDIO",
-        group: "L3",
-        day: "THU",
-        full: "1130-1430",
-        start: "1130",
-        end: "1430",
-        duration: 3,
-        location: "NIE7-02-07",
-        flag: 0,
-        remarks: "",
-        date_w1: "2021-08-12",
-        weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        title: "AAA08B",
-        id: "fejvsx0d6",
-        startDate: "2021-03-04T03:30:00.000Z",
-        endDate: "2021-03-04T06:30:00.000Z",
-        courseDivID: 1,
-      },
-    ];
+    // const dummy = [
+    //   {
+    //     type: "LEC/STUDIO",
+    //     group: "L3",
+    //     day: "THU",
+    //     full: "1130-1430",
+    //     start: "1130",
+    //     end: "1430",
+    //     duration: 3,
+    //     location: "NIE7-02-07",
+    //     flag: 0,
+    //     remarks: "",
+    //     date_w1: "2021-08-12",
+    //     weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     title: "AAA08B",
+    //     id: "fejvsx0d6",
+    //     startDate: "2021-03-04T03:30:00.000Z",
+    //     endDate: "2021-03-04T06:30:00.000Z",
+    //     courseDivID: 1,
+    //   },
+    // ];
     const convertUserDefinedTimeSlotstoAppointments = (occupiedTimeSlots) => {
       return occupiedTimeSlots.map((item) => {
         const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -125,18 +137,18 @@ function PlanTimetableContextConsumer(props) {
     const udtsAppointments = convertUserDefinedTimeSlotstoAppointments(
       userDefinedTimeSlots
     );
-    console.log(udtsAppointments);
+    // console.log(udtsAppointments);
+    const reqbody = {
+      appointments: [...occupiedTimeSlots, ...udtsAppointments],
+    };
+    console.log(reqbody);
     axios
-      .post(
-        "/icsString/get_ics_string",
-        { appointments: [...occupiedTimeSlots, ...udtsAppointments] },
-        axiosConfig
-      )
+      .post("/icsString/get_ics_string", reqbody, axiosConfig)
       .then((response) => {
         console.log(response);
 
-        console.log(response.data);
-        FileDownload(response.data, "testing2.ics");
+        // console.log(response.data);
+        FileDownload(response.data, "testing3.ics");
       });
     // FileDownload("sdfsdf", "testing.ics");
   };

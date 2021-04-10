@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Register.css";
 import { SentimentVerySatisfiedTwoTone } from "@material-ui/icons";
+import axios from "axios";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,20 @@ export default function Register() {
         courseOfStudy: cos,
         yearOfStudy: yos,
       };
-      alert(JSON.stringify(reqbody));
+      console.log(reqbody);
+      axios
+        .post("/user/register", reqbody)
+        .then((response) => {
+          console.log(response.data);
+          // console.log(response.data.token);
+          // setToken(response.data.token);
+          // history.push("/planner");
+        })
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.message);
+          }
+        });
     }
   }
 

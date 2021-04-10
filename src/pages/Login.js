@@ -27,6 +27,11 @@ export default function Login({ setToken }) {
         password: password,
       })
       .then((response) => {
+        console.log(response.data);
+        sessionStorage.setItem(
+          "userData",
+          JSON.stringify(response.data.result)
+        );
         console.log(response.data.token);
         setToken(response.data.token);
         history.push("/planner");
