@@ -11,6 +11,18 @@ import {
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams,
+  useLocation,
+} from "react-router-dom";
+import axios from "axios";
+
+
+
+
 function PlanTimetableContextConsumer(props) {
   const planTimetableContext = usePlanTimetable();
 
@@ -36,21 +48,111 @@ function PlanTimetableContextConsumer(props) {
 
   //call backend
   const saveCurrentTT = () => {
-    const courseFixed = {};
+    const courseFixed = [];
     courseDivs.forEach((courseDiv) => {
       if (courseDiv.isIndexFixed) {
-        courseFixed[courseDiv.course.courseCode] =
-          courseDiv.currentIdx.index_number;
+        courseFixed.push({
+          courseID: courseDiv.course.courseCode,
+          indexNum: courseDiv.currentIdx.index_number,
+        });
+        // [courseDiv.course.courseCode] = courseDiv.currentIdx.index_number;
       }
     });
+
+    const courseSelected = [];
+    // console.log(combinations);
+    for (const [key, value] of Object.entries(
+      combinations[currentTimeTablePage - 1]
+    )) {
+      courseSelected.push({ courseID: key, indexNum: value });
+    }
+
+    const userEmail = JSON.parse(sessionStorage.getItem("userData")).email;
     const reqbody = {
+      userEmail: userEmail,
       timetableID: Date.now().toString(),
-      courseSelected: combinations[currentTimeTablePage - 1],
+      courseSelected: courseSelected,
       fixedTimeSlots: userDefinedTimeSlots,
       courseFixed: courseFixed,
       courseClashAllowed: allowClashCC,
     };
     console.log(reqbody);
+
+    // axios.post("/saving/saveTimetable", reqbody).then((response) => {
+    //   console.log(response.data);
+    //   // if (typeof response.data.message[0] === "string") {
+    //   //   alert(response.data.message[0]);
+    //   // } else {
+    //   //   setCombinations(response.data.message);
+    //   // }
+    // });
+    // console.log(reqbody);
+  };
+
+  const downloadfile = () => {
+    const FileDownload = require("js-file-download");
+    console.log(occupiedTimeSlots);
+    let axiosConfig = {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+
+    console.log(typeof occupiedTimeSlots[0].startDate);
+    // console.log(occupiedTimeSlots);
+
+    // const dummy = [
+    //   {
+    //     type: "LEC/STUDIO",
+    //     group: "L3",
+    //     day: "THU",
+    //     full: "1130-1430",
+    //     start: "1130",
+    //     end: "1430",
+    //     duration: 3,
+    //     location: "NIE7-02-07",
+    //     flag: 0,
+    //     remarks: "",
+    //     date_w1: "2021-08-12",
+    //     weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     title: "AAA08B",
+    //     id: "fejvsx0d6",
+    //     startDate: "2021-03-04T03:30:00.000Z",
+    //     endDate: "2021-03-04T06:30:00.000Z",
+    //     courseDivID: 1,
+    //   },
+    // ];
+    const convertUserDefinedTimeSlotstoAppointments = (occupiedTimeSlots) => {
+      return occupiedTimeSlots.map((item) => {
+        const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        console.log(item);
+        return {
+          title: "Free Time Slot",
+          weekList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          startDate: item[0],
+          endDate: item[1],
+          day: dayNames[item[0].getDay()],
+        };
+      });
+    };
+    const udtsAppointments = convertUserDefinedTimeSlotstoAppointments(
+      userDefinedTimeSlots
+    );
+    // console.log(udtsAppointments);
+    const reqbody = {
+      appointments: [...occupiedTimeSlots, ...udtsAppointments],
+    };
+    console.log(reqbody);
+    axios
+      .post("/icsString/get_ics_string", reqbody, axiosConfig)
+      .then((response) => {
+        console.log(response);
+
+        // console.log(response.data);
+        FileDownload(response.data, "testing3.ics");
+      });
+    // FileDownload("sdfsdf", "testing.ics");
   };
 
   return (
@@ -71,8 +173,12 @@ function PlanTimetableContextConsumer(props) {
             currentTimeTablePage={currentTimeTablePage}
           />
           <Button onClick={saveCurrentTT}>Save Current Timetable</Button>
+          <Button onClick={downloadfile}>Download</Button>
         </div>
-        <PlannerCalendarComponent timeTableData={occupiedTimeSlots} />
+        <PlannerCalendarComponent
+          timeTableData={occupiedTimeSlots}
+          currentDate={"2021-03-02"}
+        />
       </div>
     </div>
   );

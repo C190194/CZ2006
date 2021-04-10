@@ -26,8 +26,8 @@ export default function AddFreeTimeSlotsComponent({
         schedule={tempUserDefinedTimeSlots}
         onChange={setTempUserDefinedTimeSlots}
         eventRootComponent={EventRoot}
-        visualGridVerticalPrecision={15}
-        verticalPrecision={15}
+        visualGridVerticalPrecision={30}
+        verticalPrecision={30}
         cellClickPrecision={60}
       />
     </div>

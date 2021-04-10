@@ -30,6 +30,9 @@ export default function Login({ setToken }) {
           "userData",
           JSON.stringify(response.data.result)
         );
+
+        console.log(response.data.token);
+
         setToken(response.data.token);
         history.push("/planner");
       })

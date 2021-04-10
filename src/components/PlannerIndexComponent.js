@@ -122,7 +122,7 @@ export default function ShareTimetable(props) {
       })
       .then(function (myJson) {
         setData(myJson);
-        sessionStorage.setItem("coursesData", JSON.stringify(myJson));
+        // sessionStorage.setItem("coursesData", JSON.stringify(myJson));
       });
   };
 

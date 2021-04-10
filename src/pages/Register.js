@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+
+import { SentimentVerySatisfiedTwoTone } from "@material-ui/icons";
+import axios from "axios";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -11,12 +15,42 @@ export default function Register() {
   const [yos, setYos] = useState(""); //year of study
 
   function validateForm() {
-    return email.length > 0 && password.length > 0;
+    return (
+      email.length > 0 &&
+      username.length > 0 &&
+      password.length > 0 &&
+      cos.length > 0 &&
+      yos.length > 0
+    );
   }
 
   function handleSubmit(event) {
-    alert(email + " " + password + " " + cpassword);
     event.preventDefault();
+    if (password !== cpassword) {
+      alert("Password doesn't match!");
+    } else {
+      const reqbody = {
+        email: email,
+        name: username,
+        password: password,
+        courseOfStudy: cos,
+        yearOfStudy: yos,
+      };
+      console.log(reqbody);
+      axios
+        .post("/user/register", reqbody)
+        .then((response) => {
+          console.log(response.data);
+          // console.log(response.data.token);
+          // setToken(response.data.token);
+          // history.push("/planner");
+        })
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.message);
+          }
+        });
+    }
   }
 
   return (
