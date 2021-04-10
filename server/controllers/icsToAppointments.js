@@ -99,43 +99,60 @@ const return_appointments = async (req, res) => {
 };
 
 function getAppointments(ics, thisWeek) {
-  let appointments = [];
-  //let data = ical.sync.parseFile(ics);
-  let data = ical.sync.parseICS(ics); // string
-  console.log(thisWeek);
-  console.log(data);
-  for (const ev of Object.values(data)) {
-    let event = {};
-    //let startDate = new Date(ev.start);
-    //console.log(ev.start);
-    let startDate = new Date(ev.start);
-    //console.log(startDate);
-    //startDate=startDate.getDate();
-    //console.log(startDate);
-    let endDate = new Date(ev.end);
-    let week_start = teaching_weeks[thisWeek - 1];
-    let week_end = teaching_weeks[thisWeek];
-    if (week_start < startDate && startDate < week_end) {
-      //const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      //console.log(`${ev.summary} is in ${ev.location} on the ${ev.start.getDate()} of ${months[ev.start.getMonth()]} at ${ev.start.toLocaleTimeString('en-GB')}`);
-      let summary_tuple = ev.summary.split(" ");
-      event["title"] = summary_tuple[0];
-      event["type"] = summary_tuple[1];
-      //const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-      //event["day"] = `${days[startDate.getUTCDay()]}`;
-      event["startDate"] = startDate;
-      event["endDate"] = endDate;
-      let description_tuple = ev.description.split(" ");
-      event["group"] = description_tuple[0];
-      event["location"] = description_tuple[1];
-      appointments.push(event);
+    let appointments = [];
+    //let data = ical.sync.parseFile(ics);
+    let data = ical.sync.parseICS(ics); // string
+    for (const ev of Object.values(data)) {
+      let event = {};
+      //let startDate = new Date(ev.start);
+      //console.log(ev.start);
+      let startDate = new Date(ev.start);
+      //console.log(startDate);
+      //startDate=startDate.getDate();
+      //console.log(startDate);
+      
+      let week_start = teaching_weeks[thisWeek - 1];
+      let week_end = teaching_weeks[thisWeek];
+      if (week_start < startDate && startDate < week_end) {
+        //const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        //console.log(`${ev.summary} is in ${ev.location} on the ${ev.start.getDate()} of ${months[ev.start.getMonth()]} at ${ev.start.toLocaleTimeString('en-GB')}`);
+        let summary_tuple = ev.summary.split(" ");
+        event["title"] = summary_tuple[0];
+        event["type"] = summary_tuple[1];
+        //const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        //event["day"] = `${days[startDate.getUTCDay()]}`;
+        event["startDate"] = startDate;
+        if (ev.end){
+            let endDate = new Date(ev.end);
+            event["endDate"] = endDate;
+        } else if (ev.duration) {
+            let time = ev.duration.split("PT")[1];
+            let hour_min = time.split("H");
+            let hour = 0;
+            let min = 0;
+            if (hour_min[0]){
+                hour = parseInt(hour_min[0]);
+                if (hour_min[1]){
+                    min = parseInt(hour_min[1].split("M")[0]);
+                }
+            } else {
+                hour = 0;
+                min = parseInt(time.split("M")[0]);
+            }
+            //event["endDate"] = new Date(startDate);
+            event["endDate"] = new Date(startDate.getTime() + min*60000 + hour*3600000);
+        }
+        
+        event["group"] = ev.description;
+        event["location"] = ev.location;
+        appointments.push(event);
+      }
     }
-  }
-
-  for (let i = 0; i < appointments.length; i++) {
-    appointments[i]["id"] = i;
-  }
-  return appointments;
+  
+    for (let i = 0; i < appointments.length; i++) {
+      appointments[i]["id"] = i;
+    }
+    return appointments;
 }
 
 module.exports.return_appointments = return_appointments;
