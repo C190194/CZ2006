@@ -1,5 +1,5 @@
-const { models } = require("mongoose");
-const CourseModal = require("../models/course.js");
+//const { models } = require("mongoose");
+//const CourseModal = require("../models/course.js");
 const DatabaseExam = require("../models/databaseExam");
 const ClashPlanner = require("./ClashPlan.js");
 
