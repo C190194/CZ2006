@@ -45,9 +45,7 @@ timetable = {
   SAT: times,
 };
 
-var temp_timetable = { ...timetable };
-var all_timetables = [];
-var index_comb = [];
+
 
 const send_timetable = async (req, res) => {
   var input_courses = [];
@@ -98,6 +96,9 @@ function delete_empty_slots(all_timetables) {
 }
 
 function plan_timetable(input_courses, clash_courses, free_slots) {
+  var temp_timetable = { ...timetable };
+  var all_timetables = [];
+  var index_comb = [];
   // clash_courses added
   //console.log(free_slots);
   //set all the free time slots
