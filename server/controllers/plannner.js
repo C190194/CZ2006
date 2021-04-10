@@ -223,7 +223,13 @@ function plan_timetable(input_courses, clash_courses, free_slots) {
     }
     console.log(result["0"].concat(result["2"], result["3"], result["4"]));
 
-    return result["0"].concat(result["2"], result["3"], result["4"]);
+    index_comb = result["0"].concat(result["2"], result["3"], result["4"]);
+    if (index_comb.length == 0){
+        return ["There is no possible index combination!\n"+
+                "Note that totally at most 4 courses are allowed in clashes\n"+
+                "and at most 2 courses can clash at a time."];
+    }
+    return index_comb;
   } else {
     return index_comb;
   }
