@@ -13,4 +13,7 @@ router.get('/export', sharingController.export_settings);
 
 router.get('/ics', sharingController.download_ics);
 
+router.post('/addTimetable', sharingController.add_timetable);
+
+
 module.exports = router;
