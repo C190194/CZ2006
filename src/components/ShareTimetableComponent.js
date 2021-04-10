@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 // import { DropdownButton, Dropdown } from "react-bootstrap";
 // import { usePlanTimetable } from "../context/PlanTimetableContextProvider";
-
-import "./ComponentsStyle.css";
 import {
   Button,
   Container,

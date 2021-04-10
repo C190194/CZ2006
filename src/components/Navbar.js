@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
-import * as BiIcons from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
-import "./ComponentsStyle.css";
 import { IconContext } from "react-icons";
 import UserMenu from "./UserMenu";
 
@@ -17,12 +15,15 @@ function Navbar() {
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
         <div className="navbar">
+          <div className="title"><b>MyCal</b></div>
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
+          
           {/* <Link to="/login" className="login">
             <BiIcons.BiLogIn />
           </Link> */}
+
           <div className="login">
             <UserMenu />
           </div>

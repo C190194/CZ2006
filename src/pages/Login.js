@@ -3,8 +3,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-
-import "./Login.css";
 import { AddAlertRounded } from "@material-ui/icons";
 
 export default function Login({ setToken }) {
@@ -27,7 +25,11 @@ export default function Login({ setToken }) {
         password: password,
       })
       .then((response) => {
-        console.log(response.data.token);
+        console.log(response.data);
+        sessionStorage.setItem(
+          "userData",
+          JSON.stringify(response.data.result)
+        );
         setToken(response.data.token);
         history.push("/planner");
       })
@@ -47,7 +49,7 @@ export default function Login({ setToken }) {
   }
 
   return (
-    <div className="Login" align="center">
+    <div className="Login container" align="center">
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>

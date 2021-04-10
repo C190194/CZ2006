@@ -180,52 +180,56 @@ export default function FindCommon() {
     // setIsPageChanged(true);
   };
   return (
-    <div className="container">
-      <div className="row">
-        <div className="planner-title col-12">
+    <div className="background">
+      <div className="container">
+        <div className="page-title col-12">
           <b>Find Common Time Slots</b>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-2">
-          <h4>Timetables</h4>
-          <Button onClick={addTimetable}>Add timetable</Button>
-          <Button onClick={submitFiles}>Submit files</Button>
-          <Button onClick={generateCommonFreeTimeSlots}>
-            Generate Common Free Time Slots
-          </Button>
+        <hr />
+        <div className="row">
+          <div className="col-2">
+            <h4>Timetables</h4>
+            <Button onClick={addTimetable}>Add timetable</Button>
+            <Button onClick={submitFiles}>Submit files</Button>
+            <Button onClick={generateCommonFreeTimeSlots}>
+              Generate Common Free Time Slots
+            </Button>
 
-          {selectedICSfiles.map((item, idx) => {
-            return (
-              <GetTimetableData
-                selectedICSfile={item}
-                deleteElement={deleteElement}
-                chooseICSfile={chooseICSfile.bind(this, idx)}
-                idx={idx}
-              />
-            );
-          })}
-        </div>
+            {selectedICSfiles.map((item, idx) => {
+              return (
+                <GetTimetableData
+                  selectedICSfile={item}
+                  deleteElement={deleteElement}
+                  chooseICSfile={chooseICSfile.bind(this, idx)}
+                  idx={idx}
+                />
+              );
+            })}
+          </div>
 
-        <div className="col-10">
-          <ToggleButtonNotEmpty
-            setWeekView={setWeekView}
-          ></ToggleButtonNotEmpty>
+          <div className="col-10">
+            <ToggleButtonNotEmpty
+              setWeekView={setWeekView}
+            ></ToggleButtonNotEmpty>
 
-          <SelectTimetablePageComponent
-            combinations={[
-              ...selectedICSfiles,
-              { page: "Common Free Time Slots", results: commonFreeTimeSlots },
-            ]}
-            updateTimeTablePageNum={updateTimeTablePageNum}
-          />
-          <PlannerCalendarComponent
-            timeTableData={
-              currentPage !== selectedICSfiles.length + 1
-                ? selectedICSfiles[currentPage - 1].results[weekView]
-                : commonFreeTimeSlots[weekView]
-            }
-          />
+            <SelectTimetablePageComponent
+              combinations={[
+                ...selectedICSfiles,
+                {
+                  page: "Common Free Time Slots",
+                  results: commonFreeTimeSlots,
+                },
+              ]}
+              updateTimeTablePageNum={updateTimeTablePageNum}
+            />
+            <PlannerCalendarComponent
+              timeTableData={
+                currentPage !== selectedICSfiles.length + 1
+                  ? selectedICSfiles[currentPage - 1].results[weekView]
+                  : commonFreeTimeSlots[weekView]
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

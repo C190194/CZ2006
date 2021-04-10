@@ -1,7 +1,6 @@
 export const COMMENTS = [
   {
     id: 0,
-
     courseCode: "BU8201",
     usefulness: 8,
     easiness: 10,
