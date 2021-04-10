@@ -8,10 +8,11 @@ const router = express.Router();
 //const {login,register}=require("../controllers/user.js");
 const login=require("../controllers/login");
 const register=require("../controllers/register.js");
-const forgotPassword  = require("../controllers/forgotPassword");
+const forgot = require("../controllers/forgotPassword");
 
 router.post("/login", login);
 router.post("/register", register);
-router.post("/forgotPassword",forgotPassword);
+router.post("/forgotPassword/reset",forgot.forgotPassword);
+router.post("/forgotPassword/sendCode",forgot.sendEmail);
 
 module.exports= router;
