@@ -1,3 +1,4 @@
+  
 // import ical
 const ical = require("node-ical");
 
@@ -33,7 +34,6 @@ const teaching_weeks = [
   end,
 ];
 
-const GetWeek = require("./getWeek");
 
 // req.body.icsList : array of ics file objects.
 // req.body.week : integer representing the current week.
@@ -41,62 +41,61 @@ const GetWeek = require("./getWeek");
 //                             array result2 holds appointment arrays for ics files in the next week.
 
 const return_appointments = async (req, res) => {
-  let ics_list = [];
-  let input_ics_list = [];
-  let week = 0;
-  ics_list = req.body.icsList;
-  week = req.body.week;
+  const ics_list = req.body.icsList;
+  const week = req.body.week;
 
-
-  let result1 = [];
-  let result2 = [];
-
-  for (let i = 0; i < ics_list.length; i++) {
-    if (ics_list[i]) {
-      input_ics_list.push(ics_list[i]);
-    }
-  }
-  console.log(input_ics_list);
-  if (week == -1) {
-    for (let i = 0; i < input_ics_list.length; i++) {
-      let appointments = getAppointments(input_ics_list[i], 8);
-      result2.push([...appointments]);
-    }
-    //result2 = [8, result2];
-  } else if (week == 0) {
-    for (let i = 0; i < input_ics_list.length; i++) {
-      let appointments = getAppointments(input_ics_list[i], 1);
-      result2.push([...appointments]);
-    }
-    //result2 = [1, result2];
-  } else if (week == 13) {
-    for (let i = 0; i < input_ics_list.length; i++) {
-      let appointments = getAppointments(input_ics_list[i], 13);
-      result1.push([...appointments]);
-    }
-    //result1 = [13, result1];
-  } else if (week != 14) {
-    console.log("Week" + week);
-    for (let i = 0; i < input_ics_list.length; i++) {
-      let appointments = getAppointments(input_ics_list[i], week);
-      result1.push([...appointments]);
-      console.log("result1:");
-      console.log(result1);
-    }
-    //result1 = [week, result1];
-    for (let i = 0; i < input_ics_list.length; i++) {
-      let appointments = getAppointments(input_ics_list[i], week + 1);
-      result2.push([...appointments]);
-      console.log("result2:");
-
-      console.log(result2);
-    }
-    //result2 = [week+1, result2];
-  }
-  //result2 = [8, result2];
-
-  res.status(200).json([result1, result2]);
+  res.status(200).json(generateAppointments(ics_list, week));
 };
+
+function generateAppointments(ics_list, week){
+    let input_ics_list = [];
+    let result1 = [];
+    let result2 = [];
+
+    for (let i = 0; i < ics_list.length; i++) {
+        if (ics_list[i]) {
+        input_ics_list.push(ics_list[i]);
+        }
+    }
+    console.log(input_ics_list);
+
+    if (week == -1) {
+        for (let i = 0; i < input_ics_list.length; i++) {
+        let appointments = getAppointments(input_ics_list[i], 8);
+        result2.push([...appointments]);
+        }
+        //result2 = [8, result2];
+    } else if (week == 0) {
+        for (let i = 0; i < input_ics_list.length; i++) {
+        let appointments = getAppointments(input_ics_list[i], 1);
+        result2.push([...appointments]);
+        }
+        //result2 = [1, result2];
+    } else if (week == 13) {
+        for (let i = 0; i < input_ics_list.length; i++) {
+        let appointments = getAppointments(input_ics_list[i], 13);
+        result1.push([...appointments]);
+        }
+        //result1 = [13, result1];
+    } else if (week != 14) {
+        console.log("Week" + week);
+        for (let i = 0; i < input_ics_list.length; i++) {
+        let appointments = getAppointments(input_ics_list[i], week);
+        result1.push([...appointments]);
+        console.log("result1:");
+        console.log(result1);
+        }
+        //result1 = [week, result1];
+        for (let i = 0; i < input_ics_list.length; i++) {
+        let appointments = getAppointments(input_ics_list[i], week + 1);
+        result2.push([...appointments]);
+        console.log("result2:");
+
+        console.log(result2);
+        }
+    }
+    return [result1, result2];
+}
 
 function getAppointments(ics, thisWeek) {
     let appointments = [];
