@@ -33,8 +33,7 @@ const weekDates = [
 ];
 const Day = { MON: 0, TUE: 1, WED: 2, THU: 3, FRI: 4, SAT: 5 };
 
-var events = [];
-var event = { title: "", description: "",  location: "", start: [], end: [] };
+
 
 // title: 'Dinner',
 //   description: 'Nightly thing I do',
@@ -58,6 +57,8 @@ function generateEvents(appointments){
 
 
 function editEvents(appointments) {
+  var events = [];
+  var event = { title: "", description: "",  location: "", start: [], end: [] };
   for (var a = 0; a < appointments.length; a++) {
     let i = appointments[a];
     console.log(i);
