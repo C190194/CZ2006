@@ -1,22 +1,26 @@
 const Timetable = require('../models/timetable');
 const User = require('../models/user');
+// var course ={"courseID":"","indexNum":""};
+// var courses=[];
 
 const saveTimetable  = async(req, res)=>{
     const {userEmail,timetableID,courseSelected,courseFixed, fixedTimeSlots,courseClashAllowed} = req.body;
-
-    for (courseCode in courseSelected){
-
-    }
+    console.log(courseSelected);
+    // for (i = 0;i < courseSelected.length; i++){
+    //     course["courseID"]=courseSelected[i]["courseID"];
+    //     course["indexNum"]=courseSelected[i]["indexNum"];
+    //     courses.push(course);
+    // }
 
     const timetable = new Timetable({
         timetableID: timetableID,
-        courseSelected:{courseCode:  courseSelected[i]["courseCode"], index_number:courseSelected[i]["index_number"]} ,
+        courseSelected: courseSelected,
         fixedTimeSlots: fixedTimeSlots,
         courseFixed: courseFixed,
         courseClashAllowed: courseClashAllowed
-    })
+    });
 
-    User.update(
+    User.updateOne(
         {
             email: req.body.userEmail
         },{

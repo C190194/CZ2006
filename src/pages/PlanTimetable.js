@@ -78,14 +78,14 @@ function PlanTimetableContextConsumer(props) {
     };
     console.log(reqbody);
 
-    // axios.post("/saving/saveTimetable", reqbody).then((response) => {
-    //   console.log(response.data);
-    //   // if (typeof response.data.message[0] === "string") {
-    //   //   alert(response.data.message[0]);
-    //   // } else {
-    //   //   setCombinations(response.data.message);
-    //   // }
-    // });
+    axios.put("/saving/saveTimetable", reqbody).then((response) => {
+      console.log(response.data);
+      // if (typeof response.data.message[0] === "string") {
+      //   alert(response.data.message[0]);
+      // } else {
+      //   setCombinations(response.data.message);
+      // }
+    });
     // console.log(reqbody);
   };
 
