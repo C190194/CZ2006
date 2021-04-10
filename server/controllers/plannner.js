@@ -1,7 +1,7 @@
 //const { models } = require("mongoose");
 //const CourseModal = require("../models/course.js");
 const DatabaseExam = require("../models/databaseExam");
-const ClashPlanner = require("./ClashPlan.js");
+const ClashPlanner = require("./ClashPlanner.js");
 
 var times = {
   "0830": {},
