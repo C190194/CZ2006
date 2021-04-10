@@ -75,7 +75,9 @@ function PlanTimetableContextConsumer(props) {
     };
     console.log(reqbody);
 
+
     axios.put("/saving/saveTimetable", reqbody).then((response) => {
+
       console.log(response.data);
       // if (typeof response.data.message[0] === "string") {
       //   alert(response.data.message[0]);
@@ -83,6 +85,7 @@ function PlanTimetableContextConsumer(props) {
       //   setCombinations(response.data.message);
       // }
     });
+
 
     // const reqbody = { timetableID: "2" };
     // console.log(reqbody);
