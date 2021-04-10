@@ -315,7 +315,6 @@ export default function FindCommon() {
         <div className="page-title col-12">
           <b>Find Common Time Slots</b>
         </div>
-
       </div>
       <div className="row">
         <div className="col-2">
@@ -376,7 +375,6 @@ export default function FindCommon() {
             }
             currentDate={newdate.toISOString()}
           />
->>>>>>> main
         </div>
       </div>
     </div>
