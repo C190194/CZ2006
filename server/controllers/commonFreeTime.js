@@ -29,9 +29,9 @@ let timetable_day = {
     22: 0,
     22.5: 0,
     23: 0,
-  };
+};
   
-  let timetable_week = {
+let timetable_week = {
     1: { ...timetable_day },
     2: { ...timetable_day },
     3: { ...timetable_day },
