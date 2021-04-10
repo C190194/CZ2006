@@ -18,12 +18,12 @@ export const SidebarData = [
     icon: <FcIcons.FcPlanner />,
     cName: 'nav-text'
   },
-  {
-    title: 'Share Time Table',
-    path: '/share',
-    icon: <IoIcons.IoMdPeople />,
-    cName: 'nav-text'
-  },
+  // {
+  //   title: 'Share Time Table',
+  //   path: '/share',
+  //   icon: <IoIcons.IoMdPeople />,
+  //   cName: 'nav-text'
+  // },
   {
     title: 'Find Common Free Time Slots',
     path: '/findcommon',

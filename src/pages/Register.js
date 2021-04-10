@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import "./Register.css";
+
 import { SentimentVerySatisfiedTwoTone } from "@material-ui/icons";
 import axios from "axios";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");

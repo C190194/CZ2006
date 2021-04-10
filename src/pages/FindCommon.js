@@ -310,11 +310,12 @@ export default function FindCommon() {
   const newdate = new Date();
   newdate.setDate(getMonday(newdate).getDate() + weekView * 7);
   return (
-    <div className="container">
-      <div className="row">
-        <div className="planner-title col-12">
+    <div className="background">
+      <div className="container">
+        <div className="page-title col-12">
           <b>Find Common Time Slots</b>
         </div>
+
       </div>
       <div className="row">
         <div className="col-2">
@@ -375,6 +376,7 @@ export default function FindCommon() {
             }
             currentDate={newdate.toISOString()}
           />
+>>>>>>> main
         </div>
       </div>
     </div>

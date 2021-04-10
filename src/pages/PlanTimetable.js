@@ -10,6 +10,7 @@ import {
   PlanTimetableContextProvider,
   usePlanTimetable,
 } from "../context/PlanTimetableContextProvider";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,7 +20,8 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 
-import "./PlanTimetable.css";
+
+
 
 function PlanTimetableContextConsumer(props) {
   const planTimetableContext = usePlanTimetable();
@@ -226,26 +228,31 @@ export default function PlanTimetable() {
   });
   return (
     <PlanTimetableContextProvider>
-      <div className="container">
-        <div className="row">
-          <div className="planner-title col-12">
+      <div className="background">
+        <div className="container">
+          {/* <div className="row"> */}
+          <div className="page-title col-12">
             <b>Course Planner</b>
           </div>
-          <div className="row" style={{ width: 200 }}>
-            <SearchCourseDropdown
-              prompt="Select courses..."
-              id="courseCode"
-              label="courseCode"
-              name="name"
-              options={data.map((item) => ({
-                ...item,
-                id: Math.random().toString(36).substr(2, 9),
-              }))}
-              value={value}
-              onChange={(val) => setValue(val)}
-            />
-          </div>
+          <hr />
+          {/* <div className="small-container"> */}
+            <div className="row" style={{ width: 200 }}>
+              <SearchCourseDropdown
+                prompt="Select courses..."
+                id="courseCode"
+                label="courseCode"
+                name="name"
+                options={data.map((item) => ({
+                  ...item,
+                  id: Math.random().toString(36).substr(2, 9),
+                }))}
+                value={value}
+                onChange={(val) => setValue(val)}
+              />
+            </div>
+          {/* </div> */}
           <PlanTimetableContextConsumer course={value} />
+          {/* </div> */}
         </div>
       </div>
     </PlanTimetableContextProvider>
